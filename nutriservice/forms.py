@@ -20,7 +20,8 @@ class MealsFormSet(MealsBaseFormSet):
         ]
         for form, meal_name in zip(self, meal_names):
             form.meal_name = meal_name
-            form.has_changed = lambda: True
+            if self.instance is None:
+                form.has_changed = lambda: True
             form.fields.pop('id')
             form.fields.pop('client')
 
