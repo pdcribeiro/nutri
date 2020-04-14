@@ -22,9 +22,9 @@
               {% endif %}
               <li><a href="{% url 'plans' %}">Planos</a></li>
               <li><a href="{% url 'meetings' %}">Consultas</a></li>
-              <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+              <li><a href="{% url 'logout'%}?next={{request.path}}">Sair</a></li>
             {% else %}
-              <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
+              <li><a href="{% url 'login'%}?next={{request.path}}">Entrar</a></li>
             {% endif %}
           </ul>
         {% endblock %}

@@ -15,15 +15,20 @@ class PlansInline(admin.TabularInline):
     model = Plan
     extra = 0
 
+
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'born', 'nutritionist')  #TODO add last_meeting
+    list_display = ('id', 'user', 'nutritionist', 'name', 'born',)
     inlines = [MealsInline, PlansInline, MeetingsInline]
+
+@admin.register(Meal)
+class MealAdmin(admin.ModelAdmin):
+    list_display = ('id', 'client', 'time', 'place')
 
 @admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
-    list_display = ('client', 'date')
+    list_display = ('id', 'client', 'date')
 
 @admin.register(Plan)
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ('client', 'meeting', 'date', 'energy')
+    list_display = ('id', 'client', 'meeting', 'date', 'energy')

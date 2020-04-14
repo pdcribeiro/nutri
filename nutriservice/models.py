@@ -9,7 +9,7 @@ from django.urls import reverse
 class Client(models.Model):
     """The Client model."""
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    nutritionist = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='nutritionist', null=True, blank=True, verbose_name='Nutricionista')
+    nutritionist = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='nutritionist', null=True, verbose_name='Nutricionista')
     name = models.CharField(max_length=200, verbose_name='Nome')
     born = models.DateField(null=True, blank=True, verbose_name='Data de nascimento')
 

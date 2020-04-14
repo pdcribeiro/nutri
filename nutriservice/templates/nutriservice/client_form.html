@@ -3,6 +3,7 @@
 {% block content %}
   <form action="" method="post">
     {% csrf_token %}
+    {{ form.non_field_errors }}
     <table>
       {{ form.as_table }}
     </table>
@@ -17,10 +18,10 @@
       {{ form.meals_formset.management_form }}
       {% for meal_form in form.meals_formset %}
         <tr>
-          {{ meal_form.id }}
           <td>{{ meal_form.meal_name }}</td>
-          <td>{{ meal_form.time|time:"H:M" }}</td>
-          <td>{{ meal_form.place }}</td>
+          {% for field in meal_form %}
+            <td>{{ field.errors }}{{ field }}</td>
+          {% endfor %}
         </tr>
       {% endfor %}
     </table>
