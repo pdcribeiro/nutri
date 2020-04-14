@@ -19,7 +19,7 @@
         <tr>
           {{ meal_form.id }}
           <td>{{ meal_form.meal_name }}</td>
-          <td>{{ meal_form.time }}</td>
+          <td>{{ meal_form.time|time:"H:M" }}</td>
           <td>{{ meal_form.place }}</td>
         </tr>
       {% endfor %}

@@ -32,113 +32,50 @@ def index(request):
 
 
 class ClientListView(PermissionRequiredMixin, generic.ListView):
-    model = Client
     permission_required = 'nutriservice.view_client'
+    model = Client
     paginate_by = 10
 
 class ClientDetailView(PermissionRequiredMixin, generic.DetailView):
-    model = Client
     permission_required = 'nutriservice.view_client'
+    model = Client
 
 
-class PlanListView(LoginRequiredMixin, generic.ListView):
+class PlanListView(PermissionRequiredMixin, generic.ListView):
+    permission_required = 'nutriservice.view_plan'
     model = Plan
     paginate_by = 10
 
-class PlanDetailView(LoginRequiredMixin, generic.DetailView):
+class PlanDetailView(PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'nutriservice.view_plan'
     model = Plan
 
 
-class MeetingListView(LoginRequiredMixin, generic.ListView):
+class MeetingListView(PermissionRequiredMixin, generic.ListView):
+    permission_required = 'nutriservice.view_meeting'
     model = Meeting
     paginate_by = 10
 
-class MeetingDetailView(LoginRequiredMixin, generic.DetailView):
+class MeetingDetailView(PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'nutriservice.view_meeting'
     model = Meeting
 
 
 '''TODO
-- how to save blank/unchanged text fields; explore use of choices instead
+- don't store empty meal forms; problem: position filled meal forms appropriately
 '''
 
 class ClientCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'nutriservice.add_client'
     model = Client
     form_class = ClientForm
-    permission_required = 'nutriservice.add_client'
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['form'].meals_formset = MealsFormSet()
-    #     return context
-
-    # def form_valid(self, form):
-    #     self.object = form.save()
-    # #     self.client_id = form.instance.id
-    #     return super().form_valid(form)
-
-    # def get_success_url(self):
-    #     return reverse('client-detail', args=[str(self.client_id)])
 
 class ClientUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = 'nutriservice.change_client'
     model = Client
     form_class = ClientForm
-    permission_required = 'nutriservice.change_client'
-
-    # def form_valid(self, form):
-    #     print(form)
-    #     form.save()
-    #     # self.client_id = form.instance.id
-    #     return super().form_valid(form)
-
-    # def get_success_url(self):
-    #     print(vars(self))
-    #     assert 1 == 0
-    #     return reverse('client-detail', args=[str(self.client_id)])
-
-    # def get_success_url(self):
-    #     print(vars(self))
-    #     assert 1==0
-    #     return reverse('client-detail', args=[str(self.object.id)])
-
-
-# class ClientCreate(PermissionRequiredMixin, CreateView):  #TODO review logic
-#     model = Client
-#     permission_required = 'nutriservice.add_client'
-#     fields = ['name', 'born']
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['meals_formset'] = MealsFormSet()
-#         return context
-
-#     def form_valid(self, form):
-#         meals_formset = MealsFormSet(self.request.POST)
-#         if not meals_formset.is_valid():
-#             raise ValidationError('Invalid meals formset.')
-#         meals_formset.instance = self.object = form.save()
-#         meals_formset.save()
-#         return super().form_valid(form)
-
-# class ClientUpdate(PermissionRequiredMixin, UpdateView):
-#     model = Client
-#     permission_required = 'nutriservice.add_client'
-#     fields = ['name', 'born']
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['meals_formset'] = MealsFormSet(instance=self.object)
-#         return context
-
-#     def form_valid(self, form):
-#         meals_formset = MealsFormSet(self.request.POST, instance=self.object)
-#         if not meals_formset.is_valid():
-#             raise ValidationError('Invalid meals formset.')
-#         # meals_formset.instance = self.object = form.save()
-#         form.save()
-#         meals_formset.save()
-#         return super().form_valid(form)
 
 class ClientDelete(PermissionRequiredMixin, DeleteView):
-    model = Client
     permission_required = 'nutriservice.delete_client'
+    model = Client
     success_url = reverse_lazy('clients')

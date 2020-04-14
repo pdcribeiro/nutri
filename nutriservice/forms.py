@@ -20,6 +20,7 @@ class MealsFormSet(MealsBaseFormSet):
         ]
         for form, meal_name in zip(self, meal_names):
             form.meal_name = meal_name
+            form.has_changed = lambda: True
 
 
 class ClientForm(ModelForm):
