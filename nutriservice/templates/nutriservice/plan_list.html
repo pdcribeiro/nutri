@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Lista planos</h1>
+  {% if plan_list %}
+  <ul>
+    {% for plan in plan_list %}
+      <li>
+        <a href="{{ plan.get_absolute_url }}">{{ plan }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>Não tem planos.</p>
+  {% endif %}       
+{% endblock %}

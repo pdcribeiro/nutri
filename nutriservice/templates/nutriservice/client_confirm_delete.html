@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Apagar cliente</h1>
+
+<p>Quer apagar o cliente "{{ client }}"?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Sim, apagar.">
+</form>
+
+{% endblock %}

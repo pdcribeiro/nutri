@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Lista de consultas</h1>
+  {% if meeting_list %}
+  <ul>
+    {% for meeting in meeting_list %}
+      <li>
+        <a href="{{ meeting.get_absolute_url }}">{{ meeting }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>Não tem consultas.</p>
+  {% endif %}       
+{% endblock %}

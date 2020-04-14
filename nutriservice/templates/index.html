@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Consultas</h1>
+  <p>Bem vindo(a) ao teu espaço para consultas de nutrição online.</p>
+  <h2>Resumo</h2>
+  <ul>
+    <li><strong>Clientes:</strong> {{ num_clients }}</li>
+    <li><strong>Consultas:</strong> {{ num_meetings }}</li>
+    <li><strong>Planos:</strong> {{ num_plans }}</li>
+  </ul>
+
+<!-- <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p> -->
+{% endblock %}
