@@ -106,13 +106,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-pt'
 
 TIME_ZONE = 'Europe/Lisbon'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -129,3 +129,16 @@ LOGIN_REDIRECT_URL = '/'
 
 # Logs emails sent to the console (dev only)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  #DEV
+
+
+# Date and time input formats
+TIME_INPUT_FORMATS = [
+    '%H:%M',
+]
+
+DATE_INPUT_FORMATS = [
+    '%d-%m-%Y',
+    '%d-%m-%y',
+    '%d/%m/%Y',
+    '%d/%m/%y',
+]
