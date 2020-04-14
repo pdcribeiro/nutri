@@ -18,8 +18,9 @@
       {{ form.meals_formset.management_form }}
       {% for meal_form in form.meals_formset %}
         <tr>
+          {{ meal_form.id }}
           <td>{{ meal_form.meal_name }}</td>
-          {% for field in meal_form %}
+          {% for field in meal_form.visible_fields %}
             <td>{{ field.errors }}{{ field }}</td>
           {% endfor %}
         </tr>

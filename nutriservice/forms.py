@@ -1,4 +1,3 @@
-# from django import forms
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 
@@ -10,7 +9,9 @@ MealsBaseFormSet = inlineformset_factory(Client, Meal, fields='__all__', extra=6
 class MealsFormSet(MealsBaseFormSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        meal_names = [
+
+        # Add meal name labels.
+        MEAL_NAMES = [
             'P.A.',
             'Manhã',
             'Almoço',
@@ -18,12 +19,12 @@ class MealsFormSet(MealsBaseFormSet):
             'Jantar',
             'Ceia',
         ]
-        for form, meal_name in zip(self, meal_names):
+        for form, meal_name in zip(self, MEAL_NAMES):
             form.meal_name = meal_name
-            if self.instance is None:
+
+            # Save empty fields as well when creating object.
+            if self.instance.id is None:
                 form.has_changed = lambda: True
-            form.fields.pop('id')
-            form.fields.pop('client')
 
 
 class ClientForm(ModelForm):
@@ -33,12 +34,12 @@ class ClientForm(ModelForm):
 
     def __init__(self, *args, data=None, instance=None, **kwargs):
         super().__init__(*args, data=data, instance=instance, **kwargs)
-        self.meals_formset = MealsFormSet(data, instance=instance)
+        self.meals_formset = MealsFormSet(data=data, instance=instance)
     
     def is_valid(self):
         return super().is_valid() and self.meals_formset.is_valid()
 
     def save(self, *args, **kwargs):
         self.meals_formset.instance = super().save(*args, **kwargs)
-        self.meals_formset.save()
-        return self.meals_formset.instance
+        self.meals_formset.save(*args, **kwargs)
+        return self.instance

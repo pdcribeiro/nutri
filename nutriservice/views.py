@@ -10,7 +10,7 @@ from nutriservice.forms import ClientForm, MealsFormSet
 
 
 def index(request):
-    """View function for home page of site."""
+    """View function for site home page."""
 
     # Generate counts of some of the main objects
     num_clients = Client.objects.all().count()
@@ -61,14 +61,15 @@ class MeetingDetailView(PermissionRequiredMixin, generic.DetailView):
     model = Meeting
 
 
-'''TODO
-- don't store empty meal forms; problem: position filled meal forms appropriately
-'''
-
 class ClientCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'nutriservice.add_client'
     model = Client
     form_class = ClientForm
+
+    def form_valid(self, form):
+        if self.request.user.groups.filter(name='nutritionist').exists():
+            form.instance.nutritionist = self.request.user
+        return super().form_valid(form)
 
 class ClientUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'nutriservice.change_client'

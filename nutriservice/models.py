@@ -8,7 +8,7 @@ from django.urls import reverse
 
 class Client(models.Model):
     """The Client model."""
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     nutritionist = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='nutritionist', null=True, verbose_name='Nutricionista')
     name = models.CharField(max_length=200, verbose_name='Nome')
     born = models.DateField(null=True, blank=True, verbose_name='Data de nascimento')
@@ -22,7 +22,7 @@ class Client(models.Model):
 
     def __str__(self):
         """String to represent Client model."""
-        return self.name
+        return f'{self.name} ({self.id})'
 
 
 class Meal(models.Model):
@@ -59,7 +59,7 @@ class Meeting(models.Model):
 
 class Plan(models.Model):
     """The Plan model."""
-    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, verbose_name='Cliente')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, verbose_name='Cliente')
     meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
     date = models.DateField(default=now, null=True, blank=True, verbose_name='Data')
     energy = models.IntegerField(null=True, blank=True, verbose_name='Energia')
