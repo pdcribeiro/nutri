@@ -6,7 +6,7 @@
 
 {% block description %}Defina o peso desejado{% endblock %}
 
-{% block fields %}{% with unit='kg'%}
+{% block fields %}{% with unit='kg' %}
   {% include '../common/field.html' with name='weight' value=client.weight %}
   {% include '../common/efield.html' with name='goal_weight' extra='...' input=form.goal_weight %}
 {% endwith %}{% endblock %}

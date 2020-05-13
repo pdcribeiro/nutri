@@ -1,0 +1,12 @@
+{% extends '../common/row.html' %}
+
+{% block icon %}fas fa-bed{% endblock %}
+
+{% block name %}Índice de massa corporal{% endblock %}
+
+{% comment %} {% block description %}{% endblock %} {% endcomment %}
+
+{% block fields %}{% with unit='kcal/dia' %}
+  {% include '../common/field.html' with name='bmr' value='...' %}
+  {% include '../common/field.html' with name='goal_bmr' value='...' %}
+{% endwith %}{% endblock %}

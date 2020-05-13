@@ -4,13 +4,17 @@
 
 * Plan page
   * ...
+  * \+ or - in extras
+  * Fix niddk calc on first time
 
 * Move calc iframe to after plan.js execution? Probably not
+* Try to not load niddk calc html
 
 * Fix select elements width
 * ? Edit weight in plan page
   * Create custom form taking fields from both models (Client and Plan)
 * ? Move plan model to plan app
+* ? field.html: Make 'extra' variable boolean
 
 * After creating plan, use "next" to redirect either to 'client-detail' or 'plans'
 * Use Babel to transpile JS to older versions

@@ -6,7 +6,7 @@
 
 {% comment %} {% block description %}{% endblock %} {% endcomment %}
 
-{% block fields %}
-  {% include '../common/field.html' with name='bmi' value='[[ bmi ]]' unit='kg/m2' %}
-  {% include '../common/field.html' with name='goal_bmi' value='[[ goal_bmi ]]' unit='kg/m2' %}
-{% endblock %}
+{% block fields %}{% with unit='kg/m2' %}
+  {% include '../common/field.html' with name='bmi' value='...' %}
+  {% include '../common/field.html' with name='goal_bmi' value='...' %}
+{% endwith %}{% endblock %}

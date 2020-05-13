@@ -1,0 +1,12 @@
+{% extends '../common/row.html' %}
+
+{% block icon %}fas fa-fire-alt{% endblock %}
+
+{% block name %}Índice de massa corporal{% endblock %}
+
+{% comment %} {% block description %}{% endblock %} {% endcomment %}
+
+{% block fields %}{% with unit='kcal/dia' %}
+  {% include '../common/field.html' with name='daily_energy' value='...' %}
+  {% include '../common/efield.html' with name='goal_daily_energy' extra='...' input=form.daily_energy %}
+{% endwith %}{% endblock %}

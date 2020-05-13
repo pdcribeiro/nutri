@@ -2,8 +2,10 @@
 
 {% block name %}Cálculos{% endblock %}
 
-{% block description %}Defina a taxa de dispêndio energético{% endblock %}
+{% block description %}Defina a energia diária{% endblock %}
 
 {% block rows %}
   {% include './row_bmi.html' %}
+  {% include './row_bmr.html' %}
+  {% include './row_daily_energy.html' %}
 {% endblock %}

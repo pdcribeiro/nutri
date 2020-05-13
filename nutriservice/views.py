@@ -95,10 +95,7 @@ class PlanMixin:
         self.success_url = self.request.GET.get('next', None) or reverse('plans')
         today = datetime.date.today()
         js_context = {
-            'gender': {
-                'm': 'Male',
-                'f': 'Female'
-            }[client.gender],
+            'gender': client.gender,
             'age': today.year - client.born.year -
                 ((today.month, today.day) <
                 (client.born.month, client.born.day)),

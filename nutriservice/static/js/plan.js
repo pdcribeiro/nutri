@@ -1,5 +1,7 @@
 const { gender, age, height, weight, body_fat, pal, pal_map } = js_context;
-// console.log(typeof height);
+const calc = document.getElementById('calc');
+const BMR_CONSTANT = 6.25*height - 5*age + { m: 5, f: -161 }[gender];
+
 let tmp = null;
 
 function properRound(value, places) {
@@ -14,6 +16,7 @@ function render() {
   
   const goal_time = parseFloat($('#goal_time_efield input').val());
   const pal_change = parseFloat($('#pal_change_efield input').val());
+  const goal_daily_energy = parseFloat($('#goal_daily_energy_efield input').val());
 
   // Update efield fields text
   $('#goal_weight').text(goal_weight);  //TODO general assigment for all elements
@@ -23,33 +26,45 @@ function render() {
   $('#goal_time').text(goal_time);
   $('#pal_change').text(pal_change);
 
+  $('#goal_daily_energy').text(goal_daily_energy);
+  
   // Update computed fields
   $('#goal_weight_extra').text(goal_weight - weight + ' kg');
   $('#goal_body_fat_extra').text(goal_body_fat - body_fat + ' %');
   $('#new_pal_extra').text('PAL ' + new_pal);
   
   $('#goal_bmi').text(properRound(goal_weight / (height / 100) ** 2, 1));
+  const goal_bmr = 10 * goal_weight + BMR_CONSTANT;
+  $('#goal_bmr').text(Math.round(goal_bmr));
+  $('#goal_daily_energy_extra').text(Math.round(goal_bmr * new_pal) + ' kcal/dia');
 
   // Update NIDDK calculator results
   function niddk() {
     $('#energy_to_goal, #energy_to_maintain').text('...');
-    const calc = document.getElementById('calc');
     while (calc.contentDocument.readyState !== 'complete') {
       setTimeout(niddk, 500);
       return;
     }
+    const data = {
+      ...js_context,
+      gender: { m: 'Male', f: 'Female' }[gender],
+      pal: parseFloat(pal),
+      goalWeight: goal_weight,
+      goalTime: goal_time * 30,
+      palChange: pal_change,
+    };
+    for (let key in data) {
+      if (typeof data[key] === 'undefined' || (typeof data[key] === 'number' && Number.isNaN(data[key]))) {
+        return;
+      }
+    }
     const calcBody = calc.contentDocument.body;
     const scope = calc.contentWindow.angular.element(calcBody).scope();
-    const result = scope.getEnergy({
-      ...js_context,
-      goalWeight: goal_weight,
-      goalTime: goal_time,
-      palChange: pal_change,
-    });
+    const result = scope.getEnergy(data);
     $('#energy_to_goal').text(result.energyGoal);
     $('#energy_to_maintain').text(result.energyMaintain);
   }
-  niddk();
+  setTimeout(niddk);
 }
 
 function init() {
@@ -59,6 +74,9 @@ function init() {
   // Set computed fields values
   $('#pal_extra').text('PAL ' + pal);
   $('#bmi').text(properRound(weight / (height / 100) ** 2, 1));
+  const bmr = 10 * weight + BMR_CONSTANT;
+  $('#bmr').text(Math.round(bmr));
+  $('#daily_energy').text(Math.round(bmr * pal));
   
   render();
 
