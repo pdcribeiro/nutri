@@ -1,0 +1,16 @@
+<td class="align-middle text-center">
+  <div class="efield mx-auto" id="{{ name }}_efield">
+    {% include './field.html' with value="..." %}
+
+    <div class="efield-controls" lang="en-US" style="display: flex;">
+      {{ input.errors }}
+      {{ input }}
+      <button class="efield-save btn btn-success btn-sm">
+        <i class="fas fa-check"></i>
+      </button>
+      <button class="efield-cancel btn btn-secondary btn-sm">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+</td>

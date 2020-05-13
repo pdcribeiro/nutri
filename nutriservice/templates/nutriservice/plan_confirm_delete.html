@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Apagar plano</h1>
+
+<p>Quer apagar o plano "{{ plan }}"?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Sim, apagar">
+</form>
+
+{% endblock %}

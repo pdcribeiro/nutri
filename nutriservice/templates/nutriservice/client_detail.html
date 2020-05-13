@@ -1,27 +1,44 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-  <h1>Cliente: {{ client.name }}</h1>
-
+  <h1>Clientes</h1>
+  <h2>{{ client.name }}</h2>
   <p><strong>Data de nascimento:</strong> {{ client.born }}</p>
   
-  {% if perms.nutriservice.change_client %}<a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Modificar</a>{% endif %}
-  {% if perms.nutriservice.delete_client %}<a class="btn btn-danger" href="{% url 'client-delete' client.pk %}">Apagar</a>{% endif %} 
+  {% if perms.nutriservice.change_client %}
+    <a class="btn btn-success" href="{% url 'client-update' client.pk %}">Editar</a>
+  {% endif %}
+  {% if perms.nutriservice.delete_client %}
+    <a class="btn btn-secondary" href="{% url 'client-delete' client.pk %}">Apagar</a>
+  {% endif %}
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Planos</h4>
-
+    {% if perms.nutriservice.add_plan %}
+      <a class="btn btn-success" href="{% url 'plan-create' client.pk %}?next={{request.path}}">Novo plano</a>
+    {% endif %}
     {% for plan in client.plan_set.all %}
       <hr>
-      <p><strong>Consulta:</strong> {{ plan.meeting }}</p>
-      <p><strong>Data:</strong> {{ plan.date }}</p>
-      <p><strong>Energia:</strong> {{ plan.energy }} kcal</p>
+      {% comment %} <p><strong>Consulta:</strong> {{ plan.meeting }}</p> {% endcomment %}
+      <div class="row">
+        <div class="col-sm-10">
+          <p><strong>Data:</strong> {{ plan.date }}</p>
+          <p><strong>Calorias:</strong> {{ plan.daily_energy }} kcal/dia</p>
+        </div>
+        <div class="col-sm-2">
+            {% if perms.nutriservice.add_plan %}
+              <a class="btn btn-success" href="{% url 'plan-update' plan.pk %}?next={{request.path}}">Editar</a>
+            {% endif %}
+            {% if perms.nutriservice.delete_plan %}
+              <a class="btn btn-secondary" href="{% url 'plan-delete' plan.pk %}?next={{request.path}}">Apagar</a>
+            {% endif %}
+        </div>
+      </div>
     {% endfor %}
   </div>
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Consultas</h4>
-
     {% for meeting in client.meeting_set.all %}
       <hr>
       <p><strong>Data:</strong> {{ meeting.date }}</p>

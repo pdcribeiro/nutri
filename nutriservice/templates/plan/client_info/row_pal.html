@@ -1,0 +1,12 @@
+{% extends '../common/row.html' %}
+
+{% block icon %}fas fa-running{% endblock %}
+
+{% block name %}Atividade física{% endblock %}
+
+{% block description %}Defina a atividade desejada{% endblock %}
+
+{% block fields %}
+  {% include '../common/field.html' with name='pal' extra='...' value=client.get_pal_display %}
+  {% include '../common/efield.html' with name='new_pal' extra='...' input=form.new_pal %}
+{% endblock %}

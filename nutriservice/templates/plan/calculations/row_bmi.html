@@ -1,0 +1,12 @@
+{% extends '../common/row.html' %}
+
+{% block icon %}fas fa-child{% endblock %}
+
+{% block name %}Índice de massa corporal{% endblock %}
+
+{% comment %} {% block description %}{% endblock %} {% endcomment %}
+
+{% block fields %}
+  {% include '../common/field.html' with name='bmi' value='[[ bmi ]]' unit='kg/m2' %}
+  {% include '../common/field.html' with name='goal_bmi' value='[[ goal_bmi ]]' unit='kg/m2' %}
+{% endblock %}

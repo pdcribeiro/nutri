@@ -1,0 +1,11 @@
+{% extends '../common/table.html' %}
+
+{% block name %}Informações do cliente{% endblock %}
+
+{% block description %}Defina os objetivos do cliente{% endblock %}
+
+{% block rows %}
+  {% include './row_weight.html' %}
+  {% include './row_body_fat.html' %}
+  {% include './row_pal.html' %}
+{% endblock %}

@@ -31,4 +31,4 @@ class MeetingAdmin(admin.ModelAdmin):
 
 @admin.register(Plan)
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ('id', 'client', 'meeting', 'date', 'energy')
+    list_display = ('id', 'client', 'meeting', 'date', 'daily_energy')

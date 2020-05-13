@@ -1,0 +1,9 @@
+{% extends '../common/table.html' %}
+
+{% block name %}Cálculos{% endblock %}
+
+{% block description %}Defina a taxa de dispêndio energético{% endblock %}
+
+{% block rows %}
+  {% include './row_bmi.html' %}
+{% endblock %}

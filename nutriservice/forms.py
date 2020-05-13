@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 
-from nutriservice.models import Client, Meal
+from nutriservice.models import Client, Meal, Plan
 
 
 MealsBaseFormSet = inlineformset_factory(Client, Meal, fields='__all__', extra=6, can_delete=False, max_num=6)
@@ -43,3 +43,15 @@ class ClientForm(ModelForm):
         self.meals_formset.instance = super().save(*args, **kwargs)
         self.meals_formset.save(*args, **kwargs)
         return self.instance
+
+
+class PlanForm(ModelForm):
+    class Meta:
+        model = Plan
+        exclude = ['client', 'meeting']
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     for field in self.fields:
+    #         # print(self.fields[field])
+    #         self.fields[field].widget.attrs.update({'class': 'form-control'})  #TODO handle all inputs (range)

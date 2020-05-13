@@ -1,0 +1,12 @@
+{% if not input %}<td class="align-middle text-center">{% endif %}
+  <div class="field">
+    <span class="field-value">
+
+        <span id="{{ name }}">{% if value %}{{ value }}{% endif %}</span>
+        
+        {% if unit %}<span class="field-unit"> {{ unit }}</span>{% endif %}
+    </span>
+
+    {% if extra %}<div class="field-extra text-muted" id="{{ name }}_extra">{{ extra }}</div>{% endif %}
+  </div>
+{% if not input %}</td>{% endif %}
