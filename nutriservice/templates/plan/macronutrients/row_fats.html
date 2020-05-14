@@ -1,0 +1,11 @@
+{% extends '../common/row.html' %}
+
+{% block icon %}fas fa-percentage{% endblock %}
+
+{% block name %}Lípidos{% endblock %}
+
+{% block fields %}
+  {% include '../common/efield.html' with name='fats' unit='%' extra='...' input=form.fats %}
+  {% include '../common/field.html' with name='fats_weight' value='...' unit='g' %}
+  {% include '../common/field.html' with name='fats_per_weight' value='...' unit='g/kg' %}
+{% endblock %}

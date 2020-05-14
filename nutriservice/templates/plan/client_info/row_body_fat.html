@@ -6,7 +6,7 @@
 
 {% block description %}Defina a gordura corporal desejada{% endblock %}
 
-{% block fields %}{% with unit='%' %}
+{% block fields %}
   {% include '../common/field.html' with name='body_fat' value=client.body_fat %}
   {% include '../common/efield.html' with name='goal_body_fat' extra='...' input=form.goal_body_fat %}
-{% endwith %}{% endblock %}
+{% endblock %}

@@ -3,10 +3,10 @@ import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import ValidationError
+from django.forms.widgets import NumberInput
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 
 from nutriservice.models import Client, Meeting, Plan, PAL
 # from nutriservice.forms import ClientForm, MealsFormSet
@@ -43,7 +43,7 @@ class ClientDetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'nutriservice.view_client'
     model = Client
 
-# class ClientCreate(PermissionRequiredMixin, CreateView):
+# class ClientCreate(PermissionRequiredMixin, generic.CreateView):
 #     permission_required = 'nutriservice.add_client'
 #     model = Client
 #     form_class = ClientForm
@@ -53,22 +53,22 @@ class ClientDetailView(PermissionRequiredMixin, generic.DetailView):
 #             form.instance.nutritionist = self.request.user
 #         return super().form_valid(form)
 
-# class ClientUpdate(PermissionRequiredMixin, UpdateView):
+# class ClientUpdate(PermissionRequiredMixin, generic.UpdateView):
 #     permission_required = 'nutriservice.change_client'
 #     model = Client
 #     form_class = ClientForm
 
-class ClientCreate(PermissionRequiredMixin, CreateView):
+class ClientCreate(PermissionRequiredMixin, generic.CreateView):
     permission_required = 'nutriservice.add_client'
     model = Client
     fields = '__all__'
 
-class ClientUpdate(PermissionRequiredMixin, UpdateView):
+class ClientUpdate(PermissionRequiredMixin, generic.UpdateView):
     permission_required = 'nutriservice.change_client'
     model = Client
     fields = '__all__'
 
-class ClientDelete(PermissionRequiredMixin, DeleteView):
+class ClientDelete(PermissionRequiredMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_client'
     model = Client
     success_url = reverse_lazy('clients')
@@ -84,6 +84,21 @@ class PlanDetailView(PermissionRequiredMixin, generic.DetailView):
     model = Plan
 
 class PlanMixin:
+    def get_form(self, form_class=None):
+        # form.fields['proteins'].widget = NumberInput(attrs={'type':'range', 'step': '5'})
+        form = super().get_form(form_class)
+        range_fields = ['proteins', 'carbs', 'fats']
+        for field in form.fields:
+            if field in range_fields:
+                form.fields[field].widget = NumberInput(attrs={
+                    'type':'range',
+                    'class': 'custom-range',
+                    'step': '5'})
+            else:
+                form.fields[field].widget.attrs.update({'class': 'form-control'})
+        print(form)
+        return form
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -113,6 +128,7 @@ class PlanMixin:
                 'client_info': ['Atual', 'Objetivo'],
                 'calculations': ['Atual', 'Objetivo'],
                 'niddk_calculator': ['Duração', 'Mudança no PAL', 'Atingir', 'Manter'],
+                'macronutrients': ['Percentagem', 'Quantidade', 'Quantidade por peso'],
             },
             'js_context': json.dumps(js_context),
         })
@@ -121,7 +137,7 @@ class PlanMixin:
     def get_success_url(self):
         return self.request.GET.get('next', None) or reverse('plans')
 
-class PlanCreate(PermissionRequiredMixin, PlanMixin, CreateView):
+class PlanCreate(PermissionRequiredMixin, PlanMixin, generic.CreateView):
     permission_required = 'nutriservice.add_plan'
     model = Plan
     form_class = PlanForm
@@ -132,13 +148,13 @@ class PlanCreate(PermissionRequiredMixin, PlanMixin, CreateView):
         form.instance.date = datetime.date.today()
         return super().form_valid(form)
 
-class PlanUpdate(PermissionRequiredMixin, PlanMixin, UpdateView):
+class PlanUpdate(PermissionRequiredMixin, PlanMixin, generic.UpdateView):
     permission_required = 'nutriservice.change_plan'
     model = Plan
     form_class = PlanForm
     template_name = 'plan/index.html'
 
-class PlanDelete(PermissionRequiredMixin, PlanMixin, DeleteView):
+class PlanDelete(PermissionRequiredMixin, PlanMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_plan'
     model = Plan
 

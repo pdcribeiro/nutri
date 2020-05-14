@@ -5,7 +5,7 @@
 {% block description %}Defina os objetivos do cliente{% endblock %}
 
 {% block rows %}
-  {% include './row_weight.html' %}
-  {% include './row_body_fat.html' %}
+  {% include './row_weight.html' with unit='kg' %}
+  {% include './row_body_fat.html' with unit='%' %}
   {% include './row_pal.html' %}
 {% endblock %}

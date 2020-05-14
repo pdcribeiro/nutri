@@ -85,17 +85,21 @@ class Plan(models.Model):
 
     goal_weight = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name='Peso desejado (kg)')
     goal_body_fat = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, verbose_name='Gordura corporal (%)')
-    new_pal = models.DecimalField(max_digits=3, decimal_places=2, choices=PAL, default=PAL[1][0], null=True, blank=True, verbose_name='Atividade física atual')
+    new_pal = models.DecimalField(max_digits=3, decimal_places=2, choices=PAL, default=PAL[2][0], null=True, blank=True, verbose_name='Atividade física atual')
     
     goal_time = models.DecimalField(
         max_digits=3, decimal_places=1, validators=[MinValueValidator(0.5), MaxValueValidator(12)],
-        null=True, blank=True, verbose_name='Duração da dieta (meses)')
+        default=3, null=True, blank=True, verbose_name='Duração da dieta (meses)')
     pal_change = models.DecimalField(
         max_digits=4, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(300)],
-        null=True, blank=True, verbose_name='Mudança no PAL (%)')
+        default=0, null=True, blank=True, verbose_name='Mudança no PAL (%)')
 
     daily_energy = models.IntegerField(validators=[MinValueValidator(500), MaxValueValidator(5000)], null=True, blank=True, verbose_name='Taxa de dispêndio energético (kcal/dia)')
 
+    proteins = models.IntegerField(default=25, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de proteínas (%)')
+    carbs = models.IntegerField(default=50, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de hidratos de carbono (%)')
+    fats = models.IntegerField(default=25, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de lípidos (%)')
+    
     class Meta:
         ordering = ['-date']
 

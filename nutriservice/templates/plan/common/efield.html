@@ -1,16 +1,33 @@
 <td class="align-middle text-center">
   <div class="efield mx-auto" id="{{ name }}_efield">
-    {% include './field.html' with value="..." %}
 
-    <div class="efield-controls" lang="en-US" style="display: flex;">
-      {{ input.errors }}
-      {{ input }}
-      <button class="efield-save btn btn-success btn-sm">
-        <i class="fas fa-check"></i>
-      </button>
-      <button class="efield-cancel btn btn-secondary btn-sm">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
+    {{ input.errors }}
+
+    {% if input.field.widget.input_type == 'range' %}
+      
+      <div class="d-flex" lang="en-US">
+        {{ input }}
+      </div>
+      
+      <span class="field-extra text-muted" id="{{ name }}_extra">{{ extra }}</span>
+      {% if unit %}<span class="field-unit text-muted"> {{ unit }}</span>{% endif %}
+      
+    {% else %}
+
+      {% include './field.html' with value="..." %}
+
+      <div class="efield-controls" lang="en-US" style="display: flex;">
+
+        {{ input }}
+
+        <button class="efield-save btn btn-primary btn-sm">
+          <i class="fas fa-check"></i>
+        </button>
+        
+        <button class="efield-cancel btn btn-secondary btn-sm">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    {% endif %}
   </div>
 </td>

@@ -3,7 +3,7 @@
 {% block content %}
   <h1>Plano</h1>
   {% if perms.nutriservice.add_plan %}
-    <a class="btn btn-success" href="{% url 'plan-update' plan.pk %}?next={{request.path}}">Editar</a>
+    <a class="btn btn-primary" href="{% url 'plan-update' plan.pk %}?next={{request.path}}">Editar</a>
   {% endif %}
   {% if perms.nutriservice.delete_plan %}
     <a class="btn btn-secondary" href="{% url 'plan-delete' plan.pk %}">Apagar</a>

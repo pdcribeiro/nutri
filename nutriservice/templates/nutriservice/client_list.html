@@ -7,7 +7,7 @@
     {% for client in client_list %}
       <li>
         <a href="{{ client.get_absolute_url }}">{{ client.name }}</a>
-        {% if perms.nutriservice.change_client %} <a class="btn btn-success" href="{% url 'client-update' client.pk %}">Editar</a>{% endif %}
+        {% if perms.nutriservice.change_client %} <a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Editar</a>{% endif %}
         {% if perms.nutriservice.delete_client %} <a class="btn btn-secondary" href="{% url 'client-delete' client.pk %}">Apagar</a>{% endif %}
       </li>
     {% endfor %}
@@ -16,6 +16,6 @@
     <p>Não tem clientes.</p>
   {% endif %}       
   {% if perms.nutriservice.add_client %}
-    <a class="btn btn-success" href="{% url 'client-create' %}">Novo cliente</a>
+    <a class="btn btn-primary" href="{% url 'client-create' %}">Novo cliente</a>
   {% endif %}
 {% endblock %}

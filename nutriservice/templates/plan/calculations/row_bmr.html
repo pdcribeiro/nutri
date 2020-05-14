@@ -2,11 +2,11 @@
 
 {% block icon %}fas fa-bed{% endblock %}
 
-{% block name %}Índice de massa corporal{% endblock %}
+{% block name %}Taxa de metabolismo basal{% endblock %}
 
 {% comment %} {% block description %}{% endblock %} {% endcomment %}
 
-{% block fields %}{% with unit='kcal/dia' %}
+{% block fields %}
   {% include '../common/field.html' with name='bmr' value='...' %}
   {% include '../common/field.html' with name='goal_bmr' value='...' %}
-{% endwith %}{% endblock %}
+{% endblock %}

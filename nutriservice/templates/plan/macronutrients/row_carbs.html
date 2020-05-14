@@ -1,0 +1,11 @@
+{% extends '../common/row.html' %}
+
+{% block icon %}fas fa-percentage{% endblock %}
+
+{% block name %}Hidratos de carbono{% endblock %}
+
+{% block fields %}
+  {% include '../common/efield.html' with name='carbs' unit='%' extra='...' input=form.carbs %}
+  {% include '../common/field.html' with name='carbs_weight' value='...' unit='g' %}
+  {% include '../common/field.html' with name='carbs_per_weight' value='...' unit='g/kg' %}
+{% endblock %}

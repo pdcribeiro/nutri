@@ -1,6 +1,7 @@
-const { gender, age, height, weight, body_fat, pal, pal_map } = js_context;
+const { gender, age, height, weight, body_fat: bodyFat, pal, pal_map: palMap } = jsContext;
 const calc = document.getElementById('calc');
 const BMR_CONSTANT = 6.25*height - 5*age + { m: 5, f: -161 }[gender];
+const MACRONUTRIENTS_ARR = ['proteins', 'carbs', 'fats', 'proteins', 'carbs'];
 
 let tmp = null;
 
@@ -9,34 +10,50 @@ function properRound(value, places) {
   return Math.round(value * multiplier) / multiplier;
 }
 
-function render() {
-  const goal_weight = parseFloat($('#goal_weight_efield input').val());
-  const goal_body_fat = parseFloat($('#goal_body_fat_efield input').val());
-  const new_pal = $('#new_pal_efield select').val();
+function getSignal(value) {
+  return (value >= 0 ? '+ ' : '- ') + Math.abs(value);
+}
+
+function render() {  //TODO try without parseFloat
+  const goalWeight = parseFloat($('#goal_weight_efield input').val());
+  const goalBodyFat = parseFloat($('#goal_body_fat_efield input').val());
+  const newPal = $('#new_pal_efield select').val();
   
-  const goal_time = parseFloat($('#goal_time_efield input').val());
-  const pal_change = parseFloat($('#pal_change_efield input').val());
-  const goal_daily_energy = parseFloat($('#goal_daily_energy_efield input').val());
+  const goalTime = parseFloat($('#goal_time_efield input').val());
+  const palChange = parseFloat($('#pal_change_efield input').val());
+  const goalDailyEnergy = parseFloat($('#goal_daily_energy_efield input').val());
 
-  // Update efield fields text
-  $('#goal_weight').text(goal_weight);  //TODO general assigment for all elements
-  $('#goal_body_fat').text(goal_body_fat);
-  $('#new_pal').text(pal_map[new_pal]);
+  const proteins = parseFloat($('#proteins_efield input').val()) / 100;
+  const carbs = parseFloat($('#carbs_efield input').val()) / 100;
+  const fats = parseFloat($('#fats_efield input').val()) / 100;
 
-  $('#goal_time').text(goal_time);
-  $('#pal_change').text(pal_change);
+  // Update efield fields text  //TODO? run this on init and save
+  $('#goal_weight').text(goalWeight);  //TODO? general assigment for all elements
+  $('#goal_body_fat').text(goalBodyFat);
+  $('#new_pal').text(palMap[newPal]);
 
-  $('#goal_daily_energy').text(goal_daily_energy);
+  $('#goal_time').text(goalTime);
+  $('#pal_change').text(palChange);
+
+  $('#goal_daily_energy').text(goalDailyEnergy);
   
   // Update computed fields
-  $('#goal_weight_extra').text(goal_weight - weight + ' kg');
-  $('#goal_body_fat_extra').text(goal_body_fat - body_fat + ' %');
-  $('#new_pal_extra').text('PAL ' + new_pal);
+  $('#goal_weight_extra').text(getSignal(goalWeight - weight) + ' kg');
+  $('#goal_body_fat_extra').text(getSignal(goalBodyFat - bodyFat) + ' %');
+  $('#new_pal_extra').text('PAL ' + newPal);
   
-  $('#goal_bmi').text(properRound(goal_weight / (height / 100) ** 2, 1));
-  const goal_bmr = 10 * goal_weight + BMR_CONSTANT;
-  $('#goal_bmr').text(Math.round(goal_bmr));
-  $('#goal_daily_energy_extra').text(Math.round(goal_bmr * new_pal) + ' kcal/dia');
+  $('#goal_bmi').text(properRound(goalWeight / (height / 100) ** 2, 1));
+  const goalBmr = 10 * goalWeight + BMR_CONSTANT;
+  $('#goal_bmr').text(Math.round(goalBmr));
+  $('#goal_daily_energy_extra').text(Math.round(goalBmr * newPal) + ' kcal/dia');
+
+  $('#proteins_weight').text(Math.round(goalDailyEnergy * proteins / 4));
+  $('#carbs_weight').text(Math.round(goalDailyEnergy * carbs / 4));
+  $('#fats_weight').text(Math.round(goalDailyEnergy * fats / 9));
+
+  $('#proteins_per_weight').text(properRound($('#proteins_weight').text() / weight, 2));
+  $('#carbs_per_weight').text(properRound($('#carbs_weight').text() / weight, 2));
+  $('#fats_per_weight').text(properRound($('#fats_weight').text() / weight, 2));
 
   // Update NIDDK calculator results
   function niddk() {
@@ -46,12 +63,12 @@ function render() {
       return;
     }
     const data = {
-      ...js_context,
+      ...jsContext,
       gender: { m: 'Male', f: 'Female' }[gender],
       pal: parseFloat(pal),
-      goalWeight: goal_weight,
-      goalTime: goal_time * 30,
-      palChange: pal_change,
+      goalWeight: goalWeight,
+      goalTime: goalTime * 30,
+      palChange: palChange,
     };
     for (let key in data) {
       if (typeof data[key] === 'undefined' || (typeof data[key] === 'number' && Number.isNaN(data[key]))) {
@@ -70,8 +87,13 @@ function render() {
 function init() {
   // Hide efields controls
   $('.efield-controls').hide();
-  
-  // Set computed fields values
+
+  // Set range input label values
+  $('.efield input[type="range"]').each(function() {
+    $(this).parent().siblings('.field-extra').text($(this).val());
+  });
+
+  // Set constant field values
   $('#pal_extra').text('PAL ' + pal);
   $('#bmi').text(properRound(weight / (height / 100) ** 2, 1));
   const bmr = 10 * weight + BMR_CONSTANT;
@@ -112,7 +134,7 @@ function init() {
     cancel(this);
   });
 
-  $('.efield input, .efield select').blur(function() {
+  $('.efield input[type!="range"], .efield select').blur(function() {
     if (!event.relatedTarget || !event.relatedTarget.classList.contains('efield-save')) {
       cancel(this);
     }
@@ -120,35 +142,25 @@ function init() {
     if (event.key === 'Enter') save(this, $(this).val());
     else if (event.key === 'Escape') cancel(this);
   });
+
+  $('.efield input[type="range"]').on('input', function() {
+    $(this).parent().siblings('.field-extra').text($(this).val());
+  });
+
+  $('.efield input[type="range"]').change(render);
+
+  // Range inputs interdependence
+  const mns = MACRONUTRIENTS_ARR.map(mn => $(`#${mn}_efield input`));
+  for (let i = 0; i < 3; i++) {
+    mns[i].on('input', function() {
+      const secondVal = Math.max(100 - $(this).val() - mns[i+2].val(), 0);
+      mns[i+1].val(secondVal).parent().siblings('.field-extra').text(secondVal);
+      if (secondVal === 0) {
+        const thirdVal = 100 - $(this).val();
+        mns[i+2].val(thirdVal).parent().siblings('.field-extra').text(thirdVal);
+      }
+    });
+  }
 }
 
 init();
-
-
-// function edit(event) {
-//   event.target.classList.add('d-none');
-//   event.target.parentElement.classList.add('d-flex');
-//   event.target.parentElement.classList.remove('d-none');
-// }
-
-// var app = new Vue({
-//   delimiters: ['[[', ']]'],
-//   el: '#app',
-//   data: {
-//     ...js_context,
-//     goal_weight: js_context.weight,
-//     bmi: 0, goal_bmi: 0,
-//   },
-//   mounted: function() {
-//     this.render();
-//     document.querySelectorAll('.efield-wrapper .field').forEach(element => {
-//       element.addEventListener('click', edit());
-//       console.log('in');
-//     });
-//   },
-//   methods: {
-//     render: function() {
-//       this.bmi = this.weight / (this.height / 100) ** 2;
-//     }
-//   }
-// });
