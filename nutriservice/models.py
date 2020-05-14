@@ -100,6 +100,11 @@ class Plan(models.Model):
     carbs = models.IntegerField(default=50, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de hidratos de carbono (%)')
     fats = models.IntegerField(default=25, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de lípidos (%)')
     
+    regular_milk = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de leite meio-gordo (doses)')
+    low_fat_milk = models.IntegerField(default=3, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de leite magro (doses)')
+    fruit = models.IntegerField(default=3, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de fruta (doses)')
+    vegetables = models.IntegerField(default=4, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de vegetais (doses)')
+    
     class Meta:
         ordering = ['-date']
 

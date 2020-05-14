@@ -1,0 +1,7 @@
+{% extends '../common/table.html' %}
+
+{% block rows %}
+  {% include './row_bmi.html' with unit='kg/m2' %}
+  {% include './row_bmr.html' with unit='kcal/dia' %}
+  {% include './row_daily_energy.html' with unit='kcal/dia' %}
+{% endblock %}

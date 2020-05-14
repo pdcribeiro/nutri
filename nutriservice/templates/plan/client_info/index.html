@@ -1,11 +1,9 @@
-{% extends '../common/table.html' %}
+{% extends '../common/card.html' %}
 
 {% block name %}Informações do cliente{% endblock %}
 
 {% block description %}Defina os objetivos do cliente{% endblock %}
 
-{% block rows %}
-  {% include './row_weight.html' with unit='kg' %}
-  {% include './row_body_fat.html' with unit='%' %}
-  {% include './row_pal.html' %}
+{% block tables %}
+  {% include './table_client_info.html' %}
 {% endblock %}

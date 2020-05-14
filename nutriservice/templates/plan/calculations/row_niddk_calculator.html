@@ -6,9 +6,9 @@
 
 {% block description %}Defina a duração da dieta e a mudança no PAL{% endblock %}
 
-{% block fields %}{% with unit='kcal/dia' %}
+{% block fields %}
   {% include '../common/efield.html' with name='goal_time' unit='meses' input=form.goal_time %}
   {% include '../common/efield.html' with name='pal_change' unit='%' input=form.pal_change %}
   {% include '../common/field.html' with name='energy_to_goal' value='...' %}
   {% include '../common/field.html' with name='energy_to_maintain' value='...' %}
-{% endwith %}{% endblock %}
+{% endblock %}

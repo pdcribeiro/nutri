@@ -1,0 +1,10 @@
+{% extends '../common/card.html' %}
+
+{% block name %}Distribuição de doses{% endblock %}
+
+{% block description %}Defina as doses de laticínios, fruta e vegetais{% endblock %}
+
+{% block tables %}
+  {% include './table_initial.html' with columns=columns.initial_dosages %}
+  {% include './table_optimal.html' with columns=columns.optimal_dosages %}
+{% endblock %}

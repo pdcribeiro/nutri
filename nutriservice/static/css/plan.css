@@ -6,6 +6,7 @@
 
 body {
   background-color: #e9ecef;
+  color: #495057;
 }
 
 /* Hide number input arrows */
@@ -41,9 +42,9 @@ input[type=number] {
   width: 150px;
   margin-left: -25px;
 }
-/* .efield select {
+.efield select {
   width: 200px;
-} */
+}
 .efield button {
   width: 35px;
   margin-left: 5px;
@@ -70,8 +71,13 @@ input[type=number] {
   font-size: medium;
 }
 
+.card .table:not(:last-child) {
+  margin-bottom: 20px;
+}
+
 .table {
   margin-bottom: 0px;
+  color: inherit;
 }
 .table thead th {
   padding: 0;

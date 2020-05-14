@@ -96,7 +96,6 @@ class PlanMixin:
                     'step': '5'})
             else:
                 form.fields[field].widget.attrs.update({'class': 'form-control'})
-        print(form)
         return form
     
     def get_context_data(self, **kwargs):
@@ -129,6 +128,8 @@ class PlanMixin:
                 'calculations': ['Atual', 'Objetivo'],
                 'niddk_calculator': ['Duração', 'Mudança no PAL', 'Atingir', 'Manter'],
                 'macronutrients': ['Percentagem', 'Quantidade', 'Quantidade por peso'],
+                'initial_dosages': ['Leite meio-gordo', 'Leite magro', 'Fruta', 'Vegetais'],
+                'optimal_dosages': ['Carne e eq', 'Pão e eq', 'Gordura'],
             },
             'js_context': json.dumps(js_context),
         })

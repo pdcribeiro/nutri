@@ -1,11 +1,10 @@
-{% extends '../common/table.html' %}
+{% extends '../common/card.html' %}
 
 {% block name %}Cálculos{% endblock %}
 
 {% block description %}Defina a energia diária{% endblock %}
 
-{% block rows %}
-  {% include './row_bmi.html' with unit='kg/m2' %}
-  {% include './row_bmr.html' with unit='kcal/dia' %}
-  {% include './row_daily_energy.html' with unit='kcal/dia' %}
+{% block tables %}
+  {% include './table_niddk_calculator.html' with columns=columns.niddk_calculator %}
+  {% include './table_calculations.html' with columns=columns.client_info %}
 {% endblock %}
