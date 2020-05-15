@@ -1,5 +1,11 @@
 {% extends "base_generic.html" %}
 
+{% block sidebar %}
+  {% with url='plans' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
 {% block content %}
   <h1>Lista de planos</h1>
   {% if plan_list %}

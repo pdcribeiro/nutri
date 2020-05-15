@@ -9,7 +9,11 @@
 
 1. Plan page
   * Food dosages distribution table <----- WIP
-    * Set minimum limit values or redo table
+    * Account for calories error
+    * Add new fields (iogurte sol, liq e whey)
+    * Make tables vertical
+    * Establish min/max errors? Account for average value, spread?
+  * Use base_generic.html
   * Compare performance of two versions of maxProteins/Carbs/Fats calculation
   * Fix select elements width
   * Review table column widths
@@ -47,6 +51,12 @@
   * Move height to measurements
 
 4. Appointment "timeline" / nav element
+
+
+### Plans list page
+
+* New plan
+  * Intermediate page to get client
 
 
 ### Clients list page
@@ -93,3 +103,37 @@ activityParam = BMR * (0.9 * PAL - 1) / weight * (1.0 + change / 100.0)
 change = (activityParam / BMR / (0.9 * PAL - 1) * weight - 1) * 100
 PAL = (activityParam / BMR * weight / (1.0 + change / 100.0) + 1) / 0.9
 change = ((0.9 * newPAL - 1) / (0.9 * PAL - 1) - 1) * 100
+
+
+### Clients page
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">Clientes</h4>
+    </div>
+    <div class="card-body">
+      {% comment %} {% if perms.nutriservice.add_client %}
+        <a class="btn btn-primary" href="{% url 'client-create' %}">Novo cliente</a>
+      {% endif %} {% endcomment %}
+      {% if client_list %}
+        <ul class="list-unstyled team-members">
+          {% for client in client_list %}
+            <li>
+              <div class="row">
+                <div class="col-md-8 col-8">
+                  <a href="{{ client.get_absolute_url }}">{{ client.name }}</a>
+                </div>
+                <div class="col-md-4 col-4 text-right">
+                  {% comment %} <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn> {% endcomment %}
+                  {% if perms.nutriservice.change_client %} <a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Editar</a>{% endif %}
+                  {% if perms.nutriservice.delete_client %} <a class="btn btn-secondary" href="{% url 'client-delete' client.pk %}">Apagar</a>{% endif %}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Não tem clientes.</p>
+      {% endif %}  
+    </div>
+  </div>

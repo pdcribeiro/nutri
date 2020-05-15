@@ -1,5 +1,11 @@
 {% extends "base_generic.html" %}
 
+{% block sidebar %}
+  {% with url='login' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
 {% block content %}
 
   {% if form.errors %}

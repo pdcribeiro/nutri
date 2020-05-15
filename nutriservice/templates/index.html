@@ -1,5 +1,11 @@
 {% extends "base_generic.html" %}
 
+{% block sidebar %}
+  {% with url='home' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
 {% block content %}
   <h1>Consultas</h1>
   <p>Bem vindo(a) ao teu espaço para consultas de nutrição online.</p>
