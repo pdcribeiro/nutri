@@ -1,40 +1,39 @@
-<!doctype html>
-<html lang="pt">
-  <head>
-    <title>Plano</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/3a658d280c.js" crossorigin="anonymous"></script>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/plan.css' %}">
-  </head>
-  <body>
+{% extends '../base_generic.html' %}
 
-    <div class="container-lg">
-      <form action="" method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
+{% block title %}
+  <title>Planeamento - rutinutri</title>
+{% endblock %}
 
-        {% include './client_info/index.html' with columns=columns.client_info %}
-        {% include './calculations/index.html' %}
-        {% include './macronutrients/index.html' with columns=columns.macronutrients %}
-        {% include './food_dosages/index.html' with unit='doses' %}
-        
-        <a href="{{ next }}" class="btn btn-secondary float-right">Cancelar</a>
-        <input type="submit" class="btn btn-primary float-right" value="Guardar">
-      </form>
-    </div>
+{% load static %}
+{% block links %}
+  <link rel="stylesheet" href="{% static 'css/plan.css' %}">
+{% endblock %}
 
-    <iframe id="calc" src="{% static 'calc/calc.html' %}" style="display: none;"></iframe>
+{% block page %}Planeamento{% endblock %}
 
-    <script type='text/javascript'>
-      var jsContext = {{ js_context|safe }};
-    </script>
-    <script src="{% static 'js/plan.js' %}"></script>
-  </body>
-</html>
+{% block content %}
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% include './client_info/index.html' with columns=columns.client_info %}
+    {% include './calculations/index.html' %}
+    {% include './macronutrients/index.html' with columns=columns.macronutrients %}
+    {% include './food_dosages/index.html' with columns=None unit='doses' %}
+    
+    <a href="{{ next }}" class="btn btn-secondary float-right">Cancelar</a>
+    <input type="submit" class="btn btn-primary float-right mr-4" value="Guardar">
+  </form>
+
+  <iframe id="calc" src="{% static 'calc/calc.html' %}" class="d-none"></iframe>
+{% endblock %}
+
+{% block scripts %}
+  <script type='text/javascript'>
+    var jsContext = {{ js_context|safe }};
+  </script>
+  <script src="{% static 'js/plan.js' %}"></script>
+{% endblock %}
 
       {% comment %} {% if form.errors %}
           {% for field in form %}

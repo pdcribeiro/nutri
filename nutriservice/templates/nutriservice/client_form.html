@@ -1,31 +1,50 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+  <title>Dados do cliente - rutinutri</title>
+{% endblock %}
+
+{% block page %}Dados do cliente{% endblock %}
+
 {% block content %}
   <form action="" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
-    <table>
-      {{ form.as_table }}
-    </table>
-    <table class="data-table">
-      <tr>
-        <th>Refeição</th>
-        <th>Hora</th>
-        <th>Local</th>
-        <!-- <th>Composição</th>
-        <th>Líquidos</th> -->
-      </tr>
-      {% comment %} {{ form.meals_formset.management_form }}
-      {% for meal_form in form.meals_formset %}
-        <tr>
-          {{ meal_form.id }}
-          <td>{{ meal_form.meal_name }}</td>
-          {% for field in meal_form.visible_fields %}
-            <td>{{ field.errors }}{{ field }}</td>
-          {% endfor %}
-        </tr>
-      {% endfor %} {% endcomment %}
-    </table>
-    <input type="submit" value="Guardar">
+    <div class="table-responsive-lg mb-4">
+      <table>
+        {{ form.as_table }}
+      </table>
+    </div>
+    <div class="card card-plain">
+      <div class="card-header">
+        <h4 class="card-title">Refeições</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive-lg">
+          <table class="table data-table">
+            <thead class="text-primary">
+              <tr>
+                <th>Refeição</th>
+                <th>Hora</th>
+                <th>Local</th>
+                <!-- <th>Composição</th>
+                <th>Líquidos</th> -->
+              </tr>
+            </thead>
+            {{ form.meals_formset.management_form }}
+            {% for meal_form in form.meals_formset %}
+              <tr>
+                {{ meal_form.id }}
+                <td>{{ meal_form.meal_name }}</td>
+                {% for field in meal_form.visible_fields %}
+                  <td>{{ field.errors }}{{ field }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+    <input type="submit" class="btn btn-primary float-right" value="Guardar">
   </form>
 {% endblock %}

@@ -56,35 +56,44 @@ function findDosages(totals, initialDosages) {
     }
   }
   
-  let { totalProteins, totalCarbs, totalFats } = totals;
-  const { regularMilk, lowFatMilk, fruit, vegetables } = initialDosages;
-  const initialDosagesArray = [regularMilk, lowFatMilk, fruit, vegetables];
+  let { totalProteins, totalCarbs, totalFats, totalCalories } = totals;
+  const {
+    regularMilk, lowFatMilk, solidYoghurt, liquidYoghurt, whey, fruit, vegetables
+  } = initialDosages;
+  const initialDosagesArray = [
+    regularMilk, lowFatMilk, solidYoghurt, liquidYoghurt, whey, fruit, vegetables
+  ];
 
-  totalProteins -= dot(initialDosagesArray, [7, 7, 0, 2]);
-  totalCarbs -= dot(initialDosagesArray, [12, 10, 10, 5]);
-  totalFats -= dot(initialDosagesArray, [4, 1.2, 0, 0]);
-  const totalsArray = [totalProteins, totalCarbs, totalFats];
+  totalProteins -= dot(initialDosagesArray, [7, 7, 16.5, 12.1, 19.5, 0, 2]);
+  totalCarbs -= dot(initialDosagesArray, [12, 10, 6, 8.2, 1, 10, 5]);
+  totalFats -= dot(initialDosagesArray, [4, 1.2, 0.3, 0.7, 1.8, 0, 0]);
+  totalCalories -= dot(initialDosagesArray, [106, 80, 93, 87, 98, 50, 25]);
+  const totalsArray = [totalProteins, totalCarbs, totalFats, totalCalories];
 
   const maxProteins = Math.ceil(Math.min(totalProteins / 7, totalFats / 3));
   const maxCarbs = Math.ceil(Math.min(totalProteins / 2, totalCarbs / 15));
   const maxFats = Math.ceil(totalFats / 5);
-  
+
   const factorVectors = [
     [7, 2, 0],
     [0, 15, 0],
     [3, 0, 5],
+    [55, 70, 45],
   ];
   
   let dosages, optimalDosages = null;
   let minError = 1000;
 
-  for (let proteins = 0, error = 0; proteins < maxProteins; proteins++) {
-    for (let carbs = 0; carbs < maxCarbs; carbs++) {
-      for (let fats = 0; fats < maxFats; fats++) {
+  for (let proteins = 7, error = 0; proteins <= maxProteins; proteins++) {
+    for (let carbs = 7; carbs <= maxCarbs; carbs++) {
+      for (let fats = 4; fats <= maxFats; fats++) {
         dosages = [proteins, carbs, fats];
         error = factorVectors.reduce(
-          (sum, vec, idx) => sum += Math.abs(dot(dosages, vec) - totalsArray[idx])
+          (sum, vec, idx) => sum += (Math.abs(dot(dosages, vec) - totalsArray[idx]) / totalsArray[idx])
         , 0);
+        // if ([18, 15, 4].every((val, idx) => val === dosages[idx])) {
+        //   console.log('error: ' + error);
+        // }
         if (error < minError) {
           optimalDosages = [...dosages];
           minError = error;
@@ -94,24 +103,14 @@ function findDosages(totals, initialDosages) {
   }
   // console.log({
   //   optimalDosages,
-  //   errors: factorVectors.map((val, idx) => dot(optimalDosages, val) - totalsArray[idx]),
+  //   errors: [...factorVectors.map((val, idx) => dot(optimalDosages, val) - totalsArray[idx]), minError],
   // });
   $('#optimal_proteins').text(optimalDosages[0]);
   $('#optimal_carbs').text(optimalDosages[1]);
   $('#optimal_fats').text(optimalDosages[2]);
 }
-/* findDosages({
-  totalProteins: 156,
-  totalCarbs: 313,
-  totalFats: 69,
-}, {
-  regularMilk: 0,
-  lowFatMilk: 3,
-  vegetables: 3,
-  fruit: 3,
-}); */
 
-function render() {  //TODO try without parseFloat
+function render() {  //TODO? try without parseFloat
   const goalWeight = parseFloat($('#goal_weight_efield input').val());
   const goalBodyFat = parseFloat($('#goal_body_fat_efield input').val());
   const newPal = $('#new_pal_efield select').val();
@@ -122,6 +121,9 @@ function render() {  //TODO try without parseFloat
 
   const regularMilk = parseInt($('#regular_milk_efield input').val());
   const lowFatMilk = parseInt($('#low_fat_milk_efield input').val());
+  const solidYoghurt = parseInt($('#solid_yoghurt_efield input').val());
+  const liquidYoghurt = parseInt($('#liquid_yoghurt_efield input').val());
+  const whey = parseInt($('#whey_efield input').val());
   const fruit = parseInt($('#fruit_efield input').val());
   const vegetables = parseInt($('#vegetables_efield input').val());
 
@@ -145,6 +147,9 @@ function render() {  //TODO try without parseFloat
 
   $('#regular_milk').text(regularMilk);
   $('#low_fat_milk').text(lowFatMilk);
+  $('#solid_yoghurt').text(solidYoghurt);
+  $('#liquid_yoghurt').text(liquidYoghurt);
+  $('#whey').text(whey);
   $('#fruit').text(fruit);
   $('#vegetables').text(vegetables);
   
@@ -180,12 +185,8 @@ function render() {  //TODO try without parseFloat
     totalProteins: proteinsWeight,
     totalCarbs: carbsWeight,
     totalFats: fatsWeight,
-  }, {
-    regularMilk: regularMilk,
-    lowFatMilk: lowFatMilk,
-    fruit: fruit,
-    vegetables: vegetables,
-  }));
+    totalCalories: goalDailyEnergy,
+  }, { regularMilk, lowFatMilk, solidYoghurt, liquidYoghurt, whey, fruit, vegetables }));
 }
 
 function addEventListeners() {
@@ -214,18 +215,13 @@ function addEventListeners() {
     event.preventDefault();
     save(this, $(this).parent().siblings('input').val());
   });
-  
-  // $('.efield-cancel').click(function(event) {
-  //   event.preventDefault();
-  //   cancel(this);
-  // });
 
   $('.efield input[type!="range"], .efield select').blur(function() {
     if (!event.relatedTarget || !event.relatedTarget.classList.contains('efield-save')) {
       cancel(this);
     }
   }).keydown(function(event) {
-    if (event.key === 'Enter') save(this, $(this).val());
+    if (event.key === 'Enter' || event.key === 'Tab') save(this, $(this).val());
     else if (event.key === 'Escape') cancel(this);
   });
 

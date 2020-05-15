@@ -18,7 +18,7 @@ class PlansInline(admin.TabularInline):
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'nutritionist', 'name', 'born',)
+    list_display = ('id', 'user', 'nutritionist', 'name', 'age',)
     inlines = [MealsInline, PlansInline, MeetingsInline]
 
 @admin.register(Meal)

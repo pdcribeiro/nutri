@@ -1,4 +1,4 @@
-{% extends '../common/row.html' %}
+{% extends 'common/row.html' %}
 
 {% block icon %}fas fa-bed{% endblock %}
 
@@ -7,6 +7,6 @@
 {% comment %} {% block description %}{% endblock %} {% endcomment %}
 
 {% block fields %}
-  {% include '../common/field.html' with name='bmr' value='...' %}
-  {% include '../common/field.html' with name='goal_bmr' value='...' %}
+  {% include 'common/field.html' with name='bmr' value='...' %}
+  {% include 'common/field.html' with name='goal_bmr' value='...' %}
 {% endblock %}

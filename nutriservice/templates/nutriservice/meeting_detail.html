@@ -1,7 +1,13 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+  <title>Consulta - rutinutri</title>
+{% endblock %}
+
+{% block page %}Consulta{% endblock %}
+
 {% block content %}
-  <h1>Consulta: {{ meeting.date }}</h1>
+  <h2>Data: {{ meeting.date }}</h2>
 
   <p><strong>Peso:</strong> {{ meeting.weight }} kg</p>
 

@@ -1,7 +1,18 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+  <title>Home - rutinutri</title>
+{% endblock %}
+
+{% block sidebar %}
+  {% with url='home' %}
+    {{ block.super }}
+  {% endwith %}
+{% endblock %}
+
+{% block page %}Home{% endblock %}
+
 {% block content %}
-  <h1>Consultas</h1>
   <p>Bem vindo(a) ao teu espaço para consultas de nutrição online.</p>
   <h2>Resumo</h2>
   <ul>

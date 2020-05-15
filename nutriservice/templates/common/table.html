@@ -1,0 +1,20 @@
+<div class="table-responsive-lg">
+  <table class="table" id="{% block id %}{% endblock %}">
+    <thead class="text-primary">
+      <tr>
+        <th scope="col"></th>
+        {% for col in columns %}
+          <th scope="col" class="text-center">{{ col }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% block rows %}
+        {% comment %} {% for row in rows %}
+          <th scope="row" class="text-center">{{ row }}</th>
+        {% endfor %} {% endcomment %}
+        empty_table
+      {% endblock %}
+    </tbody>
+  </table>
+</div>

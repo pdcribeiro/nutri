@@ -1,5 +1,11 @@
-{% extends '../common/table.html' %}
+{% extends 'common/table.html' %}
 
 {% block rows %}
-  {% include './row_initial.html' %}
+  {% include 'common/row.html' with field_type='efield' row_name='Leite meio gordo' name='regular_milk' extra='250 ml/dose' input=form.regular_milk  %}
+  {% include 'common/row.html' with field_type='efield' row_name='Leite magro' name='low_fat_milk' extra='250 ml/dose' input=form.low_fat_milk %}
+  {% include 'common/row.html' with field_type='efield' row_name='Iogurte sólido' name='solid_yoghurt' extra='150 g/dose' input=form.solid_yoghurt %}
+  {% include 'common/row.html' with field_type='efield' row_name='Iogurte líquido' name='liquid_yoghurt' extra='170 ml/dose' input=form.liquid_yoghurt %}
+  {% include 'common/row.html' with field_type='efield' row_name='Whey' name='whey' extra='25 g/dose' input=form.whey %}
+  {% include 'common/row.html' with field_type='efield' row_name='Fruta' name='fruit' extra='inteira' input=form.fruit %}
+  {% include 'common/row.html' with field_type='efield' row_name='Vegetais' name='vegetables' extra='100 g/dose' input=form.vegetables %}
 {% endblock %}

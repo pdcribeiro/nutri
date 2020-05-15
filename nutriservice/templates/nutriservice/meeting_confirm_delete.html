@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block title %}
+  <title>Apagar consulta - rutinutri</title>
+{% endblock %}
+
+{% block page %}Apagar consulta{% endblock %}
+
+{% block content %}
+
+<p>Quer apagar a consulta "{{ meeting }}"?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Sim, apagar">
+</form>
+
+{% endblock %}

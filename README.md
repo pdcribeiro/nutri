@@ -2,14 +2,24 @@
 
 ## TODOs
 
-* Enviar email!!!
+### WIP
+
+* Send email to NIDDK guy
+* BootstrapMixin to add form-control class, etc. to input elements
+* Duplicate plan
+* Meals
+* New meeting/plan: show client field when creating and coming from meeting/plan list pages
 
 
-### Planning
+### Plan pages
 
-1. Plan page
-  * Food dosages distribution table <----- WIP
-    * Set minimum limit values or redo table
+Meals page
+  * ...
+  * Intermediate 'dosage distribution per meal' table
+
+Plan page
+  * Make 
+  * plan.js: Use 'fields', 'cfields' and 'efields' objects
   * Compare performance of two versions of maxProteins/Carbs/Fats calculation
   * Fix select elements width
   * Review table column widths
@@ -21,6 +31,11 @@
     * Allow text input
     * Find better way to center horizontally
     * Review and improve template code
+  * Food dosages distribution table
+    * Establish min/max errors? Account for average value, spread?
+    * Peso/volume por dose igual para todos? Fazer média?
+    * ? Rename fruit to fruits
+  * Test dosages calculator
 
   * Tab and arrows navigation
   * Use Vue / React to minimize rendering?
@@ -41,12 +56,16 @@
       * $scope.weightRangeLow
       * $scope.weightRangeHigh
 
-2. Meal page
-
-3. Measurements page
+Measurements page
   * Move height to measurements
 
-4. Appointment "timeline" / nav element
+Appointment "timeline" / nav element
+
+
+### Plans list page
+
+* New plan
+  * Intermediate page to get client
 
 
 ### Clients list page
@@ -58,6 +77,7 @@
 
 
 ### Misc
+* White/dark switch
 * Review permissions for everything (e.g. individual plans, etc.)
 * Don't add "?next=" when current page is login page
 * Dynamic meal formset. Variable number of fields.
@@ -93,3 +113,37 @@ activityParam = BMR * (0.9 * PAL - 1) / weight * (1.0 + change / 100.0)
 change = (activityParam / BMR / (0.9 * PAL - 1) * weight - 1) * 100
 PAL = (activityParam / BMR * weight / (1.0 + change / 100.0) + 1) / 0.9
 change = ((0.9 * newPAL - 1) / (0.9 * PAL - 1) - 1) * 100
+
+
+### Clients page
+
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">Clientes</h4>
+    </div>
+    <div class="card-body">
+      {% comment %} {% if perms.nutriservice.add_client %}
+        <a class="btn btn-primary" href="{% url 'client-create' %}">Novo cliente</a>
+      {% endif %} {% endcomment %}
+      {% if client_list %}
+        <ul class="list-unstyled team-members">
+          {% for client in client_list %}
+            <li>
+              <div class="row">
+                <div class="col-md-8 col-8">
+                  <a href="{{ client.get_absolute_url }}">{{ client.name }}</a>
+                </div>
+                <div class="col-md-4 col-4 text-right">
+                  {% comment %} <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn> {% endcomment %}
+                  {% if perms.nutriservice.change_client %} <a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Editar</a>{% endif %}
+                  {% if perms.nutriservice.delete_client %} <a class="btn btn-secondary" href="{% url 'client-delete' client.pk %}">Apagar</a>{% endif %}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Não tem clientes.</p>
+      {% endif %}  
+    </div>
+  </div>

@@ -26,15 +26,16 @@ class Client(models.Model):
     
     name = models.CharField(max_length=200, verbose_name='Nome')
     gender = models.CharField(max_length=1, choices=GENDER, default='f', verbose_name='Sexo')
-    born = models.DateField(null=True, blank=True, verbose_name='Data de nascimento')
+    # born = models.DateField(verbose_name='Data de nascimento')
+    age = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)], verbose_name='Idade (anos)')
     
-    height = models.IntegerField(validators=[MinValueValidator(50), MaxValueValidator(300)], null=True, blank=True, verbose_name='Altura (cm)')
-    weight = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name='Peso atual (kg)')
+    height = models.IntegerField(validators=[MinValueValidator(50), MaxValueValidator(300)], verbose_name='Altura (cm)')
+    weight = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Peso atual (kg)')
     body_fat = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, verbose_name='Gordura corporal (%)')
-    pal = models.DecimalField(max_digits=3, decimal_places=2, choices=PAL, default=PAL[1][0], null=True, blank=True, verbose_name='Atividade física atual')
+    pal = models.DecimalField(max_digits=3, decimal_places=2, choices=PAL, default=PAL[1][0], verbose_name='Atividade física atual')
 
     class Meta:
-        ordering = ['name', 'born']
+        ordering = ['name', 'age']
 
     def get_absolute_url(self):
         """Returns the url to access Client details."""
@@ -43,6 +44,9 @@ class Client(models.Model):
     def __str__(self):
         """String to represent Client model."""
         return f'{self.name} ({self.id})'
+
+    def get_bmi(self):
+        return round(float(self.weight) / (self.height / 100) ** 2, 1)
 
 
 class Meal(models.Model):
@@ -101,10 +105,17 @@ class Plan(models.Model):
     fats = models.IntegerField(default=25, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de lípidos (%)')
     
     regular_milk = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de leite meio-gordo (doses)')
-    low_fat_milk = models.IntegerField(default=3, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de leite magro (doses)')
+    low_fat_milk = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de leite magro (doses)')
+    solid_yoghurt = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de iogurte sólido (doses)')
+    liquid_yoghurt = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de iogurte líquido (doses)')
+    whey = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de whey (doses)')
     fruit = models.IntegerField(default=3, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de fruta (doses)')
     vegetables = models.IntegerField(default=4, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de vegetais (doses)')
     
+    # proteins_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Carne e equivalentes (doses)')
+    # carbs_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Pão e equivalentes (doses)')
+    # fats_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Gordura (doses)')
+
     class Meta:
         ordering = ['-date']
 

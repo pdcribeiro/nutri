@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
@@ -9,9 +10,9 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from nutriservice.models import Client, Meeting, Plan, PAL
-# from nutriservice.forms import ClientForm, MealsFormSet
-from nutriservice.forms import PlanForm
+from nutriservice.forms import ClientForm, MeetingForm, PlanForm
 
+@login_required
 def index(request):
     """View function for site home page."""
 
@@ -43,35 +44,64 @@ class ClientDetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'nutriservice.view_client'
     model = Client
 
-# class ClientCreate(PermissionRequiredMixin, generic.CreateView):
-#     permission_required = 'nutriservice.add_client'
-#     model = Client
-#     form_class = ClientForm
-
-#     def form_valid(self, form):
-#         if self.request.user.groups.filter(name='nutritionist').exists():
-#             form.instance.nutritionist = self.request.user
-#         return super().form_valid(form)
-
-# class ClientUpdate(PermissionRequiredMixin, generic.UpdateView):
-#     permission_required = 'nutriservice.change_client'
-#     model = Client
-#     form_class = ClientForm
-
 class ClientCreate(PermissionRequiredMixin, generic.CreateView):
     permission_required = 'nutriservice.add_client'
     model = Client
-    fields = '__all__'
+    form_class = ClientForm
+
+    def form_valid(self, form):
+        if self.request.user.groups.filter(name='nutritionist').exists():
+            form.instance.nutritionist = self.request.user
+        return super().form_valid(form)
 
 class ClientUpdate(PermissionRequiredMixin, generic.UpdateView):
     permission_required = 'nutriservice.change_client'
     model = Client
-    fields = '__all__'
+    form_class = ClientForm
 
 class ClientDelete(PermissionRequiredMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_client'
     model = Client
     success_url = reverse_lazy('clients')
+
+
+class MeetingListView(PermissionRequiredMixin, generic.ListView):
+    permission_required = 'nutriservice.view_meeting'
+    model = Meeting
+    paginate_by = 10
+
+class MeetingDetailView(PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'nutriservice.view_meeting'
+    model = Meeting
+
+class MeetingMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'next': self.request.GET.get('next', None) or reverse('plans')})
+        return context
+    
+    def get_success_url(self):
+        return self.request.GET.get('next', None) or reverse('meetings')
+
+class MeetingCreate(PermissionRequiredMixin, MeetingMixin, generic.CreateView):
+    permission_required = 'nutriservice.add_meeting'
+    model = Meeting
+    form_class = MeetingForm
+
+    def form_valid(self, form):
+        form.instance.client = get_object_or_404(Client, pk=self.kwargs['client_pk'])
+        form.instance.date = datetime.date.today()
+        return super().form_valid(form)
+
+class MeetingUpdate(PermissionRequiredMixin, MeetingMixin, generic.UpdateView):
+    permission_required = 'nutriservice.change_meeting'
+    model = Meeting
+    form_class = MeetingForm
+
+class MeetingDelete(PermissionRequiredMixin, MeetingMixin, generic.DeleteView):
+    permission_required = 'nutriservice.delete_meeting'
+    model = Meeting
 
 
 class PlanListView(PermissionRequiredMixin, generic.ListView):
@@ -110,9 +140,10 @@ class PlanMixin:
         today = datetime.date.today()
         js_context = {
             'gender': client.gender,
-            'age': today.year - client.born.year -
-                ((today.month, today.day) <
-                (client.born.month, client.born.day)),
+            # 'age': today.year - client.born.year -
+            #     ((today.month, today.day) <
+            #     (client.born.month, client.born.day)),
+            'age': client.age,
             'height': float(client.height),
             'weight': float(client.weight),
             'body_fat': float(client.body_fat),
@@ -128,8 +159,9 @@ class PlanMixin:
                 'calculations': ['Atual', 'Objetivo'],
                 'niddk_calculator': ['Duração', 'Mudança no PAL', 'Atingir', 'Manter'],
                 'macronutrients': ['Percentagem', 'Quantidade', 'Quantidade por peso'],
-                'initial_dosages': ['Leite meio-gordo', 'Leite magro', 'Fruta', 'Vegetais'],
-                'optimal_dosages': ['Carne e eq', 'Pão e eq', 'Gordura'],
+                # 'initial_dosages': ['Leite meio-gordo', 'Leite magro', 'Fruta', 'Vegetais'],
+                # 'optimal_dosages': ['Carne e eq', 'Pão e eq', 'Gordura'],
+                'food_dosages': ['Quantidade'],
             },
             'js_context': json.dumps(js_context),
         })
@@ -158,13 +190,3 @@ class PlanUpdate(PermissionRequiredMixin, PlanMixin, generic.UpdateView):
 class PlanDelete(PermissionRequiredMixin, PlanMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_plan'
     model = Plan
-
-
-class MeetingListView(PermissionRequiredMixin, generic.ListView):
-    permission_required = 'nutriservice.view_meeting'
-    model = Meeting
-    paginate_by = 10
-
-class MeetingDetailView(PermissionRequiredMixin, generic.DetailView):
-    permission_required = 'nutriservice.view_meeting'
-    model = Meeting

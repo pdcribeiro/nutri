@@ -1,10 +1,16 @@
-{% extends '../common/card.html' %}
+{% extends 'common/card.html' %}
 
 {% block name %}Distribuição de doses{% endblock %}
 
 {% block description %}Defina as doses de laticínios, fruta e vegetais{% endblock %}
 
 {% block tables %}
-  {% include './table_initial.html' with columns=columns.initial_dosages %}
-  {% include './table_optimal.html' with columns=columns.optimal_dosages %}
+  <div class="row justify-content-around align-items-center">
+    <div class="col-sm">
+      {% include './table_initial.html' %}
+    </div>
+    <div class="col-sm">
+      {% include './table_optimal.html' %}
+    </div>
+  </div>
 {% endblock %}

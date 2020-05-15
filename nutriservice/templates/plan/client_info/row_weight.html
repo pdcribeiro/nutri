@@ -1,4 +1,4 @@
-{% extends '../common/row.html' %}
+{% extends 'common/row.html' %}
 
 {% block icon %}fas fa-balance-scale{% endblock %}
 
@@ -7,6 +7,6 @@
 {% block description %}Defina o peso desejado{% endblock %}
 
 {% block fields %}
-  {% include '../common/field.html' with name='weight' value=client.weight %}
-  {% include '../common/efield.html' with name='goal_weight' extra='...' input=form.goal_weight %}
+  {% include 'common/field.html' with name='weight' value=client.weight %}
+  {% include 'common/efield.html' with name='goal_weight' extra='...' input=form.goal_weight %}
 {% endblock %}

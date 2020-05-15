@@ -1,8 +1,7 @@
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 
-from nutriservice.models import Client, Meal, Plan
-
+from nutriservice.models import Client, Meeting, Meal, Plan
 
 MealsBaseFormSet = inlineformset_factory(Client, Meal, fields='__all__', extra=6, can_delete=False, max_num=6)
 
@@ -30,7 +29,7 @@ class MealsFormSet(MealsBaseFormSet):
 class ClientForm(ModelForm):
     class Meta:
         model = Client
-        fields = ['name', 'born']
+        exclude = ['user', 'nutritionist']
 
     def __init__(self, *args, data=None, instance=None, **kwargs):
         super().__init__(*args, data=data, instance=instance, **kwargs)
@@ -43,6 +42,12 @@ class ClientForm(ModelForm):
         self.meals_formset.instance = super().save(*args, **kwargs)
         self.meals_formset.save(*args, **kwargs)
         return self.instance
+
+
+class MeetingForm(ModelForm):
+    class Meta:
+        model = Meeting
+        exclude = ['client']
 
 
 class PlanForm(ModelForm):
