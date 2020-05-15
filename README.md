@@ -9,6 +9,7 @@
 * Duplicate plan
 * Meals
 * New meeting/plan: show client field when creating and coming from meeting/plan list pages
+* Generalize tables
 
 
 ### Plan pages
