@@ -1,14 +1,14 @@
 {% extends "base_generic.html" %}
 
 {% block title %}
-  <title>Apagar plano - rutinutri</title>
+  <title>Apagar consulta - rutinutri</title>
 {% endblock %}
 
-{% block page %}Apagar plano{% endblock %}
+{% block page %}Apagar consulta{% endblock %}
 
 {% block content %}
 
-<p>Quer apagar o plano "{{ plan }}"?</p>
+<p>Quer apagar a consulta "{{ meeting }}"?</p>
 
 <form action="" method="POST">
   {% csrf_token %}

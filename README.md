@@ -2,20 +2,23 @@
 
 ## TODOs
 
-* Enviar email!!!
+### WIP
 
-* Change 'born' to 'age'
+* Send email to NIDDK guy
+* BootstrapMixin to add form-control class, etc. to input elements
 * Duplicate plan
+* Meals
+* New meeting/plan: show client field when creating and coming from meeting/plan list pages
 
 
-### Planning
+### Plan pages
 
-1. Plan page
-  * Food dosages distribution table
-    * Establish min/max errors? Account for average value, spread?
-    * Peso/volume por dose igual para todos? Fazer média?
-    * ? Rename fruit to fruits
-  * Use base_generic.html
+Meals page
+  * ...
+  * Intermediate 'dosage distribution per meal' table
+
+Plan page
+  * Make 
   * plan.js: Use 'fields', 'cfields' and 'efields' objects
   * Compare performance of two versions of maxProteins/Carbs/Fats calculation
   * Fix select elements width
@@ -28,6 +31,10 @@
     * Allow text input
     * Find better way to center horizontally
     * Review and improve template code
+  * Food dosages distribution table
+    * Establish min/max errors? Account for average value, spread?
+    * Peso/volume por dose igual para todos? Fazer média?
+    * ? Rename fruit to fruits
   * Test dosages calculator
 
   * Tab and arrows navigation
@@ -49,14 +56,10 @@
       * $scope.weightRangeLow
       * $scope.weightRangeHigh
 
-2. Meals page
-  * ...
-  * Intermediate 'dosage distribution per meal' table
-
-3. Measurements page
+Measurements page
   * Move height to measurements
 
-4. Appointment "timeline" / nav element
+Appointment "timeline" / nav element
 
 
 ### Plans list page
@@ -74,6 +77,7 @@
 
 
 ### Misc
+* White/dark switch
 * Review permissions for everything (e.g. individual plans, etc.)
 * Don't add "?next=" when current page is login page
 * Dynamic meal formset. Variable number of fields.

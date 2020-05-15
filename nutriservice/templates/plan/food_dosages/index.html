@@ -1,4 +1,4 @@
-{% extends '../common/card.html' %}
+{% extends 'common/card.html' %}
 
 {% block name %}Distribuição de doses{% endblock %}
 
@@ -6,10 +6,10 @@
 
 {% block tables %}
   <div class="row justify-content-around align-items-center">
-    <div class="col-5">
+    <div class="col-sm">
       {% include './table_initial.html' %}
     </div>
-    <div class="col-5">
+    <div class="col-sm">
       {% include './table_optimal.html' %}
     </div>
   </div>

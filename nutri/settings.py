@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'crispy_forms',
     'nutriservice',
 ]
 
@@ -126,7 +127,6 @@ STATIC_URL = '/static/'
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
 
-
 # Logs emails sent to the console (dev only)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  #DEV
 
@@ -142,3 +142,12 @@ DATE_INPUT_FORMATS = [
     '%d/%m/%Y',
     '%d/%m/%y',
 ]
+
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# ALLOWED_HOSTS = [
+#     '127.0.0.1',
+#     '192.168.1.5',
+# ]
+
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'

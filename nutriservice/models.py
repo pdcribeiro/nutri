@@ -45,6 +45,9 @@ class Client(models.Model):
         """String to represent Client model."""
         return f'{self.name} ({self.id})'
 
+    def get_bmi(self):
+        return round(float(self.weight) / (self.height / 100) ** 2, 1)
+
 
 class Meal(models.Model):
     """The Meal model."""
@@ -109,6 +112,10 @@ class Plan(models.Model):
     fruit = models.IntegerField(default=3, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de fruta (doses)')
     vegetables = models.IntegerField(default=4, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de vegetais (doses)')
     
+    # proteins_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Carne e equivalentes (doses)')
+    # carbs_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Pão e equivalentes (doses)')
+    # fats_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Gordura (doses)')
+
     class Meta:
         ordering = ['-date']
 

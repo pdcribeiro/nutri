@@ -14,7 +14,7 @@
   </th>
   {% block fields %}
     {% if field_type %}
-      {% with 'plan/common/'|add:field_type|add:'.html' as template %}
+      {% with 'common/'|add:field_type|add:'.html' as template %}
         {% include template %}
       {% endwith %}
     {% endif %}

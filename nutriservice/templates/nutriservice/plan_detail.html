@@ -1,7 +1,12 @@
 {% extends "base_generic.html" %}
 
+{% block title %}
+  <title>Plano - rutinutri</title>
+{% endblock %}
+
+{% block page %}Plano{% endblock %}
+
 {% block content %}
-  <h1>Plano</h1>
   {% if perms.nutriservice.add_plan %}
     <a class="btn btn-primary" href="{% url 'plan-update' plan.pk %}?next={{request.path}}">Editar</a>
   {% endif %}

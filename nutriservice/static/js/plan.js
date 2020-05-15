@@ -215,18 +215,13 @@ function addEventListeners() {
     event.preventDefault();
     save(this, $(this).parent().siblings('input').val());
   });
-  
-  // $('.efield-cancel').click(function(event) {
-  //   event.preventDefault();
-  //   cancel(this);
-  // });
 
   $('.efield input[type!="range"], .efield select').blur(function() {
     if (!event.relatedTarget || !event.relatedTarget.classList.contains('efield-save')) {
       cancel(this);
     }
   }).keydown(function(event) {
-    if (event.key === 'Enter') save(this, $(this).val());
+    if (event.key === 'Enter' || event.key === 'Tab') save(this, $(this).val());
     else if (event.key === 'Escape') cancel(this);
   });
 

@@ -1,48 +1,132 @@
 {% extends "base_generic.html" %}
 
-{% block content %}
-  <h1>Clientes</h1>
-  <h2>{{ client.name }}</h2>
-  <p><strong>Idade:</strong> {{ client.age }}</p>
-  
+{% block title %}
+  <title>Dados do cliente - rutinutri</title>
+{% endblock %}
+
+{% block page %}Dados do cliente{% endblock %}
+
+{% block navbar %}
   {% if perms.nutriservice.change_client %}
-    <a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Editar</a>
+    <a class="btn btn-primary float-right mr-4" href="{% url 'client-update' client.pk %}">Editar</a>
   {% endif %}
   {% if perms.nutriservice.delete_client %}
-    <a class="btn btn-secondary" href="{% url 'client-delete' client.pk %}">Apagar</a>
+    <a class="btn btn-secondary float-right" href="{% url 'client-delete' client.pk %}">Apagar</a>
   {% endif %}
+{% endblock %}
 
-  <div style="margin-left:20px;margin-top:20px">
-    <h4>Planos</h4>
-    {% if perms.nutriservice.add_plan %}
-      <a class="btn btn-primary" href="{% url 'plan-create' client.pk %}?next={{request.path}}">Novo plano</a>
-    {% endif %}
-    {% for plan in client.plan_set.all %}
-      <hr>
-      {% comment %} <p><strong>Consulta:</strong> {{ plan.meeting }}</p> {% endcomment %}
-      <div class="row">
-        <div class="col-sm-10">
-          <p><strong>Data:</strong> {{ plan.date }}</p>
-          <p><strong>Calorias:</strong> {{ plan.daily_energy }} kcal/dia</p>
-        </div>
-        <div class="col-sm-2">
-            {% if perms.nutriservice.add_plan %}
-              <a class="btn btn-primary" href="{% url 'plan-update' plan.pk %}?next={{request.path}}">Editar</a>
-            {% endif %}
-            {% if perms.nutriservice.delete_plan %}
-              <a class="btn btn-secondary" href="{% url 'plan-delete' plan.pk %}?next={{request.path}}">Apagar</a>
-            {% endif %}
-        </div>
-      </div>
-    {% endfor %}
+{% block content %}
+  <h2>{{ client.name }}</h2>
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">Informações gerais</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Sexo:</strong> {{ client.get_gender_display }}</p>
+      <p><strong>Idade:</strong> {{ client.age }} anos</p>
+      <p><strong>Altura:</strong> {{ client.height }} cm</p>
+      <p><strong>Peso:</strong> {{ client.weight }} kg</p>
+      <p><strong>IMC:</strong> {{ client.get_bmi }} kg/m2</p>
+    </div>
   </div>
 
-  <div style="margin-left:20px;margin-top:20px">
-    <h4>Consultas</h4>
-    {% for meeting in client.meeting_set.all %}
-      <hr>
-      <p><strong>Data:</strong> {{ meeting.date }}</p>
-      <p><strong>Peso:</strong> {{ meeting.weight }} kg</p>
-    {% endfor %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col">
+          <h4 class="card-title">Planos</h4>
+        </div>
+        <div class="col">
+          {% if perms.nutriservice.add_plan %}
+            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{request.path}}">Novo plano</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if client.plan_set %}
+        <div class="table-responsive-lg">
+          <table class="table">
+            <thead class="text-primary">
+              <th>
+                Data
+              </th>
+              <th class="text-right">
+                Energia diária
+              </th>
+            </thead>
+            <tbody>
+              {% for plan in client.plan_set.all %}
+                  <tr>
+                    <td>
+                      {{ plan.date }}
+                    </td>
+                    <td class="text-right">
+                      {{ plan.daily_energy }} kcal/dia
+                    </td>
+                    <td class="text-right">
+                      {% if perms.nutriservice.view_plan %}<a class="btn btn-link" href="{% url 'plan-detail' plan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.nutriservice.change_plan %}<a class="btn btn-link" href="{% url 'plan-update' plan.pk %}?next={{request.path}}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.nutriservice.delete_plan %}<a class="btn btn-link" href="{% url 'plan-delete' plan.pk %}?next={{request.path}}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                    </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p>O cliente não tem planos.</p>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col">
+          <h4 class="card-title">Consultas</h4>
+        </div>
+        <div class="col">
+          {% if perms.nutriservice.add_meeting %}
+            <a class="btn btn-primary float-right" href="{% url 'meeting-create' client.pk %}?next={{request.path}}">Agendar consulta</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if client.meeting_set %}
+        <div class="table-responsive-lg">
+          <table class="table">
+            <thead class="text-primary">
+              <th>
+                Data
+              </th>
+              <th class="text-right">
+                Peso
+              </th>
+            </thead>
+            <tbody>
+              {% for meeting in client.meeting_set.all %}
+                  <tr>
+                    <td>
+                      {{ meeting.date }}
+                    </td>
+                    <td class="text-right">
+                      {{ meeting.weight }} kg
+                    </td>
+                    <td class="text-right">
+                      {% if perms.nutriservice.view_meeting %}<a class="btn btn-link" href="{% url 'meeting-detail' meeting.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.nutriservice.change_meeting %}<a class="btn btn-link" href="{% url 'meeting-update' meeting.pk %}?next={{request.path}}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.nutriservice.delete_meeting %}<a class="btn btn-link" href="{% url 'meeting-delete' meeting.pk %}?next={{request.path}}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                    </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p>O cliente não tem consultas.</p>
+      {% endif %}
+    </div>
   </div>
 {% endblock %}

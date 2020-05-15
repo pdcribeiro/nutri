@@ -1,4 +1,15 @@
-.sidebar-nav {
+/* Hide number input arrows */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+/* .sidebar-nav {
     margin-top: 20px;
     padding: 0;
     list-style: none;
@@ -15,4 +26,11 @@
 }
 .data-table tr:nth-child(even) {
     background-color: #dddddd;
+} */
+
+td .btn {
+  width: 40px;
+  margin: 0;
+  padding: 5px 10px;
+  font-size: large;
 }

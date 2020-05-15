@@ -9,16 +9,6 @@ body {
   color: #495057;
 }
 
-/* Hide number input arrows */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
 
 .field-value {
   font-size: large;
@@ -33,7 +23,7 @@ input[type=number] {
 
 .efield {
   /* background: lightgreen; */
-  width: 100px;
+  width: 150px;
 }
 .efield input {
   width: 75px;
@@ -55,25 +45,6 @@ input[type=number] {
   font-style: italic;
 }
 
-
-.card {
-  padding: 20px 30px;
-  margin: 20px 0;
-  box-shadow: 0 2px 2px 0 #ced4da;
-}
-.card-title {
-  margin-bottom: 5px;
-  font-size: x-large;
-  font-weight: lighter;
-}
-.card-subtitle {
-  margin-bottom: 5px;
-  font-size: medium;
-}
-
-.card .table:not(:last-child) {
-  margin-bottom: 20px;
-}
 
 .table {
   margin-bottom: 0px;
@@ -107,10 +78,9 @@ tbody td {
   width: 15%;
 }
 
-input[type='submit'] {
-  margin: 0 20px 20px 0;
-}
 
-table#optimal_dosages tbody tr {
-  height: 100px;
+@media (min-width: 576px) {
+  table#optimal_dosages tbody tr {
+    height: 100px;
+  }
 }
