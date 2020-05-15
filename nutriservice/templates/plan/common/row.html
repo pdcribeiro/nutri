@@ -1,16 +1,22 @@
 <tr>
-  <th scope="row" class="text-left">
+  <th scope="row" class="align-middle text-left">
     <div class="d-flex align-items-center">
       <i class="{% block icon %}{% endblock %}"></i>
       <div>
         <div class="row-name">
-          {% block name %}{% endblock %}
+          {% block name %}{{ row_name }}{% endblock %}
         </div>
         <div class="row-description text-muted">
-          {% block description %}{% endblock %}
+          {% block description %}{{ row_description }}{% endblock %}
         </div>
       </div>
     </div>
   </th>
-  {% block fields %}row_fields{% endblock %}
+  {% block fields %}
+    {% if field_type %}
+      {% with 'plan/common/'|add:field_type|add:'.html' as template %}
+        {% include template %}
+      {% endwith %}
+    {% endif %}
+  {% endblock %}
 </tr>

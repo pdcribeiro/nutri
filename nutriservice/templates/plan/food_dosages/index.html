@@ -5,6 +5,12 @@
 {% block description %}Defina as doses de laticínios, fruta e vegetais{% endblock %}
 
 {% block tables %}
-  {% include './table_initial.html' with columns=columns.initial_dosages %}
-  {% include './table_optimal.html' with columns=columns.optimal_dosages %}
+  <div class="row justify-content-around align-items-center">
+    <div class="col-5">
+      {% include './table_initial.html' %}
+    </div>
+    <div class="col-5">
+      {% include './table_optimal.html' %}
+    </div>
+  </div>
 {% endblock %}

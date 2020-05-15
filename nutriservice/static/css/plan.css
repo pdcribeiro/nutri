@@ -82,7 +82,7 @@ input[type=number] {
 .table thead th {
   padding: 0;
   padding-bottom: 5px;
-  border-top: none;
+  border: none;
 }
 thead th {
   font-size: small;
@@ -90,7 +90,7 @@ thead th {
 tbody th {
   width: 40%;
 }
-tbody th i {
+tbody th i:not([class='']) {
   width: 50px;
   margin-right: 10px;
   font-size: xx-large;
@@ -109,4 +109,8 @@ tbody td {
 
 input[type='submit'] {
   margin: 0 20px 20px 0;
+}
+
+table#optimal_dosages tbody tr {
+  height: 100px;
 }

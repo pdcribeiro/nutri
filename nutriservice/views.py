@@ -110,9 +110,10 @@ class PlanMixin:
         today = datetime.date.today()
         js_context = {
             'gender': client.gender,
-            'age': today.year - client.born.year -
-                ((today.month, today.day) <
-                (client.born.month, client.born.day)),
+            # 'age': today.year - client.born.year -
+            #     ((today.month, today.day) <
+            #     (client.born.month, client.born.day)),
+            'age': client.age,
             'height': float(client.height),
             'weight': float(client.weight),
             'body_fat': float(client.body_fat),
@@ -128,8 +129,9 @@ class PlanMixin:
                 'calculations': ['Atual', 'Objetivo'],
                 'niddk_calculator': ['Duração', 'Mudança no PAL', 'Atingir', 'Manter'],
                 'macronutrients': ['Percentagem', 'Quantidade', 'Quantidade por peso'],
-                'initial_dosages': ['Leite meio-gordo', 'Leite magro', 'Fruta', 'Vegetais'],
-                'optimal_dosages': ['Carne e eq', 'Pão e eq', 'Gordura'],
+                # 'initial_dosages': ['Leite meio-gordo', 'Leite magro', 'Fruta', 'Vegetais'],
+                # 'optimal_dosages': ['Carne e eq', 'Pão e eq', 'Gordura'],
+                'food_dosages': ['Quantidade'],
             },
             'js_context': json.dumps(js_context),
         })

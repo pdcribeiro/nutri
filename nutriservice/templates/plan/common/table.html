@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table" id="{% block id %}{% endblock %}">
   <thead>
     <tr>
       <th scope="col"></th>
@@ -10,7 +10,7 @@
   <tbody>
     {% block rows %}
       {% comment %} {% for row in rows %}
-        <th scope="col" class="text-center">{{ row }}</th>
+        <th scope="row" class="text-center">{{ row }}</th>
       {% endfor %} {% endcomment %}
       empty_table
     {% endblock %}

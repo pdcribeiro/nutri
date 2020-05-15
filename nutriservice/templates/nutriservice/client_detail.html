@@ -3,7 +3,7 @@
 {% block content %}
   <h1>Clientes</h1>
   <h2>{{ client.name }}</h2>
-  <p><strong>Data de nascimento:</strong> {{ client.born }}</p>
+  <p><strong>Idade:</strong> {{ client.age }}</p>
   
   {% if perms.nutriservice.change_client %}
     <a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Editar</a>

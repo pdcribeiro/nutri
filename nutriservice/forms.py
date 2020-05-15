@@ -30,7 +30,7 @@ class MealsFormSet(MealsBaseFormSet):
 class ClientForm(ModelForm):
     class Meta:
         model = Client
-        fields = ['name', 'born']
+        fields = ['name', 'age']
 
     def __init__(self, *args, data=None, instance=None, **kwargs):
         super().__init__(*args, data=data, instance=instance, **kwargs)

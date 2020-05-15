@@ -4,16 +4,19 @@
 
 * Enviar email!!!
 
+* Change 'born' to 'age'
+* Duplicate plan
+
 
 ### Planning
 
 1. Plan page
-  * Food dosages distribution table <----- WIP
-    * Account for calories error
-    * Add new fields (iogurte sol, liq e whey)
-    * Make tables vertical
+  * Food dosages distribution table
     * Establish min/max errors? Account for average value, spread?
+    * Peso/volume por dose igual para todos? Fazer média?
+    * ? Rename fruit to fruits
   * Use base_generic.html
+  * plan.js: Use 'fields', 'cfields' and 'efields' objects
   * Compare performance of two versions of maxProteins/Carbs/Fats calculation
   * Fix select elements width
   * Review table column widths
@@ -25,6 +28,7 @@
     * Allow text input
     * Find better way to center horizontally
     * Review and improve template code
+  * Test dosages calculator
 
   * Tab and arrows navigation
   * Use Vue / React to minimize rendering?
@@ -45,7 +49,9 @@
       * $scope.weightRangeLow
       * $scope.weightRangeHigh
 
-2. Meal page
+2. Meals page
+  * ...
+  * Intermediate 'dosage distribution per meal' table
 
 3. Measurements page
   * Move height to measurements
