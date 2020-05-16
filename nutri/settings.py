@@ -153,11 +153,6 @@ DATE_INPUT_FORMATS = [
 
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
-ALLOWED_HOSTS = [
-#     '127.0.0.1',
-#     '192.168.1.5',
-    'nutricenas.herokuapp.com',
-]
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -170,3 +165,5 @@ DATABASES['default'].update(db_from_env)
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+ALLOWED_HOSTS = ['nutricenas.herokuapp.com', '127.0.0.1']
