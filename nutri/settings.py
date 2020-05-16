@@ -153,10 +153,11 @@ DATE_INPUT_FORMATS = [
 
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
-# ALLOWED_HOSTS = [
+ALLOWED_HOSTS = [
 #     '127.0.0.1',
 #     '192.168.1.5',
-# ]
+    nutricenas.herokuapp.com
+]
 
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
