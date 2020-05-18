@@ -146,7 +146,7 @@ class PlanMixin:
             'age': client.age,
             'height': float(client.height),
             'weight': float(client.weight),
-            'body_fat': float(client.body_fat),
+            'body_fat': client.body_fat and float(client.body_fat) or '',
             'pal': str(client.pal),
             'pal_map': { str(key): val for [key, val] in PAL },
         }

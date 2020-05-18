@@ -1,11 +1,4 @@
-﻿@font-face {
-    font-family: dki;
-    src: url(dki.woff) format("woff");
-    font-weight: 400;
-    font-style: normal;
-}
-
-body {
+﻿body {
     background-color: #eeeded;
 }
 
@@ -44,7 +37,6 @@ body {
     font-weight: 400;
     font-variant: normal;
     font-size: inherit;
-    font-family: dki;
     line-height: 16px;
     text-rendering: auto;
     text-transform: none;
@@ -156,7 +148,6 @@ footer li:first-child:before {
     font-weight: normal;
     font-variant: normal;
     font-size: 1em;
-    font-family: dki;
     line-height: 1;
     text-rendering: auto;
     text-transform: none;
