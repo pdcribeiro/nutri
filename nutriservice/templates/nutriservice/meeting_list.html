@@ -12,6 +12,12 @@
 
 {% block page %}Consultas{% endblock %}
 
+{% block navbar %}
+  {% if perms.nutriservice.view_meeting %}
+      <a class="btn btn-secondary float-right" href="{% url 'calendar' %}">Calendário</a>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   {% if meeting_list %}
     <div class="table-responsive-lg">

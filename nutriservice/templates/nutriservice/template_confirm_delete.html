@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  <p>Quer apagar o {{ name }} "{{ object }}"?</p>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Sim, apagar">
+  </form>
+
+{% endblock %}

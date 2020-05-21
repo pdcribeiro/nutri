@@ -19,11 +19,32 @@ PAL = (
     (Decimal('2.20'), 'Muito ativo'),
 )
 
+
+class Partner(models.Model):
+    """The Partner model."""
+    name = models.CharField(max_length=200, verbose_name='Nome')
+    date = models.DateField(null=True, blank=True, verbose_name='Data de início da parceria')
+    # active = models.BooleanField(...)
+    calendar = models.CharField(max_length=200, blank=True, verbose_name='ID do calendário Google')
+
+    class Meta:
+        ordering = ['-date', 'name']
+
+    def get_absolute_url(self):
+        """Returns the url to access Partner details."""
+        return reverse('partner-detail', args=[str(self.id)])
+
+    def __str__(self):
+        """String to represent Partner model."""
+        return f'{self.name}'
+
+
 class Client(models.Model):
     """The Client model."""
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Utilizador')
     nutritionist = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='nutritionist', null=True, verbose_name='Nutricionista')
-    
+    partner = models.ForeignKey(Partner, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Parceiro')
+
     name = models.CharField(max_length=200, verbose_name='Nome')
     gender = models.CharField(max_length=1, choices=GENDER, default='f', verbose_name='Sexo')
     # born = models.DateField(verbose_name='Data de nascimento')
@@ -43,7 +64,7 @@ class Client(models.Model):
 
     def __str__(self):
         """String to represent Client model."""
-        return f'{self.name} ({self.id})'
+        return f'{self.name}'
 
     def get_bmi(self):
         return round(float(self.weight) / (self.height / 100) ** 2, 1)
@@ -65,9 +86,11 @@ class Meal(models.Model):
 
 class Meeting(models.Model):
     """The Meeting model."""
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
     date = models.DateField(default=now, null=True, blank=True, verbose_name='Data')
-    weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name='Peso')
+    time = models.TimeField(null=True, blank=True, verbose_name='Hora')
+    duration = models.DurationField(null=True, blank=True, verbose_name='Duração')
+    weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name='Peso (kg)')
 
     class Meta:
         ordering = ['-date']

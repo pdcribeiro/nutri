@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  {% load static %}
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/fontawesome.min.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container my-5 text-muted">
+    <h2 class="mb-4 text-dark text-center">Plano nutricional</h2>
+    <h3 class="mb-5 text-center">{{ client_name }}</h3>
+    <div class="mb-4">
+      <h4 class="mb-3 text-uppercase font-weight-bold text-primary">Refeições</h4>
+      {% for meal in meals %}
+        <div class="row pl-3">
+          <div class="col-1">
+            <p class="text-primary">{{ meal.time }}</p>
+          </div>
+          <div class="col-11">
+            <h6 class="text-uppercase font-weight-bold text-dark">{{ meal.name }}</h6>
+            <ul>
+              {% for item in meal.content %}
+                <li class="text-primary"><span class="text-muted">{{ item }}</span></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="mb-4">
+      <h4 class="mb-3 text-uppercase font-weight-bold text-primary">Recomendações</h4>
+      {% for subject in recommendations %}
+        <div class="row pl-3">
+          <div class="col">
+            <h6 class="text-uppercase font-weight-bold text-dark">{{ subject.name }}</h6>
+            <ul>
+              {% for item in subject.content %}
+                <li class="text-primary"><span class="text-muted">{{ item }}</span></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="mb-5">
+      <h4 class="mb-3 text-uppercase font-weight-bold text-primary">Próxima consulta</h4>
+      <p class="pl-3">Domingo à tarde.</p>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <p><i class="fas fa-user text-primary" aria-hidden="true"></i> Rute Campos</p>
+        <p><i class="fas fa-briefcase text-primary" aria-hidden="true"></i> Nutricionista | 3730N</p>
+      </div>
+      <div class="col-4">
+        <p><i class="fas fa-phone text-primary" aria-hidden="true"></i> <a href="tel:+351-914-468-219">+351 914 468 219</a></p>
+        <p><i class="fas fa-envelope text-primary" aria-hidden="true"></i> <a href="mailto:rutecamposnutri@gmail.com">rutecamposnutri@gmail.com</a></p>
+      </div>
+      <div class="col-4">
+        <img src="" alt="logo" />
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

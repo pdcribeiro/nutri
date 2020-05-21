@@ -1,7 +1,7 @@
 import datetime
 import json
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
-from nutriservice.models import Client, Meeting, Plan, PAL
+from nutriservice.models import Partner, Client, Meeting, Plan, PAL
 from nutriservice.forms import ClientForm, MeetingForm, PlanForm
 
 @login_required
@@ -35,8 +35,119 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
+def get_field_value(field, obj):
+    value = field.value_to_string(obj)
+    if field.many_to_one:
+        obj = get_object_or_404(field.target_field.model, pk=value)
+        return {'href': obj.get_absolute_url(), 'value': obj}
+    else:
+        return {'value': value}
+
+class ListViewMixin:
+    context_object_name = 'list'
+    paginate_by = 10
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        lst = context['list']
+        context.update({
+            'cols': [field.verbose_name for field in lst[0]._meta.fields
+                if field.name not in self.exclude],
+            'rows': [{
+                'id': obj.id,
+                'fields': [get_field_value(field, obj) for field in obj._meta.fields
+                    if field.name not in self.exclude]
+            } for obj in lst],
+            'buttons': [{'url': f'{self.slug}-detail', 'icon': 'file-alt'}],
+        })
+        if self.request.user.has_perm(f'nutriservice.change_{self.slug}'):
+            context['buttons'].append({'url': f'{self.slug}-update', 'icon': 'edit'})
+        if self.request.user.has_perm(f'nutriservice.delete_{self.slug}'):
+            context['buttons'].append({'url': f'{self.slug}-delete', 'icon': 'trash-alt'})
+        return context
+
+class DetailViewMixin:
+    context_object_name = 'object'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = context['object']
+        context.update({
+            'fields': [{
+                'name': field.verbose_name,
+                'data': get_field_value(field, obj)
+            } for field in obj._meta.fields if field.name not in self.exclude],
+        })
+        return context
+
+
+class PartnerListView(PermissionRequiredMixin, ListViewMixin, generic.ListView):
+    permission_required = 'nutriservice.view_partner'
+    model = Partner
+    exclude = ['id']
+    template_name = 'nutriservice/template_list.html'
+    slug = 'partner'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'title': 'Parceiros', 'url': 'partners', 'navbar': [], 'plural': 'parceiros',
+        })
+        if self.request.user.has_perm('nutriservice.add_partner'):
+            context['navbar'] += [{
+                'type': 'primary',
+                'href': reverse('partner-create'),
+                'text': 'Novo parceiro'}]
+        return context
+
+class PartnerDetailView(PermissionRequiredMixin, DetailViewMixin, generic.DetailView):
+    permission_required = 'nutriservice.view_partner'
+    model = Partner
+    exclude = ['id']
+    template_name = 'nutriservice/template_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'title': 'Detalhes do parceiro'})
+        return context
+
+class PartnerCreate(PermissionRequiredMixin, generic.CreateView):
+    permission_required = 'nutriservice.add_partner'
+    model = Partner
+    fields = '__all__'
+    template_name = 'nutriservice/template_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'title': 'Criar parceiro'})
+        return context
+
+class PartnerUpdate(PermissionRequiredMixin, generic.UpdateView):
+    permission_required = 'nutriservice.change_partner'
+    model = Partner
+    fields = '__all__'
+    template_name = 'nutriservice/template_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'title': 'Editar parceiro'})
+        return context
+
+class PartnerDelete(PermissionRequiredMixin, generic.DeleteView):
+    permission_required = 'nutriservice.delete_partner'
+    model = Partner
+    context_object_name = 'object'
+    template_name = 'nutriservice/template_confirm_delete.html'
+    success_url = reverse_lazy('partners')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'title': 'Apagar parceiro', 'name': 'parceiro'})
+        return context
+
+
 class ClientListView(PermissionRequiredMixin, generic.ListView):
-    permission_required = 'nutriservice.view_client'
+    permission_required = 'nutriservice.view_partner'
     model = Client
     paginate_by = 10
 
@@ -65,14 +176,39 @@ class ClientDelete(PermissionRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy('clients')
 
 
-class MeetingListView(PermissionRequiredMixin, generic.ListView):
+class MeetingListView(PermissionRequiredMixin, ListViewMixin, generic.ListView):
     permission_required = 'nutriservice.view_meeting'
     model = Meeting
-    paginate_by = 10
+    exclude = ['id', 'duration']
+    template_name = 'nutriservice/template_list.html'
+    slug = 'meeting'
 
-class MeetingDetailView(PermissionRequiredMixin, generic.DetailView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'title': 'Consultas', 'url': 'meetings', 'navbar': [], 'plural': 'consultas',
+        })
+        if self.request.user.has_perm('nutriservice.add_meeting'):
+            context['navbar'] += [{
+                'type': 'primary',
+                'href': reverse('meeting-create'),
+                'text': 'Agendar consulta'}]
+        return context
+
+class MeetingDetailView(PermissionRequiredMixin, DetailViewMixin, generic.DetailView):
     permission_required = 'nutriservice.view_meeting'
     model = Meeting
+    exclude = ['id']
+    template_name = 'nutriservice/template_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({'title': 'Detalhes da consulta'})
+        return context
+
+@permission_required('nutriservice.view_meeting')
+def calendar(request):
+    return render(request, 'nutriservice/calendar.html')
 
 class MeetingMixin:
     def get_context_data(self, **kwargs):
@@ -87,12 +223,23 @@ class MeetingMixin:
 class MeetingCreate(PermissionRequiredMixin, MeetingMixin, generic.CreateView):
     permission_required = 'nutriservice.add_meeting'
     model = Meeting
-    form_class = MeetingForm
+    fields = '__all__'
+    # form_class = MeetingForm
 
-    def form_valid(self, form):
-        form.instance.client = get_object_or_404(Client, pk=self.kwargs['client_pk'])
-        form.instance.date = datetime.date.today()
-        return super().form_valid(form)
+    def get_initial(self):
+        self.initial.update({'date': datetime.date.today(),
+            'time': datetime.datetime.now().strftime('%H:%M')})
+        if 'duration' in self.kwargs:
+            self.initial.update({'duration': self.kwargs['duration']})
+        if 'client_pk' in self.kwargs:
+            self.initial.update({'client': get_object_or_404(Client, pk=self.kwargs['client_pk'])})
+        return super().get_initial()
+
+    # def form_valid(self, form):
+    #     if 'client_pk' in self.kwargs:
+    #         form.instance.client = get_object_or_404(Client, pk=self.kwargs['client_pk'])
+    #         form.instance.date = datetime.date.today()
+    #     return super().form_valid(form)
 
 class MeetingUpdate(PermissionRequiredMixin, MeetingMixin, generic.UpdateView):
     permission_required = 'nutriservice.change_meeting'
@@ -190,3 +337,37 @@ class PlanUpdate(PermissionRequiredMixin, PlanMixin, generic.UpdateView):
 class PlanDelete(PermissionRequiredMixin, PlanMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_plan'
     model = Plan
+
+def deliver_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk)
+    client_name = plan.client.name
+    context = {
+        'client_name': client_name,
+        'meals': [
+            {'time': '08:00', 'name': 'Pequeno-almoço', 'content': [
+                '1 rissol',
+                '1 copo de bagaço',
+            ]},
+            {'time': '13:00', 'name': 'Almoço', 'content': [
+                '1 pão com panado',
+                '1 caneca de vinho da casa',
+            ]},
+            {'time': '21:00', 'name': 'Jantar', 'content': [
+                '2 pratos de rojões',
+                '6 colheres de sopa de arroz de sarrabulho',
+                '1/2 garrafa de tinto',
+            ]},
+        ],
+        'recommendations': [
+            {'name': 'Alimentação', 'content': [
+                'Cuidado com as carnes vermelhas.',
+            ]},
+            {'name': 'Atividade física', 'content': [
+                'Passear o cão.',
+            ]},
+            {'name': 'Outros', 'content': [
+                'Não bater na mulher.',
+            ]},
+        ],
+    }
+    return render(request, 'plan/deliverable.html', context=context)

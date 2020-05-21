@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  {% if list %}
+    <div class="table-responsive-lg">
+      <table class="table">
+        <thead class="text-primary">
+          {% for col in cols %}
+            <th>
+              {{ col }}
+            </th>
+          {% endfor %}
+        </thead>
+        <tbody>
+          {% for row in rows %}
+              <tr>
+                {% for field in row.fields %}
+                  <td>
+                    {% if field.href %}
+                      <a href="{{ field.href }}">{{ field.value }}</a>
+                    {% else %}
+                      {{ field.value }}
+                    {% endif %}
+                  </td>
+                {% endfor %}
+                <td class="text-right">
+                  {% for button in buttons %}
+                    <a class="btn btn-link" href="{% url button.url row.id %}"><i class="fas fa-{{ button.icon }}"></i></a>
+                  {% endfor %}
+                </td>
+              </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>Não tem {{ plural }}.</p>
+  {% endif %}
+{% endblock %}

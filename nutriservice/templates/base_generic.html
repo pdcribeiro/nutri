@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
 
 <head>
@@ -6,9 +6,7 @@
   {% comment %} <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="./assets/img/favicon.png"> {% endcomment %}
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  {% block title %}
-    <title>nutricenas</title>
-  {% endblock %}
+  <title>{{ title }} - nutricenas</title>
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' />
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
   {% load static %}
@@ -19,8 +17,8 @@
   {% block links %}{% endblock %}
 </head>
 
-<body class="">
-  <div class="wrapper ">
+<body class="vh-100">
+  <div class="wrapper">
     {% block sidebar %}
       <div class="sidebar" data-color="black" data-active-color="danger">
         <div class="logo">
@@ -39,7 +37,7 @@
         </div>
         <div class="sidebar-wrapper">
           <ul class="nav">
-            <li {% if url == 'home'%}class="active"{% endif %}>
+            <li {% if url == 'home' %}class="active"{% endif %}>
               <a href="{% url 'index' %}">
                 <i class="fas fa-home"></i>
                 <p>Home</p>
@@ -47,7 +45,7 @@
             </li>
             {% if user.is_authenticated %}
               {% if perms.nutriservice.change_client %}
-                <li {% if url == 'clients'%}class="active"{% endif %}>
+                <li {% if url == 'clients' %}class="active"{% endif %}>
                   {% comment %} <a href="{% url 'clients' %}"> {% endcomment %}
                   <a href="{% url 'clients' %}">
                     <i class="fas fa-user"></i>
@@ -55,27 +53,33 @@
                   </a>
                 </li>
               {% endif %}
-              <li {% if url == 'meetings'%}class="active"{% endif %}>
+              <li {% if url == 'meetings' %}class="active"{% endif %}>
                 <a href="{% url 'meetings' %}">
                   <i class="fas fa-calendar-check"></i>
                   <p>Consultas</p>
                 </a>
               </li>
-              <li {% if url == 'plans'%}class="active"{% endif %}>
+              <li {% if url == 'plans' %}class="active"{% endif %}>
                 <a href="{% url 'plans' %}">
                   <i class="fas fa-file-alt"></i>
                   <p>Planos</p>
                 </a>
               </li>
+              <li {% if url == 'partners' %}class="active"{% endif %}>
+                <a href="{% url 'partners' %}">
+                  <i class="fas fa-handshake"></i>
+                  <p>Parceiros</p>
+                </a>
+              </li>
               <li>
-                <a href="{% url 'logout'%}?next={{request.path}}">
+                <a href="{% url 'logout' %}?next={{request.path}}">
                   <i class="fas fa-sign-out-alt"></i>
                   <p>Sair</p>
                 </a>
               </li>
             {% else %}
-              <li {% if url == 'login'%}class="active"{% endif %}>
-                <a href="{% url 'login'%}?next={{request.path}}">
+              <li {% if url == 'login' %}class="active"{% endif %}>
+                <a href="{% url 'login' %}?next={{request.path}}">
                   <i class="fas fa-sign-in-alt"></i>
                   <p>Entrar</p>
                 </a>
@@ -98,7 +102,7 @@
               </button>
             </div>
             {% comment %} <a class="navbar-brand" href="javascript:;">{{ user.get_username }}</a> {% endcomment %}
-            <span class="navbar-brand">{% block page %}{% endblock %}</span>
+            <span class="navbar-brand">{{ title }}</span>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -131,7 +135,11 @@
                 </div>
               </li>
             </ul>-->
-            {% block navbar %}{% endblock %}
+            {% if navbar %}
+              {% for button in navbar %}
+                <a class="btn btn-{{ button.type }} float-right" href="{{ button.href }}">{{ button.text }}</a>
+              {% endfor %}
+            {% endif %}
           </div>
         </div>
       </nav>

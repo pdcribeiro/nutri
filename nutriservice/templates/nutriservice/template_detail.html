@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  {% for field in fields %}
+    <p>
+      <span class="font-weight-bold">{{ field.name }}: </span>
+      {% if field.data.href %}
+        <a href="{{ field.data.href }}">{{ field.data.value }}</a>
+      {% else %}
+        {{ field.data.value }}
+      {% endif %}
+    </p>
+  {% endfor %}
+
+{% endblock %}

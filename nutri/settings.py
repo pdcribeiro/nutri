@@ -166,4 +166,4 @@ DATABASES['default'].update(db_from_env)
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-ALLOWED_HOSTS = ['nutricenas.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['nutricenas.herokuapp.com', 'localhost', '127.0.0.1']

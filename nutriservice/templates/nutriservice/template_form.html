@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="table-responsive-lg mb-4">
+      <table>
+        {{ form.as_table }}
+      </table>
+    </div>
+    <input type="submit" class="btn btn-primary float-right" value="Guardar">
+  </form>
+{% endblock %}

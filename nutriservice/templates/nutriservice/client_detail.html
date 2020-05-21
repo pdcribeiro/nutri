@@ -29,56 +29,6 @@
       <p><strong>IMC:</strong> {{ client.get_bmi }} kg/m2</p>
     </div>
   </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div class="row">
-        <div class="col">
-          <h4 class="card-title">Planos</h4>
-        </div>
-        <div class="col">
-          {% if perms.nutriservice.add_plan %}
-            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{request.path}}">Novo plano</a>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-    <div class="card-body">
-      {% if client.plan_set %}
-        <div class="table-responsive-lg">
-          <table class="table">
-            <thead class="text-primary">
-              <th>
-                Data
-              </th>
-              <th class="text-right">
-                Energia diária
-              </th>
-            </thead>
-            <tbody>
-              {% for plan in client.plan_set.all %}
-                  <tr>
-                    <td>
-                      {{ plan.date }}
-                    </td>
-                    <td class="text-right">
-                      {{ plan.daily_energy }} kcal/dia
-                    </td>
-                    <td class="text-right">
-                      {% if perms.nutriservice.view_plan %}<a class="btn btn-link" href="{% url 'plan-detail' plan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
-                      {% if perms.nutriservice.change_plan %}<a class="btn btn-link" href="{% url 'plan-update' plan.pk %}?next={{request.path}}"><i class="fas fa-edit"></i></a>{% endif %}
-                      {% if perms.nutriservice.delete_plan %}<a class="btn btn-link" href="{% url 'plan-delete' plan.pk %}?next={{request.path}}"><i class="fas fa-trash-alt"></i></a>{% endif %}
-                    </td>
-                  </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <p>O cliente não tem planos.</p>
-      {% endif %}
-    </div>
-  </div>
   
   <div class="card">
     <div class="card-header">
@@ -126,6 +76,56 @@
         </div>
       {% else %}
         <p>O cliente não tem consultas.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col">
+          <h4 class="card-title">Planos</h4>
+        </div>
+        <div class="col">
+          {% if perms.nutriservice.add_plan %}
+            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{request.path}}">Novo plano</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if client.plan_set %}
+        <div class="table-responsive-lg">
+          <table class="table">
+            <thead class="text-primary">
+              <th>
+                Data
+              </th>
+              <th class="text-right">
+                Energia diária
+              </th>
+            </thead>
+            <tbody>
+              {% for plan in client.plan_set.all %}
+                  <tr>
+                    <td>
+                      {{ plan.date }}
+                    </td>
+                    <td class="text-right">
+                      {{ plan.daily_energy }} kcal/dia
+                    </td>
+                    <td class="text-right">
+                      {% if perms.nutriservice.view_plan %}<a class="btn btn-link" href="{% url 'plan-detail' plan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.nutriservice.change_plan %}<a class="btn btn-link" href="{% url 'plan-update' plan.pk %}?next={{request.path}}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.nutriservice.delete_plan %}<a class="btn btn-link" href="{% url 'plan-delete' plan.pk %}?next={{request.path}}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                    </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p>O cliente não tem planos.</p>
       {% endif %}
     </div>
   </div>

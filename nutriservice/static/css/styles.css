@@ -9,25 +9,13 @@ input[type=number] {
 }
 
 
-/* .sidebar-nav {
-    margin-top: 20px;
-    padding: 0;
-    list-style: none;
+.table tbody tr {
+  opacity: 0.6;
 }
-.data-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+.table tbody tr:hover {
+  background-color: #eee;
+  opacity: 1;
 }
-.data-table td, .data-table th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-.data-table tr:nth-child(even) {
-    background-color: #dddddd;
-} */
-
 td .btn {
   width: 40px;
   margin: 0;
