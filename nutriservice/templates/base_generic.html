@@ -40,7 +40,7 @@
             <li {% if url == 'home' %}class="active"{% endif %}>
               <a href="{% url 'index' %}">
                 <i class="fas fa-home"></i>
-                <p>Home</p>
+                <p>Início</p>
               </a>
             </li>
             {% if user.is_authenticated %}
@@ -90,7 +90,6 @@
       </div>
     {% endblock %}
     <div class="main-panel">
-      <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-fixed fixed-top border-bottom">
         <div class="container-fluid">
           <div class="navbar-wrapper">
@@ -145,7 +144,6 @@
           </div>
         </div>
       </nav>
-      <!-- End Navbar -->
       <div class="content">
         {% block content %}{% endblock %}
         {% block pagination %}

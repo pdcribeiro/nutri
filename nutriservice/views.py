@@ -2,38 +2,16 @@ import datetime
 import json
 
 from django import forms
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views import generic
+from django.views import generic, View
 
 from nutriservice.models import Partner, Client, Meeting, Plan, PAL
 from nutriservice.forms import ClientForm
-
-@login_required
-def index(request):
-    """View function for site home page."""
-
-    # Generate counts of some of the main objects
-    num_clients = Client.objects.all().count()
-    num_meetings = Meeting.objects.all().count()
-    num_plans = Plan.objects.all().count()
-    
-    # # Number of visits to this view, as counted in the session variable.
-    # num_visits = request.session.get('num_visits', 0)
-    # request.session['num_visits'] = num_visits + 1
-
-    context = {
-        'num_clients': num_clients,
-        'num_meetings': num_meetings,
-        'num_plans': num_plans,
-        # 'num_visits': num_visits,
-    }
-
-    return render(request, 'index.html', context=context)
 
 
 def get_field_value(field, obj):
@@ -128,6 +106,29 @@ class DetailViewMixin(ViewMixin):
 class DeleteViewMixin(ViewMixin):
     context_object_name = 'object'
     template_name = 'nutriservice/template_confirm_delete.html'
+
+
+class Home(LoginRequiredMixin, ViewMixin, View):
+    def get(self, request):
+        # Generate counts of some of the main objects
+        num_clients = Client.objects.all().count()
+        num_meetings = Meeting.objects.all().count()
+        num_plans = Plan.objects.all().count()
+        
+        # # Number of visits to this view, as counted in the session variable.
+        # num_visits = request.session.get('num_visits', 0)
+        # request.session['num_visits'] = num_visits + 1
+
+        context = {
+            'title': 'Início',
+            'url': 'home',
+            'num_clients': num_clients,
+            'num_meetings': num_meetings,
+            'num_plans': num_plans,
+            # 'num_visits': num_visits,
+        }
+
+        return render(request, 'index.html', context=context)
 
 
 class PartnerListView(PermissionRequiredMixin, ListViewMixin, generic.ListView):
@@ -419,6 +420,7 @@ class PlanDelete(PermissionRequiredMixin, PlanMixin, DeleteViewMixin, generic.De
     model = Plan
     context = {'title': 'Apagar plano', 'name': 'plano'}
 
+@permission_required('nutriservice.view_plan')
 def deliver_plan(request, pk):
     plan = get_object_or_404(Plan, pk=pk)
     client_name = plan.client.name
