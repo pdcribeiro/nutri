@@ -1817,6 +1817,11 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
     width: 100%;
     padding-top: 10px;
     z-index: 1029; }
+  .navbar.navbar-fixed {
+    position: fixed;
+    margin-left: 260px;
+    background-color: #f4f3ef;
+    z-index: 1029; }
   .documentation .navbar.fixed-top {
     left: 0;
     width: initial; }
@@ -3824,6 +3829,8 @@ License - nucleoapp.com/license/
     padding: 0; }
     .navbar.navbar-absolute {
       padding-top: 0; }
+    .navbar.navbar-fixed {
+      margin-left: 0; }
     .navbar .navbar-brand {
       font-size: 16px;
       margin-right: 0; }

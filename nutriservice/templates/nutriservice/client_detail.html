@@ -1,20 +1,5 @@
 {% extends "base_generic.html" %}
 
-{% block title %}
-  <title>Dados do cliente - nutricenas</title>
-{% endblock %}
-
-{% block page %}Dados do cliente{% endblock %}
-
-{% block navbar %}
-  {% if perms.nutriservice.change_client %}
-    <a class="btn btn-primary float-right ml-4" href="{% url 'client-update' client.pk %}">Editar</a>
-  {% endif %}
-  {% if perms.nutriservice.delete_client %}
-    <a class="btn btn-secondary float-right ml-4" href="{% url 'client-delete' client.pk %}">Apagar</a>
-  {% endif %}
-{% endblock %}
-
 {% block content %}
   <h2>{{ client.name }}</h2>
   <div class="card">

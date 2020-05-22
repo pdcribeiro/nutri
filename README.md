@@ -2,13 +2,6 @@
 
 ## TODOs
 
-* Make navbar fixed?
-
-* Turn function views into classes
-
-* Retry to generalize Meeting/Plan mixins
-
-
 ### Meetings
 
 1. Create partner views
@@ -120,6 +113,9 @@ Appointment "timeline" / nav element
 
 
 ### Misc
+* Filter db entries appropriately
+* Turn function views into classes
+* Retry to generalize Meeting/Plan mixins
 * Set card max height and scroll vertically
 * Send email to NIDDK guy
 * BootstrapMixin to add form-control class, etc. to input elements
@@ -131,9 +127,11 @@ Appointment "timeline" / nav element
 * Review permissions for everything (e.g. individual plans, etc.)
 * Don't add "?next=" when current page is login page
 * Dynamic meal formset. Variable number of fields.
+* Default partner
 * ? Optimize MealsFormSet.__init__() for loop
 * ? Don't store empty meal forms; problem: position filled meal forms appropriately
 * ? nutriservice.models.Meeting/Plan.date: set default value in form, not in model
+* ? Bottom navbar for forms views
 
 
 ### Client version

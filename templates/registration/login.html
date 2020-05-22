@@ -40,6 +40,6 @@
     </form>
     
     {# Assumes you setup the password_reset view in your URLconf #}
-    <p><a href="{% url 'password_reset' %}">Recuperar palavra-chave?</a></p>
+    {% comment %} <p><a href="{% url 'password_reset' %}">Recuperar palavra-chave?</a></p> {% endcomment %}
   </div>
 </body>

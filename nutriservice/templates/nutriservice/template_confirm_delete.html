@@ -1,22 +1,16 @@
 {% extends "base_generic.html" %}
 
+{% block navbar %}
+  <a href="{{ next }}" class="btn btn-secondary my-0 ml-3 float-right">Cancelar</a>
+  <button type="submit" class="btn btn-primary my-0 float-right" form="form">Confirmar</button>
+{% endblock %}
+
 {% block content %}
 
   <p>Quer apagar o {{ name }} "{{ object }}"?</p>
 
-  <form action="" method="POST">
+  <form id="form" action="" method="POST">
     {% csrf_token %}
-    <button id="cancel-btn" class="btn btn-secondary ml-2 float-right">Cancelar</button>
-    <input type="submit" class="btn btn-primary float-right" value="Confirmar">
   </form>
 
-{% endblock %}
-
-{% block scripts %}
-  <script>
-    $('#cancel-btn').click(function(event) {
-      event.preventDefault();
-      history.back();
-    });
-  </script>
 {% endblock %}

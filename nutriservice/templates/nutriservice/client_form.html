@@ -1,19 +1,9 @@
-{% extends "base_generic.html" %}
-
-{% block navbar %}
-  <button type="submit" class="btn btn-primary float-right" form="form">Guardar</button>
-  <a href="{{ next }}" class="btn btn-secondary ml-4 float-right">Cancelar</a>
-{% endblock %}
+{% extends "nutriservice/template_form.html" %}
 
 {% block content %}
   <form id="form" action="" method="post">
     {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div class="table-responsive-lg mb-4">
-      <table>
-        {{ form.as_table }}
-      </table>
-    </div>
+    {% block form %}{{ block.super }}{% endblock %}
     <div class="card card-plain">
       <div class="card-header">
         <h4 class="card-title">Refeições</h4>
@@ -44,6 +34,5 @@
         </div>
       </div>
     </div>
-    <input type="submit" class="btn btn-primary float-right" value="Guardar">
   </form>
 {% endblock %}
