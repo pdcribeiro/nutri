@@ -42,7 +42,7 @@ class Client(models.Model):
     """The Client model."""
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Utilizador')
     nutritionist = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='nutritionist', null=True, verbose_name='Nutricionista')
-    partner = models.ForeignKey(Partner, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Parceiro')
+    partner = models.ForeignKey(Partner, on_delete=models.SET_NULL, null=True, verbose_name='Parceiro')
 
     name = models.CharField(max_length=200, verbose_name='Nome')
     gender = models.CharField(max_length=1, choices=GENDER, default='f', verbose_name='Sexo')

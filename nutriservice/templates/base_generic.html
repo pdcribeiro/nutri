@@ -135,11 +135,11 @@
                 </div>
               </li>
             </ul>-->
-            {% if navbar %}
+            {% block navbar %}
               {% for button in navbar %}
                 <a class="btn btn-{{ button.type }} float-right ml-4" href="{{ button.href }}">{{ button.text }}</a>
               {% endfor %}
-            {% endif %}
+            {% endblock %}
           </div>
         </div>
       </nav>

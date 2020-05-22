@@ -1,18 +1,17 @@
 {% extends '../base_generic.html' %}
 
-{% block title %}
-  <title>Planeamento - nutricenas</title>
-{% endblock %}
-
 {% load static %}
 {% block links %}
   <link rel="stylesheet" href="{% static 'css/plan.css' %}">
 {% endblock %}
 
-{% block page %}Planeamento{% endblock %}
+{% block navbar %}
+  <button type="submit" class="btn btn-primary float-right" form="form">Guardar</button>
+  <a href="{{ next }}" class="btn btn-secondary ml-4 float-right">Cancelar</a>
+{% endblock %}
 
 {% block content %}
-  <form action="" method="post">
+  <form id="form" action="" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
 
@@ -36,8 +35,8 @@
       {% include './food_dosages/index.html' with columns=None unit='doses' %}
     </div>
     
-    <a href="{{ next }}" class="btn btn-secondary float-right">Cancelar</a>
-    <input type="submit" class="btn btn-primary mr-4 float-right" value="Guardar">
+    <a href="{{ next }}" class="btn btn-secondary ml-4 float-right">Cancelar</a>
+    <input type="submit" class="btn btn-primary float-right" value="Guardar">
   </form>
   
   <iframe id="calc" src="{% static 'calc/calc.html' %}" class="d-none"></iframe>

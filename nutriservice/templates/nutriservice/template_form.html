@@ -1,7 +1,12 @@
 {% extends "base_generic.html" %}
 
+{% block navbar %}
+  <button type="submit" class="btn btn-primary float-right" form="form">Guardar</button>
+  <a href="{{ next }}" class="btn btn-secondary ml-4 float-right">Cancelar</a>
+{% endblock %}
+
 {% block content %}
-  <form action="" method="post">
+  <form id="form" action="" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="table-responsive-lg mb-4">
@@ -9,6 +14,7 @@
         {{ form.as_table }}
       </table>
     </div>
+      <a href="{{ next }}" class="btn btn-secondary ml-4 float-right">Cancelar</a>
     <input type="submit" class="btn btn-primary float-right" value="Guardar">
   </form>
 {% endblock %}

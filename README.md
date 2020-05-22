@@ -2,8 +2,6 @@
 
 ## TODOs
 
-* Add 'Guardar' and 'Cancelar' buttons to PlanCreate and PlanUpdate navbar
-  * Add to other Create and Update views as well
 * Make navbar fixed?
 
 * Turn function views into classes

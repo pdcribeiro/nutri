@@ -1,13 +1,12 @@
 {% extends "base_generic.html" %}
 
-{% block title %}
-  <title>Dados do cliente - nutricenas</title>
+{% block navbar %}
+  <button type="submit" class="btn btn-primary float-right" form="form">Guardar</button>
+  <a href="{{ next }}" class="btn btn-secondary ml-4 float-right">Cancelar</a>
 {% endblock %}
 
-{% block page %}Dados do cliente{% endblock %}
-
 {% block content %}
-  <form action="" method="post">
+  <form id="form" action="" method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
     <div class="table-responsive-lg mb-4">

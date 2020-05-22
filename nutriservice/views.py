@@ -125,6 +125,9 @@ class DetailViewMixin(ViewMixin):
                 'href': reverse(f'{self.slug}-delete', args=[self.kwargs['pk']])}]
         return context
 
+class FormViewMixin:
+    pass
+
 class DeleteViewMixin(ViewMixin):
     context_object_name = 'object'
     template_name = 'nutriservice/template_confirm_delete.html'
