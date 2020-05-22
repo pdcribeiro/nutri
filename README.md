@@ -2,9 +2,11 @@
 
 ## TODOs
 
-* ! Generalize templates
-  * Add detail navbar buttons (partner and meeting)
-  * Refactor existing views and delete templates
+* Add 'Guardar' and 'Cancelar' buttons to PlanCreate and PlanUpdate navbar
+  * Add to other Create and Update views as well
+* Make navbar fixed?
+
+* Turn function views into classes
 
 * Retry to generalize Meeting/Plan mixins
 
@@ -120,6 +122,7 @@ Appointment "timeline" / nav element
 
 
 ### Misc
+* Set card max height and scroll vertically
 * Send email to NIDDK guy
 * BootstrapMixin to add form-control class, etc. to input elements
 * ! Duplicate plan

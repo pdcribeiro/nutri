@@ -6,7 +6,17 @@
 
   <form action="" method="POST">
     {% csrf_token %}
-    <input type="submit" value="Sim, apagar">
+    <button id="cancel-btn" class="btn btn-secondary float-right">Cancelar</button>
+    <input type="submit" class="btn btn-primary mr-2 float-right" value="Confirmar">
   </form>
 
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $('#cancel-btn').click(function(event) {
+      event.preventDefault();
+      history.back();
+    });
+  </script>
 {% endblock %}

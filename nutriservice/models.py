@@ -1,4 +1,3 @@
-import datetime
 from decimal import Decimal
 
 from django.contrib.auth.models import User
@@ -51,7 +50,7 @@ class Client(models.Model):
     age = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)], verbose_name='Idade (anos)')
     
     height = models.IntegerField(validators=[MinValueValidator(50), MaxValueValidator(300)], verbose_name='Altura (cm)')
-    weight = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Peso atual (kg)')
+    weight = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Peso (kg)')
     body_fat = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, verbose_name='Gordura corporal (%)')
     pal = models.DecimalField(max_digits=3, decimal_places=2, choices=PAL, default=PAL[1][0], verbose_name='Atividade física atual')
 
@@ -87,13 +86,13 @@ class Meal(models.Model):
 class Meeting(models.Model):
     """The Meeting model."""
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
-    date = models.DateField(default=now, null=True, blank=True, verbose_name='Data')
-    time = models.TimeField(null=True, blank=True, verbose_name='Hora')
-    duration = models.DurationField(null=True, blank=True, verbose_name='Duração')
+    date = models.DateField(verbose_name='Data')
+    time = models.TimeField(verbose_name='Hora')
+    duration = models.IntegerField(verbose_name='Duração (minutos)')
     weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name='Peso (kg)')
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['-date', '-time']
 
     def get_absolute_url(self):
         """Returns the url to access Meeting details."""
@@ -101,12 +100,12 @@ class Meeting(models.Model):
 
     def __str__(self):
         """String to represent Meeting model."""
-        return f'{self.client.name} ({self.date})'
+        return f'{self.date}'
 
 
 class Plan(models.Model):
     """The Plan model."""
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True, verbose_name='Cliente')
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
     meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
     date = models.DateField(default=now, null=True, blank=True, verbose_name='Data')
 
@@ -121,7 +120,7 @@ class Plan(models.Model):
         max_digits=4, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(300)],
         default=0, null=True, blank=True, verbose_name='Mudança no PAL (%)')
 
-    daily_energy = models.IntegerField(validators=[MinValueValidator(500), MaxValueValidator(5000)], null=True, blank=True, verbose_name='Taxa de dispêndio energético (kcal/dia)')
+    daily_energy = models.IntegerField(validators=[MinValueValidator(500), MaxValueValidator(5000)], null=True, blank=True, verbose_name='Energia diária (kcal/dia)')
 
     proteins = models.IntegerField(default=25, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de proteínas (%)')
     carbs = models.IntegerField(default=50, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de hidratos de carbono (%)')
@@ -140,7 +139,7 @@ class Plan(models.Model):
     # fats_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Gordura (doses)')
 
     class Meta:
-        ordering = ['-date']
+        ordering = ['-date', 'client__name', '-id']
 
     def get_absolute_url(self):
         """Returns the url to access Plan details."""

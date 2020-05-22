@@ -9,10 +9,15 @@ input[type=number] {
 }
 
 
-.table tbody tr {
+.disabled {
+  pointer-events: none;
+}
+
+
+.table-list tbody tr {
   opacity: 0.6;
 }
-.table tbody tr:hover {
+.table-list tbody tr:hover {
   background-color: #eee;
   opacity: 1;
 }

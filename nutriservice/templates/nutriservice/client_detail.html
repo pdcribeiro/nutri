@@ -8,10 +8,10 @@
 
 {% block navbar %}
   {% if perms.nutriservice.change_client %}
-    <a class="btn btn-primary float-right mr-4" href="{% url 'client-update' client.pk %}">Editar</a>
+    <a class="btn btn-primary float-right ml-4" href="{% url 'client-update' client.pk %}">Editar</a>
   {% endif %}
   {% if perms.nutriservice.delete_client %}
-    <a class="btn btn-secondary float-right" href="{% url 'client-delete' client.pk %}">Apagar</a>
+    <a class="btn btn-secondary float-right ml-4" href="{% url 'client-delete' client.pk %}">Apagar</a>
   {% endif %}
 {% endblock %}
 
@@ -38,7 +38,8 @@
         </div>
         <div class="col">
           {% if perms.nutriservice.add_meeting %}
-            <a class="btn btn-primary float-right" href="{% url 'meeting-create' client.pk %}?next={{request.path}}">Agendar consulta</a>
+            <a class="btn btn-primary float-right ml-4" href="{% url 'meeting-create' client.pk 60 %}?next={{ request.path }}">Agendar rastreio</a>
+            <a class="btn btn-primary float-right" href="{% url 'meeting-create' client.pk 30 %}?next={{ request.path }}">Agendar consulta</a>
           {% endif %}
         </div>
       </div>
@@ -66,8 +67,8 @@
                     </td>
                     <td class="text-right">
                       {% if perms.nutriservice.view_meeting %}<a class="btn btn-link" href="{% url 'meeting-detail' meeting.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
-                      {% if perms.nutriservice.change_meeting %}<a class="btn btn-link" href="{% url 'meeting-update' meeting.pk %}?next={{request.path}}"><i class="fas fa-edit"></i></a>{% endif %}
-                      {% if perms.nutriservice.delete_meeting %}<a class="btn btn-link" href="{% url 'meeting-delete' meeting.pk %}?next={{request.path}}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                      {% if perms.nutriservice.change_meeting %}<a class="btn btn-link" href="{% url 'meeting-update' meeting.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.nutriservice.delete_meeting %}<a class="btn btn-link" href="{% url 'meeting-delete' meeting.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
                     </td>
                   </tr>
               {% endfor %}
@@ -88,7 +89,7 @@
         </div>
         <div class="col">
           {% if perms.nutriservice.add_plan %}
-            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{request.path}}">Novo plano</a>
+            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{ request.path }}">Novo plano</a>
           {% endif %}
         </div>
       </div>
@@ -116,8 +117,8 @@
                     </td>
                     <td class="text-right">
                       {% if perms.nutriservice.view_plan %}<a class="btn btn-link" href="{% url 'plan-detail' plan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
-                      {% if perms.nutriservice.change_plan %}<a class="btn btn-link" href="{% url 'plan-update' plan.pk %}?next={{request.path}}"><i class="fas fa-edit"></i></a>{% endif %}
-                      {% if perms.nutriservice.delete_plan %}<a class="btn btn-link" href="{% url 'plan-delete' plan.pk %}?next={{request.path}}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                      {% if perms.nutriservice.change_plan %}<a class="btn btn-link" href="{% url 'plan-update' plan.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.nutriservice.delete_plan %}<a class="btn btn-link" href="{% url 'plan-delete' plan.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
                     </td>
                   </tr>
               {% endfor %}

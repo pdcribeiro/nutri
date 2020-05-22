@@ -1,7 +1,44 @@
-const { gender, age, height, weight, body_fat: bodyFat, pal, pal_map: palMap } = jsContext;
-const BMR_CONSTANT = 6.25*height - 5*age + { m: 5, f: -161 }[gender];
+if (typeof jsContext !== 'undefined') {
+  var { gender, age, height, weight, body_fat: bodyFat, pal, pal_map: palMap } = jsContext;
+  var BMR_CONSTANT = 6.25*height - 5*age + { m: 5, f: -161 }[gender];
+  var tmp = null;
+}
 
-let tmp = null;
+function init() {
+  // Hide efield controls
+  $('.efield-controls').hide();
+
+  // Set range input label values
+  $('.efield input[type="range"]').each(function() {
+    $(this).parent().siblings('.field-extra').text($(this).val());
+  });
+
+  // Reload form on select change
+  $('#id_client').change(function() {
+    if ($(this).val()) {
+      $('form').append('<input type="hidden" name="reload" value="True" /> ');
+      $('form').submit();
+    } else {
+      $('#wrapper').addClass('disabled').css('opacity', 0.5);
+    }
+  });
+
+  if (typeof jsContext !== 'undefined') {
+    $('#wrapper').css('opacity', 1).removeClass('disabled');
+
+    // Set constant field values
+    $('#pal_extra').text('PAL ' + pal);
+    $('#bmi').text(properRound(weight / (height / 100) ** 2, 1));
+    const bmr = 10 * weight + BMR_CONSTANT;
+    $('#bmr').text(Math.round(bmr));
+    $('#daily_energy').text(Math.round(bmr * pal));
+    
+    render();
+  
+    addEventListeners();
+  }
+}
+init();
 
 function measurePerformance(callback, calls=10) {
   var t0 = performance.now();
@@ -244,25 +281,3 @@ function addEventListeners() {
     });
   }
 }
-
-function init() {
-  // Hide efield controls
-  $('.efield-controls').hide();
-
-  // Set range input label values
-  $('.efield input[type="range"]').each(function() {
-    $(this).parent().siblings('.field-extra').text($(this).val());
-  });
-
-  // Set constant field values
-  $('#pal_extra').text('PAL ' + pal);
-  $('#bmi').text(properRound(weight / (height / 100) ** 2, 1));
-  const bmr = 10 * weight + BMR_CONSTANT;
-  $('#bmr').text(Math.round(bmr));
-  $('#daily_energy').text(Math.round(bmr * pal));
-  
-  render();
-
-  addEventListeners();
-}
-init();

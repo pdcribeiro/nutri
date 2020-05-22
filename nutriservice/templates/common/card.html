@@ -1,9 +1,9 @@
-<div class="card">
-  <div class="card-header">
-    <h4 class="card-title">{% block name %}{% endblock %}</h4>
-    <p class="card-category">{% block description %}{% endblock %}</p>
+<div class="card my-4">
+  <div class="card-header pt-4 px-4 pb-0">
+    <h4 class="card-title mt-0">{% block name %}{% endblock %}</h4>
+    <p class="card-category mb-2">{% block description %}{% endblock %}</p>
   </div>
-  <div class="card-body">
+  <div class="card-body pt-0 px-4 pb-3">
     <div class="card-text">
       {% block tables %}
         {% include './table.html' %}

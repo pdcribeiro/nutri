@@ -16,22 +16,39 @@
     {% csrf_token %}
     {{ form.non_field_errors }}
 
-    {% include './client_info/index.html' with columns=columns.client_info %}
-    {% include './calculations/index.html' %}
-    {% include './macronutrients/index.html' with columns=columns.macronutrients %}
-    {% include './food_dosages/index.html' with columns=None unit='doses' %}
+    <div class="row">
+      <div class="col">
+          {{ form.client.errors }}
+          <label for="{{ form.client.id_for_label }}">Cliente:</label>
+          {{ form.client }}
+      </div>
+      <div class="col">
+          {{ form.meeting.errors }}
+          <label for="{{ form.meeting.id_for_label }}">Consulta:</label>
+          {{ form.meeting }}
+      </div>
+    </div>
+
+    <div id="wrapper" class="disabled" style="opacity: 0.5;">
+      {% include './client_info/index.html' with columns=columns.client_info %}
+      {% include './calculations/index.html' %}
+      {% include './macronutrients/index.html' with columns=columns.macronutrients %}
+      {% include './food_dosages/index.html' with columns=None unit='doses' %}
+    </div>
     
     <a href="{{ next }}" class="btn btn-secondary float-right">Cancelar</a>
-    <input type="submit" class="btn btn-primary float-right mr-4" value="Guardar">
+    <input type="submit" class="btn btn-primary mr-4 float-right" value="Guardar">
   </form>
-
+  
   <iframe id="calc" src="{% static 'calc/calc.html' %}" class="d-none"></iframe>
 {% endblock %}
 
 {% block scripts %}
-  <script type='text/javascript'>
-    var jsContext = {{ js_context|safe }};
-  </script>
+  {% if js_context %}
+    <script type='text/javascript'>
+      var jsContext = {{ js_context|safe }};
+    </script>
+  {% endif %}
   <script src="{% static 'js/plan.js' %}"></script>
 {% endblock %}
 
