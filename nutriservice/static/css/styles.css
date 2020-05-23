@@ -34,6 +34,22 @@ td .btn {
 }
 
 
+.navbar .btn {
+  display: flex;
+  align-items: center;
+}
+.navbar .btn i {
+  margin: -1px 0;
+  font-size: large;
+}
+
+@media screen and (max-width: 991px) {
+  .navbar .btn span {
+    display: none;
+  }
+}
+
+
 .fc-title {
   font-weight: bold;
 }

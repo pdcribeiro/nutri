@@ -1,13 +1,8 @@
-{% extends '../base_generic.html' %}
+{% extends 'nutriservice/template_form.html' %}
 
 {% load static %}
 {% block links %}
   <link rel="stylesheet" href="{% static 'css/plan.css' %}">
-{% endblock %}
-
-{% block navbar %}
-  <a href="{{ next }}" class="btn btn-secondary my-0 ml-4 float-right">Cancelar</a>
-  <button type="submit" class="btn btn-primary my-0 float-right" form="form">Guardar</button>
 {% endblock %}
 
 {% block content %}

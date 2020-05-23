@@ -32,6 +32,7 @@ function initClient() {
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
     // Handle the initial sign-in state.
+    initCalendar();
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
@@ -42,13 +43,13 @@ function initClient() {
 
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
-    authorizeButton.style.display = 'none';
-    signoutButton.style.display = 'block';
+    $(authorizeButton).hide();
+    $(signoutButton).show();
     //listUpcomingEvents();
-    initCalendar();
+    calendar.render();
   } else {
-    authorizeButton.style.display = 'block';
-    signoutButton.style.display = 'none';
+    $(authorizeButton).show();
+    $(signoutButton).hide();
   }
 }
 
@@ -140,7 +141,6 @@ function initCalendar() {
     minTime: '08:00:00',
     events: fetchEvents,
   });
-  calendar.render();
 }
 
 function fetchEvents(fetchInfo, successCallback, failureCallback) {

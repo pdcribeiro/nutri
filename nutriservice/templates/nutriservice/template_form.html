@@ -1,8 +1,14 @@
 {% extends "base_generic.html" %}
 
 {% block navbar %}
-  <a href="{{ next }}" class="btn btn-secondary my-0 ml-3 float-right">Cancelar</a>
-  <button type="submit" class="btn btn-primary my-0 float-right" form="form">Guardar</button>
+  <button type="submit" class="btn btn-primary my-0 px-3 float-right" form="form">
+    <i class="fas fa-save"></i>
+    <span>&nbsp;&nbsp;Guardar</span>
+  </button>
+  <a href="{{ next }}" class="btn btn-secondary my-0 ml-3 px-3 float-right">
+    <i class="fas fa-undo"></i>
+    <span>&nbsp;&nbsp;Cancelar</span>
+  </a>
 {% endblock %}
 
 {% block content %}

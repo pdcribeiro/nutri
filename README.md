@@ -24,9 +24,10 @@
 * Choose calendars to show
 * Format and parse duration without seconds
 * Show upcoming meetings in home page
-
 * Add partner permissions to Herokuapp
   * Review other permissions
+* ? calendar.js: Use eventSources instead of events
+  * Use addEventSource, remove, etc.
 
 
 ### Partners page (Partner model)

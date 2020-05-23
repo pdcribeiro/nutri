@@ -25,7 +25,10 @@
                 {% endfor %}
                 <td class="text-right">
                   {% for button in buttons %}
-                    <a class="btn btn-link" href="{% url button.url row.id %}?next={{ request.path }}"><i class="fas fa-{{ button.icon }}"></i></a>
+                    <a class="btn btn-link" href="{% url button.url row.id %}?next={{ request.path }}">
+                      {% if button.icon %}<i class="fas fa-{{ button.icon }}"></i>{% endif %}
+                      {% if button.text %}{{ button.text }}{% endif %}
+                    </a>
                   {% endfor %}
                 </td>
               </tr>

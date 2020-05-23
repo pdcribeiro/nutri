@@ -73,8 +73,9 @@ class ListViewMixin(ViewMixin):
         })
         if self.request.user.has_perm(f'nutriservice.add_{self.slug}'):
             context['navbar'].append({
+                'icon': 'fas fa-plus', 'type': 'primary',
                 'text': self.add_btn_str if hasattr(self, 'add_btn_str') else 'Criar',
-                'type': 'primary', 'href': f"{reverse(f'{self.slug}-create')}?next={self.request.path}"})
+                'href': f"{reverse(f'{self.slug}-create')}?next={self.request.path}"})
         if self.request.user.has_perm(f'nutriservice.change_{self.slug}'):
             context['buttons'].append({'url': f'{self.slug}-update', 'icon': 'edit'})
         if self.request.user.has_perm(f'nutriservice.delete_{self.slug}'):
@@ -137,6 +138,7 @@ class PartnerListView(PermissionRequiredMixin, ListViewMixin, generic.ListView):
     context = {'title': 'Parceiros', 'url': 'partners', 'plural': 'parceiros'}
     exclude = ['id']
     slug = 'partner'
+    add_btn_str = 'Novo parceiro'
 
 class PartnerDetailView(PermissionRequiredMixin, DetailViewMixin, generic.DetailView):
     permission_required = 'nutriservice.view_partner'
@@ -280,7 +282,7 @@ class MeetingCreate(PermissionRequiredMixin, MeetingMixin, generic.CreateView):
     permission_required = 'nutriservice.add_meeting'
     model = Meeting
     fields = '__all__'
-    template_name = 'nutriservice/template_form.html'
+    template_name = 'nutriservice/meeting_form.html'
     context = {'title': 'Agendar consulta'}
 
     def get_initial(self):
@@ -294,7 +296,7 @@ class MeetingUpdate(PermissionRequiredMixin, MeetingMixin, generic.UpdateView):
     permission_required = 'nutriservice.change_meeting'
     model = Meeting
     fields = '__all__'
-    template_name = 'nutriservice/template_form.html'
+    template_name = 'nutriservice/meeting_form.html'
     context = {'title': 'Editar consulta'}
 
 class MeetingDelete(PermissionRequiredMixin, MeetingMixin, DeleteViewMixin, generic.DeleteView):

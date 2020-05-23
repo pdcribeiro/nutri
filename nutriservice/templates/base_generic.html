@@ -138,7 +138,15 @@
           <div class="d-flex align-items-center">
             {% block navbar %}
               {% for button in navbar %}
-                <a class="btn btn-{{ button.type }} float-right my-0 ml-3" href="{{ button.href }}">{{ button.text }}</a>
+                <a class="btn btn-{{ button.type }} float-right my-0 ml-3" href="{{ button.href }}">
+                  {% if button.icon %}<i class="{{ button.icon }}"></i>{% endif %}
+                  {% if button.text %}
+                    <span>
+                      {% if button.icon %}&nbsp;&nbsp;{% endif %}
+                      {{ button.text }}
+                    </span>
+                  {% endif %}
+                </a>
               {% endfor %}
             {% endblock %}
           </div>
