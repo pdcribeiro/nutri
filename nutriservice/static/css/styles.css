@@ -37,6 +37,8 @@ td .btn {
 .navbar .btn {
   display: flex;
   align-items: center;
+  padding-right: 1rem;
+  padding-left: 1rem;
 }
 .navbar .btn i {
   margin: -1px 0;

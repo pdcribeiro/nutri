@@ -97,10 +97,12 @@ class DetailViewMixin(ViewMixin):
             } for field in obj._meta.fields if filter_fields(self, field.name)],
         })
         if self.request.user.has_perm(f'nutriservice.change_{self.slug}'):
-            context['navbar'] += [{'text': 'Editar', 'type': 'primary',
+            context['navbar'] += [{
+                'icon': 'fas fa-edit', 'text': 'Editar', 'type': 'primary',
                 'href': reverse(f'{self.slug}-update', args=[self.kwargs['pk']])}]
         if self.request.user.has_perm(f'nutriservice.delete_{self.slug}'):
-            context['navbar'] += [{'text': 'Apagar', 'type': 'secondary',
+            context['navbar'] += [{
+                'icon': 'fas fa-trash-alt', 'text': 'Apagar', 'type': 'secondary',
                 'href': reverse(f'{self.slug}-delete', args=[self.kwargs['pk']])}]
         return context
 
