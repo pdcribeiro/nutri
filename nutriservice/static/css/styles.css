@@ -27,3 +27,13 @@ td .btn {
   padding: 5px 10px;
   font-size: large;
 }
+
+
+#spinner {
+  display: none;
+}
+
+
+.fc-title {
+  font-weight: bold;
+}

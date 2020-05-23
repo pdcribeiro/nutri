@@ -3351,7 +3351,7 @@ License - nucleoapp.com/license/
   transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1); }
   .main-panel > .content {
     padding: 0 30px 30px;
-    min-height: calc(100vh - 123px);
+    min-height: calc(100vh - 139px);
     margin-top: 93px; }
   .main-panel > .navbar {
     margin-bottom: 0; }
@@ -3389,7 +3389,7 @@ License - nucleoapp.com/license/
   height: 380px; }
 
 .footer {
-  padding: 24px 0; }
+  padding: 12px 0; }
   .footer.footer-default {
     background-color: #f2f2f2; }
   .footer nav {
@@ -4160,7 +4160,9 @@ License - nucleoapp.com/license/
     display: none; }
   .main-panel .content {
     padding-left: 15px;
-    padding-right: 15px; }
+    padding-right: 15px;
+    min-height: calc(100vh - 119px);
+    margin-top: 73px; }
   .footer nav {
     display: block;
     margin-bottom: 5px;

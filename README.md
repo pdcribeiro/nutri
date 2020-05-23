@@ -4,40 +4,29 @@
 
 ### Meetings
 
-1. Create partner views
-  * Maybe generalize other list templates
-2. Associate calendar IDs
-3. Continue calendar implementation
+* ! Google calendar integration
+  * Add
+  * Update
+  * Delete
+
+* Calendar
+  * Add event by clicking calendar cell
+  * Update events start datetime by dragging
+  * Update events duration by dragging
 
 * Create meeting
-  * ! From meetings page
-    * Select client: select element and text input to search
-    * Enter date
-    * Enter duration
-  * ! From client page
-    * Preselect client and disable input
-  * ! 'Agendar consulta' button
-  * ! 'Agendar rastreio' button
   * Fail on conflict and show conflicting event
   * Possibility to add custom event types
 
 * Edit meeting (reschedule)
   * Only update gcalendar if date or time changed
-  * Disable client field
 
-* Delete meeting
-  * Delete from gcalendar
-
-* ! Show all calendars
-
+* Choose calendars to show
 * Format and parse duration without seconds
-* Fix calendar customization not working
-* Possibility to set default view
 * Show upcoming meetings in home page
-* Click calendar iframe to fill date and time
-* Load calendar iframe after everything else
 
 * Add partner permissions to Herokuapp
+  * Review other permissions
 
 
 ### Partners page (Partner model)
@@ -128,6 +117,9 @@ Appointment "timeline" / nav element
 * Don't add "?next=" when current page is login page
 * Dynamic meal formset. Variable number of fields.
 * Default partner
+* Search input
+  * When selecting clients
+  * In homepage, to jump to client page
 * ? Optimize MealsFormSet.__init__() for loop
 * ? Don't store empty meal forms; problem: position filled meal forms appropriately
 * ? nutriservice.models.Meeting/Plan.date: set default value in form, not in model
