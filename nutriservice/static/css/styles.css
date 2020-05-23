@@ -34,22 +34,26 @@ td .btn {
 }
 
 
-.navbar .btn {
-  display: flex;
-  align-items: center;
+.btn {
   padding-right: 1rem;
   padding-left: 1rem;
 }
-.navbar .btn i {
+.btn i {
   margin: -1px 0;
   font-size: large;
 }
 
 @media screen and (max-width: 991px) {
-  .navbar .btn span {
+  .btn span {
     display: none;
   }
 }
+
+.navbar .btn {
+  display: flex;
+  align-items: center;
+}
+
 
 
 .fc-title {

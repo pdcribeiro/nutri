@@ -23,8 +23,14 @@
         </div>
         <div class="col">
           {% if perms.nutriservice.add_meeting %}
-            <a class="btn btn-primary float-right ml-4" href="{% url 'meeting-create' client.pk 60 %}?next={{ request.path }}">Agendar rastreio</a>
-            <a class="btn btn-primary float-right" href="{% url 'meeting-create' client.pk 30 %}?next={{ request.path }}">Agendar consulta</a>
+            <a class="btn btn-primary float-right ml-4" href="{% url 'meeting-create' client.pk 60 %}?next={{ request.path }}">
+              <i class="fas fa-plus"></i>
+              <span>&nbsp;&nbsp;Agendar rastreio</span>
+            </a>
+            <a class="btn btn-primary float-right" href="{% url 'meeting-create' client.pk 30 %}?next={{ request.path }}">
+              <i class="fas fa-plus"></i>
+              <span>&nbsp;&nbsp;Agendar consulta</span>
+            </a>
           {% endif %}
         </div>
       </div>
@@ -74,7 +80,10 @@
         </div>
         <div class="col">
           {% if perms.nutriservice.add_plan %}
-            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{ request.path }}">Novo plano</a>
+            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{ request.path }}">
+              <i class="fas fa-plus"></i>
+              <span>&nbsp;&nbsp;Novo plano</span>
+            </a>
           {% endif %}
         </div>
       </div>
