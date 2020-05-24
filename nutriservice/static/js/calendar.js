@@ -1,3 +1,5 @@
+var { CALENDAR_ID_MAP, TIME_ZONE } = jsContext;
+
 // Client ID and API key from the Developer Console
 var CLIENT_ID = '177217773425-ktoaf0un3hgni6ud1sf3ih4cb2agd1e9.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyD9HgSmymaLu43wOmr6ImG-il2tUnMFpf0';
@@ -36,7 +38,7 @@ function initClient() {
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
-  }, function(error) {
+  }, function (error) {
     appendPre(JSON.stringify(error, null, 2));
   });
 }
@@ -77,7 +79,7 @@ function listUpcomingEvents() {
     'singleEvents': true,
     'maxResults': 10,
     'orderBy': 'startTime'
-  }).then(function(response) {
+  }).then(function (response) {
     var events = response.result.items;
     appendPre('Upcoming events:');
 
@@ -89,7 +91,6 @@ function listUpcomingEvents() {
           when = event.start.date;
         }
         appendPre(event.summary + ' (' + when + ')')
-        //console.log(event);
       }
     } else {
       appendPre('No upcoming events found.');
@@ -99,7 +100,7 @@ function listUpcomingEvents() {
 
 function execute() {
   return gapi.client.calendar.calendarList.list({})
-    .then(function(response) {
+    .then(function (response) {
       for (var calendar of response.result.items) {
         if (calendar.summary === 'nutricenas') {
           return calendar.id;
@@ -107,20 +108,19 @@ function execute() {
       }
       throw 'Calendar not found.';
     })
-    .catch(function(error) {
+    .catch(function (error) {
       return gapi.client.calendar.calendars.insert({
         "resource": {
           "summary": "nutricenas"
         }
-      }).then(function(response) {
+      }).then(function (response) {
         return response.result.id;
       })
-      .catch(function(response) {
-        throw 'Failed to create calendar.';
-      });
+        .catch(function (response) {
+          throw 'Failed to create calendar.';
+        });
     })
-    .then(function(id) {
-      console.log(id);
+    .then(function (id) {
       //calendar.src = 'https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23f4f3ef&amp;ctz=Europe%2FLisbon&amp;src=' + encodeURIComponent(id) + '&amp;showTitle=0&amp;showNav=1&amp;showDate=1&amp;showTabs=1&amp;showPrint=0&amp;showCalendars=1&amp;mode=WEEK&amp;hl=pt_PT';
       //calendar.src = 'https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23f4f3ef&amp;ctz=Europe%2FLisbon&amp;src=' + encodeURIComponent(id) + '&amp;showTitle=0&amp;showNav=1&amp;showPrint=0&amp;showTabs=1&amp;showTz=0&amp;mode=WEEK&amp;hl=pt_PT';
     });
@@ -149,9 +149,9 @@ function fetchEvents(fetchInfo, successCallback, failureCallback) {
     .then(([calendars, colors]) =>
       fetchEventsFromCalendars(fetchInfo, calendars, colors))
     .then(events => {
-        // console.log('Fetched', events.length, 'events.');  //DEV
-        // console.log(events);  //DEV
-        successCallback(events);
+      // console.log('Fetched', events.length, 'events.');  //DEV
+      // console.log(events);  //DEV
+      successCallback(events);
     })
     .catch(error => {
       console.error("Error in 'initCalendar'.", error);
@@ -196,8 +196,8 @@ function fetchEventsFromCalendar(fetchInfo, calendar, color) {
 }
 
 function parseEvents(events, color) {
-  return events.map(function(event) {
-    console.log(color.foreground);
+  // console.log(events);
+  return events.map(function (event) {
     return {
       'title': event.summary,
       'start': event.start.date || event.start.dateTime,
@@ -207,6 +207,65 @@ function parseEvents(events, color) {
   })
 }
 
+
+var url = window.location.href;
+
+$('#form').submit(function(event) {
+  if (url.indexOf('/meeting/create/') > -1) {
+    alert('Meeting created.');
+    // createMeeting(event);
+  }
+  else if (/\/meeting\/\d+\/update\//.test(url)) {
+    alert('Meeting updated.');
+    // updateMeeting(event);
+  }
+});
+
+function createMeeting(submitEvent) {
+  var startDateTime = '';
+  var endDateTime = '';
+  return gapi.client.calendar.events.insert({
+    'calendarId': jsContext.calendarId,
+    'resource': {
+      'start': {
+        'dateTime': startDateTime,
+        'timeZone': TIME_ZONE,
+      },
+      'end': {
+        'dateTime': endDateTime,
+        'timeZone': TIME_ZONE,
+      },
+    }
+  })
+    .catch(error => {
+      console.error('Error creating meeting.', error);
+      submitEvent.preventDefault();
+    });
+}
+
+function updateMeeting(submitEvent) {
+  return;
+  // return gapi.client.calendar.events.insert({
+  //   'calendarId': jsContext.calendarId,
+  //   'resource': {
+  //     'start': {
+  //       'dateTime': '',
+  //       'timeZone': TIME_ZONE,
+  //     },
+  //     'end': {
+  //       'dateTime': '',
+  //       'timeZone': TIME_ZONE,
+  //     },
+  //   }
+  // })
+  //   .then(response => {
+  //       console.log(response.result);
+  //   })
+  //   .catch(error => {
+  //     console.error("Error creating meeting.", error);
+  //     submitEvent.preventDefault();
+  //   });
+}
 
     // events: [
     //   {

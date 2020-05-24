@@ -5,7 +5,9 @@
 ### Meetings
 
 * ! Google calendar integration
-  * Add
+  * ! Add
+    * Reload on client select page
+    * Provide js_context
   * Update
   * Delete
 
@@ -28,6 +30,8 @@
   * Review other permissions
 * ? calendar.js: Use eventSources instead of events
   * Use addEventSource, remove, etc.
+
+* ruinha: Create meeting form above or below calendar?
 
 
 ### Partners page (Partner model)

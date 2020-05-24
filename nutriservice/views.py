@@ -338,9 +338,6 @@ class PlanMixin(ViewMixin):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        next_ = self.request.GET.get('next', '')
-        if 'client_pk' in self.kwargs and next_.find('/main/client/') == 0 or form.instance.id:
-            form.fields['client'].disabled = True
         range_fields = ['proteins', 'carbs', 'fats']
         for field in form.fields:
             if field in range_fields:
@@ -418,6 +415,11 @@ class PlanUpdate(PermissionRequiredMixin, PlanMixin, generic.UpdateView):
     fields = '__all__'
     template_name = 'plan/index.html'
     context = {'title': 'Editar plano'}
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['client'].disabled = True
+        return form
 
 class PlanDelete(PermissionRequiredMixin, PlanMixin, DeleteViewMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_plan'
