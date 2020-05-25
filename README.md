@@ -4,6 +4,8 @@
 
 ### Meetings
 
+* Test everything
+
 * Calendar
   * Add event / fill date time by clicking calendar cell
   * Update events start datetime by dragging
@@ -16,8 +18,9 @@
 * Edit meeting (reschedule)
   * Only update gcalendar if date or time changed
 
-* Save calendar name instead of ID
-  * Fetch ID automatically
+* Prepopulate summary field when coming from consulta/rastreio link
+  * Use get parameters
+  * Use regex?
 * Choose calendars to show
 * Format and parse duration without seconds
 * Show upcoming meetings in home page

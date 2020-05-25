@@ -8,17 +8,7 @@
 {% endblock %}
 
 {% block navbar %}
-  <div id="spinner" class="spinner-border mr-3 text-success" role="status">
-    <span class="sr-only">Loading...</span>
-  </div>
-  <button id="authorize_button" class="btn btn-warning my-0 mr-5 float-right">
-    <i class="fab fa-google"></i>
-    <span>&nbsp;&nbsp;Autorizar conta Google</span>
-  </button>
-  <button id="signout_button" class="btn btn-secondary my-0 mr-5 float-right" style="display: none;">
-    <i class="fas fa-sign-out-alt"></i>
-    <span>&nbsp;&nbsp;Alterar conta Google</span>
-  </button>
+  {% include 'common/navbar_gapi.html' %}
   {{ block.super }}
 {% endblock %}
 
@@ -43,15 +33,5 @@
   <script src="https://unpkg.com/@fullcalendar/daygrid/main.min.js"></script>
   <script src="https://unpkg.com/@fullcalendar/timegrid/main.min.js"></script>
   <script src="https://unpkg.com/@fullcalendar/list/main.min.js"></script>
-  {% if js_context %}
-    <script>
-      var { CLIENT_ID, API_KEY } = {{ js_context|safe }};
-    </script>
-  {% endif %}
-  {% load static %}
-  <script src="{% static 'js/calendar.js' %}"></script>
-  <script async defer src="https://apis.google.com/js/api.js"
-    onload="this.onload=function(){};handleClientLoad()"
-    onreadystatechange="if (this.readyState === 'complete') this.onload()">
-  </script>
+  {% include 'common/scripts_calendar.html' %}
 {% endblock %}

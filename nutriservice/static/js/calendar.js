@@ -288,6 +288,10 @@ $('form').submit(function (event, gcalSync = false) {
     event.preventDefault();
     deleteMeeting();
   }
+  else if (/\/partner\/(create|\d+\/update)\//.test(path) && !gcalSync) {
+    event.preventDefault();
+    parseCalendar();
+  }
 });
 
 // Create meeting on gcal
@@ -388,6 +392,64 @@ function deleteMeeting() {
         console.error('Error deleting meeting.', error);
         alert('Erro ao apagar evento Google. Verifique a sua ligação à internet.');
       }
+    });
+}
+
+function parseCalendar() {
+  $('#spinner').show();
+  calendarId = $('#id_calendar').val();
+  gapi.client.calendar.calendars.get({calendarId})
+    // Calendar found through ID. Submit.
+    .then(() => {
+      $('#spinner').hide();
+      $('form').trigger('submit', true);
+    })
+    // Calendar not found through ID. Search by name.
+    .catch(response => {
+      console.error('Calendar ID not found. Searching by name...', response.result);
+      searchCalendarByName();
+    });
+}
+
+function searchCalendarByName() {
+  gapi.client.calendar.calendarList.list({})
+    .then(response => {
+      for (var calendar of response.result.items) {
+        if (calendar.summary === calendarId) {
+          return calendar.id;
+        }
+      }
+      throw '';
+    })
+    // Calendar found through name. Replace ID and submit.
+    .then(calId => {
+      $('#id_calendar').val(calId);
+      $('#spinner').hide();
+      $('form').trigger('submit', true);
+    })
+    // Calendar not found through name. Create new.
+    .catch(() => {
+      console.error('Calendar not found. Creating new one...');
+      createCalendar();
+    });
+}
+
+function createCalendar() {
+  gapi.client.calendar.calendars.insert({
+    resource: {
+      summary: $('#id_calendar').val(),
+    }
+  })
+    // Calendar created. Replace ID and submit.
+    .then(response => {
+      $('#id_calendar').val(response.result.id)
+      $('#spinner').hide();
+      $('form').trigger('submit', true);
+    })
+    // Failed to create calendar.
+    .catch(response => {
+      console.log('Failed to create calendar.', response.result);
+      alert('O calendário não foi encontrado e não foi possível criar um novo. Verifique a sua ligação à internet.');
     });
 }
 

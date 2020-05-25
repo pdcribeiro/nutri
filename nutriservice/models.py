@@ -24,7 +24,7 @@ class Partner(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nome')
     date = models.DateField(null=True, blank=True, verbose_name='Data de início da parceria')
     # active = models.BooleanField(...)
-    calendar = models.CharField(max_length=200, verbose_name='ID do calendário Google')
+    calendar = models.CharField(max_length=200, verbose_name='Calendário Google')
 
     class Meta:
         ordering = ['-date', 'name']

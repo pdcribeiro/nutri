@@ -113,6 +113,17 @@ class DeleteViewMixin(ViewMixin):
     context_object_name = 'object'
     template_name = 'nutriservice/template_confirm_delete.html'
 
+class GoogleApiMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'js_context': {
+                'CLIENT_ID': os.environ.get('GOOGLE_CLIENT_ID'),
+                'API_KEY': os.environ.get('GOOGLE_API_KEY'),
+            }
+        })
+        return context
+
 
 class Home(LoginRequiredMixin, ViewMixin, View):
     def get(self, request):
@@ -152,18 +163,18 @@ class PartnerDetailView(PermissionRequiredMixin, DetailViewMixin, generic.Detail
     exclude = ['id']
     slug = 'partner'
 
-class PartnerCreate(PermissionRequiredMixin, ViewMixin, generic.CreateView):
+class PartnerCreate(PermissionRequiredMixin, GoogleApiMixin, ViewMixin, generic.CreateView):
     permission_required = 'nutriservice.add_partner'
     model = Partner
     fields = '__all__'
-    template_name = 'nutriservice/template_form.html'
+    template_name = 'nutriservice/partner_form.html'
     context = {'title': 'Criar parceiro'}
 
-class PartnerUpdate(PermissionRequiredMixin, ViewMixin, generic.UpdateView):
+class PartnerUpdate(PermissionRequiredMixin, GoogleApiMixin, ViewMixin, generic.UpdateView):
     permission_required = 'nutriservice.change_partner'
     model = Partner
     fields = '__all__'
-    template_name = 'nutriservice/template_form.html'
+    template_name = 'nutriservice/partner_form.html'
     context = {'title': 'Editar parceiro'}
 
 class PartnerDelete(PermissionRequiredMixin, DeleteViewMixin, generic.DeleteView):
@@ -272,17 +283,6 @@ class MeetingDetailView(PermissionRequiredMixin, DetailViewMixin, generic.Detail
 @permission_required('nutriservice.view_meeting')
 def calendar(request):
     return render(request, 'nutriservice/calendar.html')
-
-class GoogleApiMixin:
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'js_context': {
-                'CLIENT_ID': os.environ.get('GOOGLE_CLIENT_ID'),
-                'API_KEY': os.environ.get('GOOGLE_API_KEY'),
-            }
-        })
-        return context
 
 class MeetingMixin(GoogleApiMixin, ViewMixin):
     success_url = 'meetings'
