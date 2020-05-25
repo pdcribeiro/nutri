@@ -1,7 +1,9 @@
-from django.forms import ModelForm
+from django.contrib.auth.forms import AuthenticationForm
+from django import forms
 from django.forms.models import inlineformset_factory
 
 from nutriservice.models import Client, Meeting, Meal, Plan
+
 
 MealsBaseFormSet = inlineformset_factory(Client, Meal, fields='__all__', extra=6, can_delete=False, max_num=6)
 
@@ -26,7 +28,7 @@ class MealsFormSet(MealsBaseFormSet):
                 form.has_changed = lambda: True
 
 
-class ClientForm(ModelForm):
+class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         exclude = ['user', 'nutritionist']
@@ -44,7 +46,16 @@ class ClientForm(ModelForm):
         return self.instance
 
 
-# class MeetingForm(ModelForm):
+# class MeetingForm(forms.ModelForm):
 #     class Meta:
 #         model = Meeting
-#         exclude = ['event']
+#         exclude = ['event']from django.contrib.auth.forms import AuthenticationForm
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control mb-2',
+        'placeholder': 'utilizador'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-control mb-3',
+        'placeholder': 'palavra-passe'}))
