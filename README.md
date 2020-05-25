@@ -4,12 +4,7 @@
 
 ### Meetings
 
-* ! Google calendar integration
-  * ! Add
-    * Reload on client select page
-    * Provide js_context
-  * Update
-  * Delete
+* Hide sidebar in meeting form
 
 * Calendar
   * Add event by clicking calendar cell
@@ -23,6 +18,8 @@
 * Edit meeting (reschedule)
   * Only update gcalendar if date or time changed
 
+* Save calendar name instead of ID
+  * Fetch ID automatically
 * Choose calendars to show
 * Format and parse duration without seconds
 * Show upcoming meetings in home page

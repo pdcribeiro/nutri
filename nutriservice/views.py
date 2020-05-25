@@ -6,9 +6,11 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
+from django.views.generic.edit import ModelFormMixin
 
 from nutriservice.models import Partner, Client, Meeting, Plan, PAL
 from nutriservice.forms import ClientForm
@@ -237,11 +239,12 @@ class MeetingListView(PermissionRequiredMixin, ListViewMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Remove seconds from time fields
-        rows = context['rows']
-        time_idx = context['cols'].index('Hora')
-        for i in range(len(rows)):
-            field = rows[i]['fields'][time_idx]
-            field['value'] = field['value'][:-3]
+        if context['rows']:
+            rows = context['rows']
+            time_idx = context['cols'].index('Hora')
+            for i in range(len(rows)):
+                field = rows[i]['fields'][time_idx]
+                field['value'] = field['value'][:-3]
         # Add custom navbar buttons
         # if self.request.user.has_perm('nutriservice.add_meeting'):
         #     context['navbar'] = [
@@ -274,10 +277,10 @@ class MeetingMixin(ViewMixin):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        if 'client_pk' in self.kwargs or form.instance.id:
-            form.fields['client'].disabled = True
         form.fields['date'].widget = forms.DateInput(attrs={'placeholder':'day-month-year'})
         form.fields['time'].widget = forms.TimeInput(attrs={'placeholder':'hora:minuto'})
+        form.fields['event'].widget = forms.HiddenInput()
+        form.fields['event'].required = False
         return form
 
 class MeetingCreate(PermissionRequiredMixin, MeetingMixin, generic.CreateView):
@@ -288,8 +291,10 @@ class MeetingCreate(PermissionRequiredMixin, MeetingMixin, generic.CreateView):
     context = {'title': 'Agendar consulta'}
 
     def get_initial(self):
-        if 'client_pk' in self.kwargs:
-            self.initial.update({'client': get_object_or_404(Client, pk=self.kwargs['client_pk'])})
+        self.initial.update({
+            'client': get_object_or_404(Client, pk=self.kwargs['client_pk'])
+                if 'client_pk' in self.kwargs else None
+        })
         if 'duration' in self.kwargs:
             self.initial.update({'duration': self.kwargs['duration']})
         return super().get_initial()
@@ -301,10 +306,31 @@ class MeetingUpdate(PermissionRequiredMixin, MeetingMixin, generic.UpdateView):
     template_name = 'nutriservice/meeting_form.html'
     context = {'title': 'Editar consulta'}
 
-class MeetingDelete(PermissionRequiredMixin, MeetingMixin, DeleteViewMixin, generic.DeleteView):
+    def get_initial(self):
+        self.initial.update({
+            'client': get_object_or_404(Meeting, pk=self.kwargs['pk']).client})
+        return super().get_initial()
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['client'].disabled = True
+        return form
+
+class MeetingDelete(PermissionRequiredMixin, ViewMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_meeting'
     model = Meeting
     context = {'title': 'Apagar consulta', 'name': 'consulta'}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        meeting = get_object_or_404(Meeting, pk=self.kwargs['pk'])
+        context.update({
+            'js_context': {
+                'calendarId': meeting.client.partner.calendar,
+                'eventId': meeting.event,
+            }
+        })
+        return context
 
 
 class PlanListView(PermissionRequiredMixin, ListViewMixin, generic.ListView):
@@ -368,9 +394,9 @@ class PlanMixin(ViewMixin):
             'age': client.age,
             'height': float(client.height),
             'weight': float(client.weight),
-            'body_fat': client.body_fat and float(client.body_fat) or '',
+            'bodyFat': client.body_fat and float(client.body_fat) or '',
             'pal': str(client.pal),
-            'pal_map': { str(key): val for [key, val] in PAL },
+            'palMap': { str(key): val for [key, val] in PAL },
         }
         context.update({
             'client': client,
@@ -416,12 +442,17 @@ class PlanUpdate(PermissionRequiredMixin, PlanMixin, generic.UpdateView):
     template_name = 'plan/index.html'
     context = {'title': 'Editar plano'}
 
+    def get_initial(self):
+        self.initial.update({
+            'client': get_object_or_404(Plan, pk=self.kwargs['pk']).client})
+        return super().get_initial()
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['client'].disabled = True
         return form
 
-class PlanDelete(PermissionRequiredMixin, PlanMixin, DeleteViewMixin, generic.DeleteView):
+class PlanDelete(PermissionRequiredMixin, DeleteViewMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_plan'
     model = Plan
     context = {'title': 'Apagar plano', 'name': 'plano'}
@@ -460,3 +491,8 @@ def deliver_plan(request, pk):
         ],
     }
     return render(request, 'plan/deliverable.html', context=context)
+
+
+def get_calendar(request, client_pk):
+    client = get_object_or_404(Client, pk=client_pk)
+    return HttpResponse(client.partner.calendar)

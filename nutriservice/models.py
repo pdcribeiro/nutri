@@ -24,7 +24,7 @@ class Partner(models.Model):
     name = models.CharField(max_length=200, verbose_name='Nome')
     date = models.DateField(null=True, blank=True, verbose_name='Data de início da parceria')
     # active = models.BooleanField(...)
-    calendar = models.CharField(max_length=200, blank=True, verbose_name='ID do calendário Google')
+    calendar = models.CharField(max_length=200, verbose_name='ID do calendário Google')
 
     class Meta:
         ordering = ['-date', 'name']
@@ -89,6 +89,8 @@ class Meeting(models.Model):
     date = models.DateField(verbose_name='Data')
     time = models.TimeField(verbose_name='Hora')
     duration = models.IntegerField(verbose_name='Duração (minutos)')
+    summary = models.CharField(max_length=200, verbose_name='Resumo')
+    event = models.CharField(max_length=200, verbose_name='ID do evento Google')
     weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name='Peso (kg)')
 
     class Meta:

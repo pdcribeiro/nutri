@@ -24,28 +24,21 @@
 {% block content %}
   <form id="form" action="" method="post" class="mb-3">
     {% csrf_token %}
+    {{ form.non_field_errors }}
     {% block form %}{{ block.super }}{% endblock %}
   </form>
   <div id="calendar"></div>
 {% endblock %}
 
-{% if js_context %}
-  {% block scripts %}
-    <script src="https://unpkg.com/@fullcalendar/core/main.min.js"></script>
-    <script src="https://unpkg.com/@fullcalendar/interaction/main.min.js"></script>
-    <script src="https://unpkg.com/@fullcalendar/daygrid/main.min.js"></script>
-    <script src="https://unpkg.com/@fullcalendar/timegrid/main.min.js"></script>
-    <script src="https://unpkg.com/@fullcalendar/google-calendar/main.min.js"></script>
-    {% load tz %}{% get_current_timezone as TIME_ZONE %}
-    <script type='text/javascript'>
-      var jsContext = {{ js_context|safe }};
-      jsContext.TIME_ZONE = TIME_ZONE;
-    </script>
-    {% load static %}
-    <script src="{% static 'js/calendar.js' %}"></script>
-    <script async defer src="https://apis.google.com/js/api.js"
-      onload="this.onload=function(){};handleClientLoad()"
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
-  {% endblock %}
-{% endif %}
+{% block scripts %}
+  <script src="https://unpkg.com/@fullcalendar/core/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/interaction/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/daygrid/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/timegrid/main.min.js"></script>
+  {% load static %}
+  <script src="{% static 'js/calendar.js' %}"></script>
+  <script async defer src="https://apis.google.com/js/api.js"
+    onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
+{% endblock %}

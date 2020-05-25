@@ -24,6 +24,8 @@ urlpatterns = [
     path('meeting/create/<int:client_pk>/<int:duration>/', views.MeetingCreate.as_view(), name='meeting-create'),
     path('meeting/<int:pk>/update/', views.MeetingUpdate.as_view(), name='meeting-update'),
     path('meeting/<int:pk>/delete/', views.MeetingDelete.as_view(), name='meeting-delete'),
+    
+    path('calendar/<int:client_pk>/', views.get_calendar, name='get-calendar'),
 
     path('plans/', views.PlanListView.as_view(), name='plans'),
     path('plan/<int:pk>', views.PlanDetailView.as_view(), name='plan-detail'),

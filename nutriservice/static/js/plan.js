@@ -1,5 +1,5 @@
 if (typeof jsContext !== 'undefined') {
-  var { gender, age, height, weight, body_fat: bodyFat, pal, pal_map: palMap } = jsContext;
+  var { gender, age, height, weight, bodyFat, pal, palMap } = jsContext;
   var BMR_CONSTANT = 6.25*height - 5*age + { m: 5, f: -161 }[gender];
   var tmp = null;
 }

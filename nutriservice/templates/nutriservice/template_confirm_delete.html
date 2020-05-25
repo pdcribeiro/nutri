@@ -17,6 +17,7 @@
 
   <form id="form" action="" method="POST">
     {% csrf_token %}
+    {% block form %}{% endblock %}
   </form>
 
 {% endblock %}

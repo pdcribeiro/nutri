@@ -42,3 +42,9 @@ class ClientForm(ModelForm):
         self.meals_formset.instance = super().save(*args, **kwargs)
         self.meals_formset.save(*args, **kwargs)
         return self.instance
+
+
+# class MeetingForm(ModelForm):
+#     class Meta:
+#         model = Meeting
+#         exclude = ['event']

@@ -1,5 +1,3 @@
-var { CALENDAR_ID_MAP, TIME_ZONE } = jsContext;
-
 // Client ID and API key from the Developer Console
 var CLIENT_ID = '177217773425-ktoaf0un3hgni6ud1sf3ih4cb2agd1e9.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyD9HgSmymaLu43wOmr6ImG-il2tUnMFpf0';
@@ -18,28 +16,33 @@ var calendarEl = document.getElementById('calendar');
 var calendar = null;
 
 
-function handleClientLoad() {
+function handleClientLoad(renderCalendar=true) {
   $('#spinner').show();
-  gapi.load('client:auth2', initClient);
-}
-
-function initClient() {
-  gapi.client.init({
-    apiKey: API_KEY,
-    clientId: CLIENT_ID,
-    discoveryDocs: DISCOVERY_DOCS,
-    scope: SCOPES
-  }).then(function () {
-    // Listen for sign-in state changes.
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-    // Handle the initial sign-in state.
-    initCalendar();
-    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    authorizeButton.onclick = handleAuthClick;
-    signoutButton.onclick = handleSignoutClick;
-  }, function (error) {
-    appendPre(JSON.stringify(error, null, 2));
+  gapi.load('client:auth2', () => {
+    gapi.client.init({
+      apiKey: API_KEY,
+      clientId: CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES
+    })
+      .then(() => {
+        if (renderCalendar) {
+          initCalendar();
+        }
+        else {
+          $('#spinner').hide();
+        }
+  
+        // Listen for sign-in state changes.
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+  
+        // Handle the initial sign-in state.
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        authorizeButton.onclick = handleAuthClick;
+        signoutButton.onclick = handleSignoutClick;
+      }, function (error) {
+        appendPre(JSON.stringify(error, null, 2));
+      });
   });
 }
 
@@ -48,7 +51,7 @@ function updateSigninStatus(isSignedIn) {
     $(authorizeButton).hide();
     $(signoutButton).show();
     //listUpcomingEvents();
-    calendar.render();
+    if (calendar) calendar.render();
   } else {
     $(authorizeButton).show();
     $(signoutButton).hide();
@@ -57,12 +60,10 @@ function updateSigninStatus(isSignedIn) {
 
 function handleAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
-  calendar.src = calendar.src;
 }
 
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
-  calendar.src = '';
 }
 
 function appendPre(message) {
@@ -155,6 +156,7 @@ function fetchEvents(fetchInfo, successCallback, failureCallback) {
     })
     .catch(error => {
       console.error("Error in 'initCalendar'.", error);
+      alert('Erro ao obter calendários Google. Verifique a sua ligação à internet.');
       failureCallback(error);
     })
     .then(() => {
@@ -208,64 +210,171 @@ function parseEvents(events, color) {
 }
 
 
-var url = window.location.href;
-
-$('#form').submit(function(event) {
-  if (url.indexOf('/meeting/create/') > -1) {
-    alert('Meeting created.');
-    // createMeeting(event);
+// Update summary when client changes
+var client = null;
+$('#id_client').focus(function() {
+  if ($('#id_client').val()) {
+    client = getClientName();
   }
-  else if (/\/meeting\/\d+\/update\//.test(url)) {
-    alert('Meeting updated.');
-    // updateMeeting(event);
+}).change(function() {
+  if ($('#id_client').val()) {
+    if ($('#id_summary').val()) {
+      var regex = new RegExp(`(.*)${client}(.*)`, 'i');
+      if (regex.test($('#id_summary').val())) {
+        var newClient = getClientName();
+        var newSummary = $('#id_summary').val().replace(regex, `$1${newClient}$2`);
+        $('#id_summary').val(newSummary);
+        client = newClient;
+      }
+    }
+    else {
+      var newClient = getClientName();
+      $('#id_summary').val('Consulta ' + newClient);
+      client = newClient;
+    }
   }
 });
 
-function createMeeting(submitEvent) {
-  var startDateTime = '';
-  var endDateTime = '';
+function getClientName() {
+  var client_id = $('#id_client').val();
+  return $(`#id_client option[value="${client_id}"]`).text();
+}
+
+
+// Fetch gcal calendar ID
+function fetchCalendar() {
+  if ($('#id_client').val()) {
+    var url = '/main/calendar/' + $('#id_client').val();
+    fetch(url).then(response => response.text()).then(function (calId) {
+      calendarId = calId;
+    });
+  }
+}
+if (typeof calendarId === 'undefined') {
+  var calendarId = null;
+  fetchCalendar();
+}
+$('#id_client').change(fetchCalendar);
+
+
+// Gcal integration on form submission
+var path = window.location.pathname;
+$('form').submit(function (event, gcalSync = false) {
+  if (path.indexOf('/meeting/create/') > -1 && !gcalSync) {
+    event.preventDefault();
+    createMeeting();
+  }
+  else if (/\/meeting\/\d+\/update\//.test(path) && !gcalSync) {
+    event.preventDefault();
+    updateMeeting();
+  }
+  else if (/\/meeting\/\d+\/delete\//.test(path) && !gcalSync) {
+    event.preventDefault();
+    deleteMeeting();
+  }
+});
+
+// Create meeting on gcal
+function createMeeting() {
   return gapi.client.calendar.events.insert({
-    'calendarId': jsContext.calendarId,
-    'resource': {
-      'start': {
-        'dateTime': startDateTime,
-        'timeZone': TIME_ZONE,
-      },
-      'end': {
-        'dateTime': endDateTime,
-        'timeZone': TIME_ZONE,
-      },
-    }
+    calendarId,
+    resource: getEventResource(),
   })
+    .then(response => {
+      $('#id_event').val(response.result.id);
+      $('form').trigger('submit', true);
+    })
     .catch(error => {
       console.error('Error creating meeting.', error);
-      submitEvent.preventDefault();
+      alert('Erro ao criar evento Google. Verifique a sua ligação à internet.');
     });
 }
 
-function updateMeeting(submitEvent) {
-  return;
-  // return gapi.client.calendar.events.insert({
-  //   'calendarId': jsContext.calendarId,
-  //   'resource': {
-  //     'start': {
-  //       'dateTime': '',
-  //       'timeZone': TIME_ZONE,
-  //     },
-  //     'end': {
-  //       'dateTime': '',
-  //       'timeZone': TIME_ZONE,
-  //     },
-  //   }
-  // })
-  //   .then(response => {
-  //       console.log(response.result);
-  //   })
-  //   .catch(error => {
-  //     console.error("Error creating meeting.", error);
-  //     submitEvent.preventDefault();
-  //   });
+function getEventResource() {
+  var [startDateTime, endDateTime] = parseDateTime();
+  return {
+    'summary': $('#id_summary').val(),
+    'start': {
+      'dateTime': startDateTime,
+    },
+    'end': {
+      'dateTime': endDateTime,
+    },
+  }
 }
+
+function parseDateTime() {
+  var date = $('#id_date').val();
+  var time = $('#id_time').val();
+  var duration = $('#id_duration').val();
+
+  // Parse date.
+  var now = new Date();
+  var [_, day, _, month, _, year] = date.match(/(\d+)(\D(\d+)(\D(\d+))?)?/)
+  if (day.length === 1) day = '0' + day;
+  if (typeof month === 'undefined') var month = (now.getMonth() + 1).toString();
+  if (month.length === 1) month = '0' + month;
+  if (typeof year === 'undefined') var year = (now.getYear() + 1900).toString();
+  else if (year.length === 2) year = '20' + year;
+  date = `${year}-${month}-${day}`;
+  $('#id_date').val(`${day}-${month}-${year}`)
+
+  // Parse time.
+  var [_, hours, _, minutes] = time.match(/(\d+)(\D(\d+))?/)
+  if (hours.length === 1) hours = '0' + hours;
+  if (typeof minutes === 'undefined') var minutes = '00';
+  else if (minutes.length === 1) minutes = '0' + minutes;
+  time = hours + ':' + minutes;
+  $('#id_time').val(time);
+
+  // Compute UTC date time strings.
+  var startDateObj = new Date(date + 'T' + time);
+  var durationInMs = duration * 60 * 1000;
+  var endDateObj = new Date(startDateObj.getTime() + durationInMs);
+
+  return [
+    startDateObj.toISOString(),
+    endDateObj.toISOString()
+  ];
+}
+
+// Update meeting on gcal
+function updateMeeting() {
+  return gapi.client.calendar.events.update({
+    calendarId,
+    'eventId': $('#id_event').val(),
+    'resource': getEventResource(),
+  })
+    .then(response => {
+      $('form').trigger('submit', true);
+    })
+    .catch(error => {
+      console.error('Error creating meeting.', error);
+      alert('Erro ao criar evento Google. Verifique a sua ligação à internet.');
+    });
+}
+
+// Delete meeting on gcal
+function deleteMeeting() {
+  return gapi.client.calendar.events.delete({
+    calendarId,
+    eventId,
+  })
+    .then(response => {
+      $('form').trigger('submit', true);
+    })
+    .catch(response => {
+      if (response.result.error.code === 410) {
+        alert('O evento Google já tinha sido apagado. A consulta foi apagada da base de dados.');
+        $('form').trigger('submit', true);
+      }
+      else {
+        console.error('Error deleting meeting.', error);
+        alert('Erro ao apagar evento Google. Verifique a sua ligação à internet.');
+      }
+    });
+}
+
 
     // events: [
     //   {
