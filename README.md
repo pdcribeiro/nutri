@@ -4,8 +4,6 @@
 
 ### Meetings
 
-* Hide sidebar in meeting form
-
 * Calendar
   * Add event by clicking calendar cell
   * Update events start datetime by dragging
@@ -104,6 +102,7 @@ Appointment "timeline" / nav element
 
 
 ### Misc
+* Fix opposite logic on Paper Dashboard sidebar toggler
 * Filter db entries appropriately
 * Turn function views into classes
 * Retry to generalize Meeting/Plan mixins

@@ -16,7 +16,12 @@ var calendarEl = document.getElementById('calendar');
 var calendar = null;
 
 
-function handleClientLoad(renderCalendar=true) {
+// Hide sidebar smoothly.
+setTimeout(function () {
+  $('.navbar-toggler').click();
+});
+
+function handleClientLoad(renderCalendar = true) {
   $('#spinner').show();
   gapi.load('client:auth2', () => {
     gapi.client.init({
@@ -32,10 +37,11 @@ function handleClientLoad(renderCalendar=true) {
         else {
           $('#spinner').hide();
         }
-  
+
+
         // Listen for sign-in state changes.
         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-  
+
         // Handle the initial sign-in state.
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
         authorizeButton.onclick = handleAuthClick;
@@ -130,15 +136,29 @@ function execute() {
 
 function initCalendar() {
   calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: ['interaction', 'dayGrid', 'timeGrid', 'googleCalendar'],
+    plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
+    locale: 'pt',
     defaultView: 'timeGridWeek',
-    // height: 500,
+    height: $('.content').height(),
+    // views: {
+    //   timeGrid: { year: 'numeric', month: 'long', day: 'numeric' },
+    // },
+    // slotDuration: '01:00:00',
+    // slotLabelInterval: '02:00:00',
+    buttonText: {
+      today:    'hoje',
+      month:    'mês',
+      week:     'semana',
+      day:      'dia',
+      list:     'lista'
+    },
     eventTextColor: 'white',
     header: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
+    // header: false,
     minTime: '08:00:00',
     events: fetchEvents,
   });
@@ -212,11 +232,11 @@ function parseEvents(events, color) {
 
 // Update summary when client changes
 var client = null;
-$('#id_client').focus(function() {
+$('#id_client').focus(function () {
   if ($('#id_client').val()) {
     client = getClientName();
   }
-}).change(function() {
+}).change(function () {
   if ($('#id_client').val()) {
     if ($('#id_summary').val()) {
       var regex = new RegExp(`(.*)${client}(.*)`, 'i');

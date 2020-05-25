@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/core/main.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/daygrid/main.min.css">
   <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/timegrid/main.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/list/main.min.css">
 {% endblock %}
 
 {% block navbar %}
@@ -22,12 +23,18 @@
 {% endblock %}
 
 {% block content %}
-  <form id="form" action="" method="post" class="mb-3">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    {% block form %}{{ block.super }}{% endblock %}
-  </form>
-  <div id="calendar"></div>
+  <div class="row">
+    <div class="col-lg-8 mb-4 mb-lg-0">
+      <div id="calendar"></div>
+    </div>
+    <div class="col-lg-4">
+      <form id="form" action="" method="post" class="mb-3">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% block form %}{{ block.super }}{% endblock %}
+      </form>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}
@@ -35,6 +42,7 @@
   <script src="https://unpkg.com/@fullcalendar/interaction/main.min.js"></script>
   <script src="https://unpkg.com/@fullcalendar/daygrid/main.min.js"></script>
   <script src="https://unpkg.com/@fullcalendar/timegrid/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/list/main.min.js"></script>
   {% load static %}
   <script src="{% static 'js/calendar.js' %}"></script>
   <script async defer src="https://apis.google.com/js/api.js"
