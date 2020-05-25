@@ -15,14 +15,10 @@
   {{ block.super }}
 {% endblock %}
 
-{% block form %}
-  {{ form.event }}
-{% endblock %}
-
 {% block scripts %}
   {% if js_context %}
     <script>
-      var { calendarId, eventId } = {{ js_context|safe }};
+      var { CLIENT_ID, API_KEY, calendarId, eventId } = {{ js_context|safe }};
     </script>
   {% endif %}
   {% load static %}

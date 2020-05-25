@@ -43,6 +43,11 @@
   <script src="https://unpkg.com/@fullcalendar/daygrid/main.min.js"></script>
   <script src="https://unpkg.com/@fullcalendar/timegrid/main.min.js"></script>
   <script src="https://unpkg.com/@fullcalendar/list/main.min.js"></script>
+  {% if js_context %}
+    <script>
+      var { CLIENT_ID, API_KEY } = {{ js_context|safe }};
+    </script>
+  {% endif %}
   {% load static %}
   <script src="{% static 'js/calendar.js' %}"></script>
   <script async defer src="https://apis.google.com/js/api.js"

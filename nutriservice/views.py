@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 
 from django import forms
 from django.contrib.auth.decorators import permission_required
@@ -272,7 +273,18 @@ class MeetingDetailView(PermissionRequiredMixin, DetailViewMixin, generic.Detail
 def calendar(request):
     return render(request, 'nutriservice/calendar.html')
 
-class MeetingMixin(ViewMixin):
+class GoogleApiMixin:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'js_context': {
+                'CLIENT_ID': os.environ.get('GOOGLE_CLIENT_ID'),
+                'API_KEY': os.environ.get('GOOGLE_API_KEY'),
+            }
+        })
+        return context
+
+class MeetingMixin(GoogleApiMixin, ViewMixin):
     success_url = 'meetings'
 
     def get_form(self, form_class=None):
@@ -316,7 +328,7 @@ class MeetingUpdate(PermissionRequiredMixin, MeetingMixin, generic.UpdateView):
         form.fields['client'].disabled = True
         return form
 
-class MeetingDelete(PermissionRequiredMixin, ViewMixin, generic.DeleteView):
+class MeetingDelete(PermissionRequiredMixin, GoogleApiMixin, ViewMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_meeting'
     model = Meeting
     context = {'title': 'Apagar consulta', 'name': 'consulta'}
@@ -324,11 +336,9 @@ class MeetingDelete(PermissionRequiredMixin, ViewMixin, generic.DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         meeting = get_object_or_404(Meeting, pk=self.kwargs['pk'])
-        context.update({
-            'js_context': {
-                'calendarId': meeting.client.partner.calendar,
-                'eventId': meeting.event,
-            }
+        context['js_context'].update({
+            'calendarId': meeting.client.partner.calendar,
+            'eventId': meeting.event,
         })
         return context
 

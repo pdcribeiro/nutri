@@ -5,7 +5,7 @@
 ### Meetings
 
 * Calendar
-  * Add event by clicking calendar cell
+  * Add event / fill date time by clicking calendar cell
   * Update events start datetime by dragging
   * Update events duration by dragging
 
@@ -25,8 +25,6 @@
   * Review other permissions
 * ? calendar.js: Use eventSources instead of events
   * Use addEventSource, remove, etc.
-
-* ruinha: Create meeting form above or below calendar?
 
 
 ### Partners page (Partner model)
