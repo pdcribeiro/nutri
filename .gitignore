@@ -1,6 +1,5 @@
 *.bak
 *.pyc
 db.sqlite3
-nutriservice/migrations
 server.sh
 staticfiles/
