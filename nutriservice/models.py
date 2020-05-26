@@ -1,3 +1,4 @@
+import datetime
 from decimal import Decimal
 
 from django.contrib.auth.models import User
@@ -16,6 +17,11 @@ PAL = (
     (Decimal('1.50'), 'Leve'),
     (Decimal('1.75'), 'Ativo'),
     (Decimal('2.20'), 'Muito ativo'),
+)
+MEASURE = (
+    ('w', 'Peso'),
+    ('h', 'Altura'),
+    ('f', 'Gordura'),
 )
 
 
@@ -42,7 +48,6 @@ class Client(models.Model):
     """The Client model."""
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Utilizador')
     nutritionist = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='nutritionist', null=True, verbose_name='Nutricionista')
-    partner = models.ForeignKey(Partner, on_delete=models.SET_NULL, null=True, verbose_name='Parceiro')
 
     name = models.CharField(max_length=200, verbose_name='Nome')
     gender = models.CharField(max_length=1, choices=GENDER, default='f', verbose_name='Sexo')
@@ -53,6 +58,8 @@ class Client(models.Model):
     weight = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Peso (kg)')
     body_fat = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, verbose_name='Gordura corporal (%)')
     pal = models.DecimalField(max_digits=3, decimal_places=2, choices=PAL, default=PAL[1][0], verbose_name='Atividade física atual')
+    
+    partner = models.ForeignKey(Partner, on_delete=models.SET_NULL, null=True, verbose_name='Parceiro')
 
     class Meta:
         ordering = ['name', 'age']
@@ -81,6 +88,15 @@ class Meal(models.Model):
     def __str__(self):
         """String to represent Meal model."""
         return f'meal_id: {self.id} ({self.client})'
+
+
+class Measurement(models.Model):
+    """The Measurement model."""
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
+    measure = models.CharField(max_length=1, choices=MEASURE, default='w', verbose_name='Medida')
+    value = models.IntegerField(verbose_name='Idade (anos)')
+    unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
+    date = models.DateField(default=datetime.date.today, verbose_name='Data')
 
 
 class Meeting(models.Model):

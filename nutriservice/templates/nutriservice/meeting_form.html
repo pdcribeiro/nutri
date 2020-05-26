@@ -1,14 +1,11 @@
 {% extends "nutriservice/template_form.html" %}
 
 {% block links %}
-  <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/core/main.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/daygrid/main.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/timegrid/main.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/list/main.min.css">
+  {% include 'common/calendar_links.html' %}
 {% endblock %}
 
 {% block navbar %}
-  {% include 'common/navbar_gapi.html' %}
+  {% include 'common/gapi_navbar.html' %}
   {{ block.super }}
 {% endblock %}
 
@@ -28,10 +25,5 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="https://unpkg.com/@fullcalendar/core/main.min.js"></script>
-  <script src="https://unpkg.com/@fullcalendar/interaction/main.min.js"></script>
-  <script src="https://unpkg.com/@fullcalendar/daygrid/main.min.js"></script>
-  <script src="https://unpkg.com/@fullcalendar/timegrid/main.min.js"></script>
-  <script src="https://unpkg.com/@fullcalendar/list/main.min.js"></script>
-  {% include 'common/scripts_calendar.html' %}
+  {% include 'common/calendar_scripts.html' with render_calendar='true' %}
 {% endblock %}

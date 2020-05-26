@@ -4,21 +4,26 @@ from . import views
 urlpatterns = [
     path('', views.Home.as_view(), name='index'),
 
-    path('partners/', views.PartnerListView.as_view(), name='partners'),
-    path('partner/<int:pk>', views.PartnerDetailView.as_view(), name='partner-detail'),
+    path('partners/', views.PartnerList.as_view(), name='partners'),
+    path('partner/<int:pk>', views.PartnerDetail.as_view(), name='partner-detail'),
     path('partner/create/', views.PartnerCreate.as_view(), name='partner-create'),
     path('partner/<int:pk>/update/', views.PartnerUpdate.as_view(), name='partner-update'),
     path('partner/<int:pk>/delete/', views.PartnerDelete.as_view(), name='partner-delete'),
 
-    path('clients/', views.ClientListView.as_view(), name='clients'),
-    path('client/<int:pk>', views.ClientDetailView.as_view(), name='client-detail'),
+    path('clients/', views.ClientList.as_view(), name='clients'),
+    path('client/<int:pk>', views.ClientDetail.as_view(), name='client-detail'),
     path('client/create/', views.ClientCreate.as_view(), name='client-create'),
     path('client/<int:pk>/update/', views.ClientUpdate.as_view(), name='client-update'),
     path('client/<int:pk>/delete/', views.ClientDelete.as_view(), name='client-delete'),
+
+    path('measures/', views.MeasurementList.as_view(), name='measurements'),
+    # path('measure/<int:pk>', views.MeasurementDetail.as_view(), name='measurement-detail'),
+    # path('measure/create/', views.MeasurementCreate.as_view(), name='measurement-create'),
+    # path('measure/<int:pk>/update/', views.MeasurementUpdate.as_view(), name='measurement-update'),
+    # path('measure/<int:pk>/delete/', views.MeasurementDelete.as_view(), name='measurement-delete'),
     
-    path('meetings/', views.MeetingListView.as_view(), name='meetings'),
-    path('meeting/<int:pk>', views.MeetingDetailView.as_view(), name='meeting-detail'),
-    path('calendar/', views.calendar, name='calendar'),
+    path('meetings/', views.MeetingList.as_view(), name='meetings'),
+    path('meeting/<int:pk>', views.MeetingDetail.as_view(), name='meeting-detail'),
     path('meeting/create/', views.MeetingCreate.as_view(), name='meeting-create'),
     path('meeting/create/<int:client_pk>/', views.MeetingCreate.as_view(), name='meeting-create'),
     path('meeting/create/<int:client_pk>/<int:duration>/', views.MeetingCreate.as_view(), name='meeting-create'),
@@ -27,8 +32,8 @@ urlpatterns = [
     
     path('calendar/<int:client_pk>/', views.get_calendar, name='get-calendar'),
 
-    path('plans/', views.PlanListView.as_view(), name='plans'),
-    path('plan/<int:pk>', views.PlanDetailView.as_view(), name='plan-detail'),
+    path('plans/', views.PlanList.as_view(), name='plans'),
+    path('plan/<int:pk>', views.PlanDetail.as_view(), name='plan-detail'),
     path('plan/create/', views.PlanCreate.as_view(), name='plan-create'),
     path('plan/create/<int:client_pk>/', views.PlanCreate.as_view(), name='plan-create'),
     path('plan/<int:pk>/update/', views.PlanUpdate.as_view(), name='plan-update'),

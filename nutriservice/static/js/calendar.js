@@ -17,7 +17,7 @@ setTimeout(function () {
   $('.navbar-toggler').click();
 });
 
-function handleClientLoad(renderCalendar = true) {
+function handleClientLoad(renderCalendar=false) {
   $('#spinner').show();
   gapi.load('client:auth2', () => {
     gapi.client.init({

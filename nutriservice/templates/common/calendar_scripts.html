@@ -1,0 +1,18 @@
+{% if render_calendar %}
+  <script src="https://unpkg.com/@fullcalendar/core/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/interaction/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/daygrid/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/timegrid/main.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/list/main.min.js"></script>
+{% endif %}
+{% if js_context %}
+  <script>
+    var { CLIENT_ID, API_KEY, calendarId, eventId } = {{ js_context|safe }};
+  </script>
+{% endif %}
+{% load static %}
+<script src="{% static 'js/calendar.js' %}"></script>
+<script async defer src="https://apis.google.com/js/api.js"
+  onload="this.onload=function(){};handleClientLoad({{ render_calendar }})"
+  onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>

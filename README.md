@@ -2,9 +2,28 @@
 
 ## TODOs
 
+* Tests
+
+* Fetch data instead of reloading page in PlanCreate
+
+
+### Measurements
+
+* Create templated views
+
+
+### Clients
+
+* models.Client.Meta.ordering: display and order by last meeting/activity
+* Filter clients by user (nutri)
+* Filter plans/meetings by clients
+* Client.age: calculate and display age in list view
+* Use for loop to display table headers in client_form.html
+
+
 ### Meetings
 
-* Test everything
+* Put calendar in meetings list page
 
 * Calendar
   * Add event / fill date time by clicking calendar cell
@@ -15,29 +34,19 @@
   * Fail on conflict and show conflicting event
   * Possibility to add custom event types
 
-* Edit meeting (reschedule)
+* Update meeting
   * Only update gcalendar if date or time changed
 
 * Prepopulate summary field when coming from consulta/rastreio link
   * Use get parameters
   * Use regex?
 * Choose calendars to show
-* Format and parse duration without seconds
 * Show upcoming meetings in home page
-* Add partner permissions to Herokuapp
-  * Review other permissions
 * ? calendar.js: Use eventSources instead of events
   * Use addEventSource, remove, etc.
 
 
-### Partners page (Partner model)
-
-* Name
-* Partnership start date
-* Calendar id
-
-
-### Plan pages
+### Plans
 
 Meals page
   * ...
@@ -88,21 +97,10 @@ Measurements page
 Appointment "timeline" / nav element
 
 
-### Plans list page
-
-* New plan
-  * Intermediate page to get client
-
-
-### Clients list page
-* models.Client.Meta.ordering: display and order by last meeting/activity
-* Filter clients by user (nutri)
-* Filter plans/meetings by clients
-* Client.age: calculate and display age in list view
-* Use for loop to display table headers in client_form.html
-
-
 ### Misc
+* Organize calendar.js script
+  * Split into multiple files?
+    * How do imports work? Any additional software needed?
 * Fix opposite logic on Paper Dashboard sidebar toggler
 * Filter db entries appropriately
 * Turn function views into classes

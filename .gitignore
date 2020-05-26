@@ -4,3 +4,4 @@ db.sqlite3
 server.sh
 deploy.sh
 staticfiles/
+*/migrations/
