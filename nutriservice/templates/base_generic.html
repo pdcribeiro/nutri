@@ -44,33 +44,46 @@
               </a>
             </li>
             {% if user.is_authenticated %}
-              {% if perms.nutriservice.change_client %}
+              {% if perms.nutriservice.view_client %}
                 <li {% if url == 'clients' %}class="active"{% endif %}>
-                  {% comment %} <a href="{% url 'clients' %}"> {% endcomment %}
                   <a href="{% url 'clients' %}">
                     <i class="fas fa-user"></i>
                     <p>Clientes</p>
                   </a>
                 </li>
               {% endif %}
+              {% if perms.nutriservice.view_meeting %}
               <li {% if url == 'meetings' %}class="active"{% endif %}>
                 <a href="{% url 'meetings' %}">
                   <i class="fas fa-calendar-check"></i>
                   <p>Consultas</p>
                 </a>
               </li>
+              {% endif %}
+              {% if perms.nutriservice.view_measurement %}
+              <li {% if url == 'measurements' %}class="active"{% endif %}>
+                <a href="{% url 'measurements' %}">
+                  <i class="fas fa-ruler"></i>
+                  <p>Medições</p>
+                </a>
+              </li>
+              {% endif %}
+              {% if perms.nutriservice.view_plan %}
               <li {% if url == 'plans' %}class="active"{% endif %}>
                 <a href="{% url 'plans' %}">
                   <i class="fas fa-file-alt"></i>
                   <p>Planos</p>
                 </a>
               </li>
+              {% endif %}
+              {% if perms.nutriservice.view_partner %}
               <li {% if url == 'partners' %}class="active"{% endif %}>
                 <a href="{% url 'partners' %}">
                   <i class="fas fa-handshake"></i>
                   <p>Parceiros</p>
                 </a>
               </li>
+              {% endif %}
               <li>
                 <a href="{% url 'logout' %}?next={{ request.path }}">
                   <i class="fas fa-sign-out-alt"></i>

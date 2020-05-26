@@ -12,12 +12,8 @@ var calendarEl = document.getElementById('calendar');
 var calendar = null;
 
 
-// Hide sidebar smoothly.
-setTimeout(function () {
-  $('.navbar-toggler').click();
-});
-
 function handleClientLoad(renderCalendar=false) {
+  if (renderCalendar) $('.navbar-toggler').click();
   $('#spinner').show();
   gapi.load('client:auth2', () => {
     gapi.client.init({

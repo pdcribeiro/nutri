@@ -40,8 +40,16 @@ def filter_fields(obj, field):
         return field not in obj.exclude
     return True
 
+def check_url_reverse(url_name, *args, **kwargs):
+    try:
+        reverse(url_name, *args, **kwargs)
+    except:
+        return False
+    return True
+
 def append_to_dict_item(dict_, item, appendix):
     dict_[item] = (dict_[item] if item in dict_ else '') + appendix
+
 
 class ViewMixin:
     def get_context_data(self, **kwargs):
@@ -56,12 +64,13 @@ class ViewMixin:
 
     def get_next(self):
         return (self.request.GET.get('next')
-            or reverse(hasattr(self, 'success_url') and self.success_url or 'index'))
+            or hasattr(self, 'success_url') and self.success_url
+            or 'index')
 
 class ListMixin(ViewMixin):
     context_object_name = 'list'
     paginate_by = 10
-    template_name = 'nutriservice/template_list.html'
+    template_name = 'common/generic_list.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,22 +84,31 @@ class ListMixin(ViewMixin):
                 'fields': [get_field_value(field, obj) for field in obj._meta.fields
                     if filter_fields(self, field.name)]
             } for obj in lst],
-            'buttons': [{'url': f'{self.slug}-detail', 'icon': 'file-alt'}],
+            'buttons': [],
         })
+        # Add 'add item' button to navbar
         if self.request.user.has_perm(f'nutriservice.add_{self.slug}'):
             context['navbar'].append({
                 'icon': 'fas fa-plus', 'type': 'primary',
                 'text': self.add_btn_str if hasattr(self, 'add_btn_str') else 'Criar',
                 'href': f"{reverse(f'{self.slug}-create')}?next={self.request.path}"})
-        if self.request.user.has_perm(f'nutriservice.change_{self.slug}'):
+        # Add view list item button
+        if (self.request.user.has_perm(f'nutriservice.view_{self.slug}')
+                and check_url_reverse(f'{self.slug}-detail', args=[0])):
+            context['buttons'].append({'url': f'{self.slug}-detail', 'icon': 'file-alt'})
+        # Add edit list item button
+        if (self.request.user.has_perm(f'nutriservice.change_{self.slug}')
+                and check_url_reverse(f'{self.slug}-update', args=[0])):
             context['buttons'].append({'url': f'{self.slug}-update', 'icon': 'edit'})
-        if self.request.user.has_perm(f'nutriservice.delete_{self.slug}'):
+        # Add delete list item button
+        if (self.request.user.has_perm(f'nutriservice.delete_{self.slug}')
+                and check_url_reverse(f'{self.slug}-delete', args=[0])):
             context['buttons'].append({'url': f'{self.slug}-delete', 'icon': 'trash-alt'})
         return context
 
 class DetailMixin(ViewMixin):
     context_object_name = 'object'
-    template_name = 'nutriservice/template_detail.html'
+    template_name = 'common/generic_detail.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,10 +132,10 @@ class DetailMixin(ViewMixin):
 
 class DeleteViewMixin(ViewMixin):
     context_object_name = 'object'
-    template_name = 'nutriservice/template_confirm_delete.html'
+    template_name = 'common/generic_confirm_delete.html'
 
 class FormMixin:
-    template_name = 'nutriservice/template_form.html'
+    template_name = 'common/generic_form.html'
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -251,7 +269,7 @@ class ClientBasedCreateMixin(generic.CreateView):
 class ClientBasedUpdateMixin(generic.UpdateView):
     def get_initial(self):
         self.initial.update({
-            'client': get_object_or_404(self.Model, pk=self.kwargs['pk']).client})
+            'client': get_object_or_404(self.model, pk=self.kwargs['pk']).client})
         return super().get_initial()
 
     def get_form(self, form_class=None):
@@ -304,7 +322,7 @@ class MeetingFormMixin(GoogleApiMixin, FormMixin, ViewMixin):
     model = Meeting
     fields = '__all__'
     template_name = 'nutriservice/meeting_form.html'
-    success_url = 'meetings'
+    success_url = reverse_lazy('meetings')
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -330,6 +348,7 @@ class MeetingUpdate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedUpdate
 class MeetingDelete(PermissionRequiredMixin, MeetingFormMixin, generic.DeleteView):
     permission_required = 'nutriservice.delete_meeting'
     model = Meeting
+    template_name = 'nutriservice/meeting_confirm_delete.html'
     context = {'title': 'Apagar consulta', 'name': 'consulta'}
 
     def get_context_data(self, **kwargs):
@@ -345,8 +364,9 @@ class MeetingDelete(PermissionRequiredMixin, MeetingFormMixin, generic.DeleteVie
 class MeasurementList(PermissionRequiredMixin, ListMixin, generic.ListView):
     permission_required = 'nutriservice.view_measurement'
     model = Measurement
-    context = {'title': 'Medições', 'url': 'measures', 'plural': 'medições'}
-    slug = 'measure'
+    context = {'title': 'Medições', 'url': 'measurements', 'plural': 'medições'}
+    exclude = ['id']
+    slug = 'measurement'
     add_btn_str = 'Nova medição'
 
 class MeasurementFormMixin(FormMixin, ViewMixin):
@@ -396,7 +416,7 @@ class PlanFormMixin(FormMixin, ViewMixin):
     model = Plan
     fields = '__all__'
     template_name = 'plan/index.html'
-    success_url = 'plans'
+    success_url = reverse_lazy('plans')
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)

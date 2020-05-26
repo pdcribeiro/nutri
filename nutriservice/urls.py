@@ -18,9 +18,9 @@ urlpatterns = [
 
     path('measures/', views.MeasurementList.as_view(), name='measurements'),
     # path('measure/<int:pk>', views.MeasurementDetail.as_view(), name='measurement-detail'),
-    # path('measure/create/', views.MeasurementCreate.as_view(), name='measurement-create'),
-    # path('measure/<int:pk>/update/', views.MeasurementUpdate.as_view(), name='measurement-update'),
-    # path('measure/<int:pk>/delete/', views.MeasurementDelete.as_view(), name='measurement-delete'),
+    path('measure/create/', views.MeasurementCreate.as_view(), name='measurement-create'),
+    path('measure/<int:pk>/update/', views.MeasurementUpdate.as_view(), name='measurement-update'),
+    path('measure/<int:pk>/delete/', views.MeasurementDelete.as_view(), name='measurement-delete'),
     
     path('meetings/', views.MeetingList.as_view(), name='meetings'),
     path('meeting/<int:pk>', views.MeetingDetail.as_view(), name='meeting-detail'),

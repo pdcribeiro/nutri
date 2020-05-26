@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.urls import reverse
 
+
 GENDER = (
     ('m', 'Masculino'),
     ('f', 'Feminino'),
@@ -94,9 +95,16 @@ class Measurement(models.Model):
     """The Measurement model."""
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
     measure = models.CharField(max_length=1, choices=MEASURE, default='w', verbose_name='Medida')
-    value = models.IntegerField(verbose_name='Idade (anos)')
-    unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
+    value = models.IntegerField(verbose_name='Valor')
+    # unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
     date = models.DateField(default=datetime.date.today, verbose_name='Data')
+
+    class Meta:
+        ordering = ['-date', 'client__name']
+
+    def __str__(self):
+        """String to represent Measurement model."""
+        return f'{self.get_measure_display()} of {self.client.name} in {self.date}'
 
 
 class Meeting(models.Model):

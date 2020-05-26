@@ -4,6 +4,10 @@
 
 * Tests
 
+* Change nutriservice to service
+
+* Load gapi only once? Store stuff in sessionData?
+
 * Fetch data instead of reloading page in PlanCreate
 
 
