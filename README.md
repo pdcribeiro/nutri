@@ -4,8 +4,6 @@
 
 * Tests
 
-* Change nutriservice to service
-
 * Load gapi only once? Store stuff in sessionData?
 
 * Fetch data instead of reloading page in PlanCreate
@@ -126,7 +124,7 @@ Appointment "timeline" / nav element
   * In homepage, to jump to client page
 * ? Optimize MealsFormSet.__init__() for loop
 * ? Don't store empty meal forms; problem: position filled meal forms appropriately
-* ? nutriservice.models.Meeting/Plan.date: set default value in form, not in model
+* ? service.models.Meeting/Plan.date: set default value in form, not in model
 * ? Bottom navbar for forms views
 
 
@@ -166,7 +164,7 @@ change = ((0.9 * newPAL - 1) / (0.9 * PAL - 1) - 1) * 100
       <h4 class="card-title">Clientes</h4>
     </div>
     <div class="card-body">
-      {% comment %} {% if perms.nutriservice.add_client %}
+      {% comment %} {% if perms.service.add_client %}
         <a class="btn btn-primary" href="{% url 'client-create' %}">Novo cliente</a>
       {% endif %} {% endcomment %}
       {% if client_list %}
@@ -179,8 +177,8 @@ change = ((0.9 * newPAL - 1) / (0.9 * PAL - 1) - 1) * 100
                 </div>
                 <div class="col-md-4 col-4 text-right">
                   {% comment %} <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn> {% endcomment %}
-                  {% if perms.nutriservice.change_client %} <a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Editar</a>{% endif %}
-                  {% if perms.nutriservice.delete_client %} <a class="btn btn-secondary" href="{% url 'client-delete' client.pk %}">Apagar</a>{% endif %}
+                  {% if perms.service.change_client %} <a class="btn btn-primary" href="{% url 'client-update' client.pk %}">Editar</a>{% endif %}
+                  {% if perms.service.delete_client %} <a class="btn btn-secondary" href="{% url 'client-delete' client.pk %}">Apagar</a>{% endif %}
                 </div>
               </div>
             </li>

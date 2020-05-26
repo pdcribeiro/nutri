@@ -2,7 +2,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from nutriservice.models import Client, Meeting, Meal, Plan
+from service.models import Client, Meeting, Meal, Plan
 
 
 MealsBaseFormSet = inlineformset_factory(Client, Meal, fields='__all__', extra=6, can_delete=False, max_num=6)
