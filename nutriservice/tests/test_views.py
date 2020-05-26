@@ -1,12 +1,13 @@
 import datetime
 from decimal import Decimal
 
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User, Group, Permission
 from django.test import TestCase
 
 from nutriservice.models import Partner, Client, Measurement, Meeting, Plan, PAL
 
 
+USER = {'username': 'user', 'password': 'user1234'}
 MODELS = ['partner', 'client', 'measurement', 'meeting', 'plan']
 
 
@@ -40,8 +41,7 @@ class LoginRequiredTest(TestCase):
         'client/1/delete/',
         'measure/1/delete/',
         'meeting/1/delete/',
-        'plan/1/delete/',
-    ]
+        'plan/1/delete/']
 
     @classmethod
     def setUpTestData(cls):
@@ -58,7 +58,7 @@ class LoginRequiredTest(TestCase):
 
 
 class TemplateUsedTest(TestCase):
-    TEMPLATE_MAP = [
+    TEMPLATE_URL_MAP = [
         # List views
         {'template': 'common/generic_list.html', 'urls': [
             'partners/',
@@ -107,16 +107,15 @@ class TemplateUsedTest(TestCase):
         ]},
         {'template': 'nutriservice/meeting_confirm_delete.html', 'urls': [
             'meeting/1/delete/',
-        ]},
-    ]
+        ]}]
 
     @classmethod
     def setUpTestData(cls):
         create_one_of_each()
 
     def test_correct_template_used(self):
-        self.client.login(username='user', password='user1234')
-        for template in self.TEMPLATE_MAP:
+        self.client.login(**USER)
+        for template in self.TEMPLATE_URL_MAP:
             for url in template['urls']:
                 response = self.client.get('/main/' + url)
                 try:
@@ -128,11 +127,38 @@ class TemplateUsedTest(TestCase):
                     self.assertTemplateUsed(response, template['template'])
 
 
+class EmptyDatabaseTest(TestCase):
+    URLS = [
+        # List views
+        'partners/',
+        'clients/',
+        'measures/',
+        'meetings/',
+        'plans/',
+        # Form views
+        'partner/create/',
+        'client/create/',
+        'measure/create/',
+        'meeting/create/',
+        'plan/create/']
+
+    @classmethod
+    def setUpTestData(cls):
+        create_nutritionist()
+
+    def test_empty_database(self):
+        self.client.login(**USER)
+        for url in self.URLS:
+            response = self.client.get('/main/' + url)
+            try:
+                self.assertEqual(response.status_code, 200)
+            except:
+                print(f"FAILED: url '{url}'")
+                self.assertEqual(response.status_code, 200)
+
+
 def create_one_of_each():
-    user = User.objects.create_user(username='user', password='user1234')
-    user.user_permissions.add(*[Permission.objects.get(codename=f'{perm}_{model}')
-        for perm in ['view', 'add', 'change', 'delete'] for model in MODELS])
-    user.save()
+    user = create_nutritionist()
     partner = Partner.objects.create(name='partner', calendar='calendar')
     partner.save()
     client = Client.objects.create(
@@ -148,3 +174,14 @@ def create_one_of_each():
     measurement.save()
     meeting.save()
     plan.save()
+    return user
+
+def create_nutritionist():
+    user = User.objects.create_user(**USER)
+    user.save()
+    group = Group.objects.create(name='nutritionist')
+    group.permissions.set([Permission.objects.get(codename=f'{perm}_{model}')
+        for perm in ['view', 'add', 'change', 'delete'] for model in MODELS])
+    group.user_set.add(user)
+    group.save()
+    return user
