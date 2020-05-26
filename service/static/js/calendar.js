@@ -1,16 +1,13 @@
-// Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+var calendar = null;
 
-// Authorization scopes required by the API; multiple scopes can be
-// included, separated by spaces.
+
+// // Google API // //
+
+var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 var SCOPES = "https://www.googleapis.com/auth/calendar";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
-var calendarEl = document.getElementById('calendar');
-
-var calendar = null;
-
 
 function handleClientLoad(renderCalendar=false) {
   if (renderCalendar) $('.navbar-toggler').click();
@@ -126,6 +123,10 @@ function execute() {
 }
 
 
+// // Calendar // //
+
+var calendarEl = document.getElementById('calendar');
+
 function initCalendar() {
   calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
@@ -222,73 +223,7 @@ function parseEvents(events, color) {
 }
 
 
-// Update summary when client changes
-var client = null;
-$('#id_client').focus(function () {
-  if ($('#id_client').val()) {
-    client = getClientName();
-  }
-}).change(function () {
-  if ($('#id_client').val()) {
-    if ($('#id_summary').val()) {
-      var regex = new RegExp(`(.*)${client}(.*)`, 'i');
-      if (regex.test($('#id_summary').val())) {
-        var newClient = getClientName();
-        var newSummary = $('#id_summary').val().replace(regex, `$1${newClient}$2`);
-        $('#id_summary').val(newSummary);
-        client = newClient;
-      }
-    }
-    else {
-      var newClient = getClientName();
-      $('#id_summary').val('Consulta ' + newClient);
-      client = newClient;
-    }
-  }
-});
-
-function getClientName() {
-  var client_id = $('#id_client').val();
-  return $(`#id_client option[value="${client_id}"]`).text();
-}
-
-
-// Fetch gcal calendar ID
-function fetchCalendar() {
-  if ($('#id_client').val()) {
-    var url = '/main/calendar/' + $('#id_client').val();
-    fetch(url).then(response => response.text()).then(function (calId) {
-      calendarId = calId;
-    });
-  }
-}
-if (typeof calendarId === 'undefined') {
-  var calendarId = null;
-  fetchCalendar();
-}
-$('#id_client').change(fetchCalendar);
-
-
-// Gcal integration on form submission
-var path = window.location.pathname;
-$('form').submit(function (event, gcalSync = false) {
-  if (path.indexOf('/meeting/create/') > -1 && !gcalSync) {
-    event.preventDefault();
-    createMeeting();
-  }
-  else if (/\/meeting\/\d+\/update\//.test(path) && !gcalSync) {
-    event.preventDefault();
-    updateMeeting();
-  }
-  else if (/\/meeting\/\d+\/delete\//.test(path) && !gcalSync) {
-    event.preventDefault();
-    deleteMeeting();
-  }
-  else if (/\/partner\/(create|\d+\/update)\//.test(path) && !gcalSync) {
-    event.preventDefault();
-    parseCalendar();
-  }
-});
+// // Meeting Form // //
 
 // Create meeting on gcal
 function createMeeting() {
@@ -391,6 +326,9 @@ function deleteMeeting() {
     });
 }
 
+
+// // Partner Form // //
+
 function parseCalendar() {
   $('#spinner').show();
   calendarId = $('#id_calendar').val();
@@ -450,51 +388,79 @@ function createCalendar() {
 }
 
 
-    // events: [
-    //   {
-    //     title: 'All Day Event',
-    //     start: '2020-05-01'
-    //   },
-    //   {
-    //     title: 'Long Event',
-    //     start: '2020-05-07',
-    //     end: '2020-05-10'
-    //   },
-    //   {
-    //     groupId: '999',
-    //     title: 'Repeating Event',
-    //     start: '2020-05-09T16:00:00'
-    //   },
-    //   {
-    //     groupId: '999',
-    //     title: 'Repeating Event',
-    //     start: '2020-05-16T16:00:00'
-    //   },
-    //   {
-    //     title: 'Conference',
-    //     start: '2020-05-11',
-    //     end: '2020-05-13'
-    //   },
-    //   {
-    //     title: 'Meeting',
-    //     start: '2020-05-12T10:30:00',
-    //     end: '2020-05-12T12:30:00'
-    //   },
-    //   {
-    //     title: 'Lunch',
-    //     start: '2020-05-12T12:00:00'
-    //   },
-    //   {
-    //     title: 'Meeting',
-    //     start: '2020-05-12T14:30:00'
-    //   },
-    //   {
-    //     title: 'Birthday Party',
-    //     start: '2020-05-13T07:00:00'
-    //   },
-    //   {
-    //     title: 'Click for Google',
-    //     url: 'http://google.com/',
-    //     start: '2020-05-28',
-    //   }
-    // ]
+// // Misc // //
+
+var VIEWS_MAP = [
+  { section: 'Meeting', pattern: /\/meeting\/create\//, function: createMeeting },
+  { section: 'Meeting', pattern: /\/meeting\/\d+\/update\//, function: updateMeeting },
+  { section: 'Meeting', pattern: /\/meeting\/\d+\/delete\//, function: deleteMeeting },
+  { section: 'Partner', pattern: /\/partner\/(create|\d+\/update)\//, function: parseCalendar },
+];
+
+// Get current view
+var view = null;
+VIEWS_MAP.forEach(function(view_) {
+  if (view_.pattern.test(window.location.pathname)) view = view_;
+})
+
+
+if (view.section === 'Meeting') {
+  // Update summary when client changes
+  var client = null;
+  $('#id_client').focus(function () {
+    if ($('#id_client').val()) {
+      client = getClientName();
+    }
+  }).change(function () {
+    if ($('#id_client').val()) {
+      if ($('#id_summary').val()) {
+        var regex = new RegExp(`(.*)${client}(.*)`, 'i');
+        if (regex.test($('#id_summary').val())) {
+          var newClient = getClientName();
+          var newSummary = $('#id_summary').val().replace(regex, `$1${newClient}$2`);
+          $('#id_summary').val(newSummary);
+          client = newClient;
+        }
+      }
+      else {
+        var newClient = getClientName();
+        $('#id_summary').val('Consulta ' + newClient);
+        client = newClient;
+      }
+    }
+  });
+
+  function getClientName() {
+    var client_id = $('#id_client').val();
+    return $(`#id_client option[value="${client_id}"]`).text();
+  }
+
+  // Fetch gcal calendar ID
+  function fetchCalendar() {
+    if ($('#id_client').val()) {
+      var url = '/main/calendar/' + $('#id_client').val();
+      fetch(url).then(response => response.text()).then(function (calId) {
+        calendarId = calId;
+      });
+    }
+  }
+  if (typeof calendarId === 'undefined') {
+    var calendarId = null;
+    fetchCalendar();
+  }
+  $('#id_client').change(fetchCalendar);
+}
+
+if (view.section === 'Partner') {
+  $('#id_name').on('input', function(event) {
+    $('#id_calendar').val(event.target.value);
+  });
+}
+
+// Google Calendar integration on form submission
+$('form').submit(function (event, gcalSync = false) {
+  if (!gcalSync) {
+    event.preventDefault();
+    view.function();
+  }
+});
