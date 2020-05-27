@@ -13,6 +13,8 @@
 
 * Create templated views
 
+* ? Add measurements in meeting
+
 
 ### Clients
 
@@ -100,6 +102,8 @@ Appointment "timeline" / nav element
 
 
 ### Misc
+* Handle brute force attacks
+* Handle DDoS attacks
 * Organize calendar.js script
   * Split into multiple files?
     * How do imports work? Any additional software needed?

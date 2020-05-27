@@ -116,6 +116,7 @@ class Meeting(models.Model):
     summary = models.CharField(max_length=200, verbose_name='Resumo')
     event = models.CharField(max_length=200, verbose_name='ID do evento Google')
     weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name='Peso (kg)')
+    notes = models.TextField(blank=True, verbose_name='Notas')
 
     class Meta:
         ordering = ['-date', '-time']

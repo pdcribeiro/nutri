@@ -191,8 +191,8 @@ function render() {  //TODO? try without parseFloat
   $('#vegetables').text(vegetables);
   
   // Update computed fields
-  $('#goal_weight_extra').text(getSignal(goalWeight - weight) + ' kg');
-  $('#goal_body_fat_extra').text(getSignal(goalBodyFat - bodyFat) + ' %');
+  $('#goal_weight_extra').text(getSignal(properRound(goalWeight - weight, 1)) + ' kg');
+  $('#goal_body_fat_extra').text(getSignal(properRound(goalBodyFat - bodyFat), 1) + ' %');
   $('#new_pal_extra').text('PAL ' + newPal);
   
   setTimeout(() => niddk({
