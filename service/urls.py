@@ -29,6 +29,12 @@ urlpatterns = [
     path('meeting/create/<int:client_pk>/<int:duration>/', views.MeetingCreate.as_view(), name='meeting-create'),
     path('meeting/<int:pk>/update/', views.MeetingUpdate.as_view(), name='meeting-update'),
     path('meeting/<int:pk>/delete/', views.MeetingDelete.as_view(), name='meeting-delete'),
+
+    path('meeting/<int:pk>/start/', views.MeetingStart.as_view(), name='meeting-start'),
+    path('meeting/<int:pk>/measure/', views.MeetingMeasure.as_view(), name='meeting-measure'),
+    # path('meeting/<int:pk>/calculate/', views.MeetingCalculate.as_view(), name='meeting-calculate'),
+    # path('meeting/<int:pk>/plan/', views.MeetingPlan.as_view(), name='meeting-plan'),
+    path('meeting/<int:pk>/finish/', views.MeetingFinish.as_view(), name='meeting-finish'),
     
     path('calendar/<int:client_pk>/', views.get_calendar, name='get-calendar'),
 

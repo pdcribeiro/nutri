@@ -2,18 +2,52 @@
 
 ## TODOs
 
-* Tests
+* Provide initial value for measurement unit
 
-* Load gapi only once? Store stuff in sessionData?
+Meeting flow
+  * Add Measurements view
+  
+  * Define models
+  * Define urls
+  * Define empty/generic views
+  * Test flow
+  * Improve views
+  * ...
+  * IF meeting_state = ongoing, 
+  * Meeting flow "navbar"
 
-* Fetch data instead of reloading page in PlanCreate
+Meeting flow design
+0. Click start button in meeting list item
+  * LATER
+    * Only show start button if meeting in previous/next two hour
+    * Start button disapears after meeting finishes
+1. Start
+  * IF previous meeting: notes from previous meeting
+2. Measurements
+3. IF first meeting: calculations page
+4. Meal plan adjustments
+  * Slide down option to check calculations
+    * Option to edit calculations
+5. Finish
+  * Notes for next meeting
+  * Generate meal plan deliverable
+
+* ? Move FormMixin code to BootstrapMixin
 
 
 ### Measurements
 
-* Create templated views
-
-* ? Add measurements in meeting
+* Measures list
+  * Select measure
+* New measurement form
+* Measurement list
+* LATER
+  * Progress graph EITHER:
+    * For selected measure
+    * For pre defined measures (eg. weight, body fat)
+  * Allow client to add measurements
+  * Distinguish client and nutritionist added measurements
+  * Progress graph
 
 
 ### Clients
@@ -28,6 +62,9 @@
 ### Meetings
 
 * Put calendar in meetings list page
+* Failed meeting indicator (eg. red color) on list view
+* Only show detail view button for started meetings
+  * Replace start button in place
 
 * Calendar
   * Add event / fill date time by clicking calendar cell
@@ -49,8 +86,14 @@
 * ? calendar.js: Use eventSources instead of events
   * Use addEventSource, remove, etc.
 
+LATER
+* If any meeting is ongoing, place button/popup in every page to return to meeting
+  * Return to where left off
+
 
 ### Plans
+
+* Fetch data instead of reloading page in PlanCreate
 
 Meals page
   * ...
@@ -98,15 +141,19 @@ Plan page
 Measurements page
   * Move height to measurements
 
-Appointment "timeline" / nav element
+
+### Google API
+
+* Load gapi only once? Store stuff in sessionData?
+* Split calendar.js script into multiple files
+  * Node.js required?
 
 
 ### Misc
+* Change any 'get_object_or_404' calls with 'self.object'
+* More tests
 * Handle brute force attacks
 * Handle DDoS attacks
-* Organize calendar.js script
-  * Split into multiple files?
-    * How do imports work? Any additional software needed?
 * Fix opposite logic on Paper Dashboard sidebar toggler
 * Filter db entries appropriately
 * Turn function views into classes

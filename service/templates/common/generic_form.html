@@ -16,11 +16,25 @@
     {% csrf_token %}
     {% block form %}
       {{ form.non_field_errors }}
-      <div class="table-responsive-lg mb-4">
+      {% comment %} <div class="table-responsive-lg mb-4">
         <table>
           {{ form.as_table }}
         </table>
-      </div>
+      </div> {% endcomment %}
+      {% for field in form.hidden_fields %}
+        {{ field.errors }}
+        {{ field }}
+      {% endfor %}
+      {% for field in form.visible_fields %}
+        <div class="form-group">
+          {{ field.errors }}
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+          {% endif %}
+        </div>
+      {% endfor %}
     {% endblock %}
   </form>
 {% endblock %}

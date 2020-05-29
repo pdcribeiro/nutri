@@ -1,0 +1,62 @@
+{% extends 'common/generic_form.html' %}
+
+{% block content %}
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Medições antropométricas</h4>
+      </div>
+      <div class="card-body">
+        {% load service_tags %}
+        <div class="list-group">
+          {% for measure in measures %}
+            <button type="button" class="list-group-item list-group-item-action{% if current_measure %} active{% endif %}">
+              {{ measure }}<span class="float-right">{{ client|get_last_measurement:measure }}</span>
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Nova medição</h4>
+      </div>
+      <div class="card-body">
+        <form id="form" action="" method="post">
+          {% csrf_token %}
+          <ul class="list-group list-group-horizontal">
+            <li class="list-group-item">{{ form.date }}</li>
+            <li class="list-group-item">{{ form.new_measurement }}</li>
+            <li class="list-group-item">{{ form.unit }}</li>
+              <input type="submit" class="btn btn-primary" value="Registar">
+            <li class="list-group-item">
+            </li>
+          </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Medições</h4>
+      </div>
+      <div class="card-body">
+        {% for measurement in measurements %}
+          <ul class="list-group list-group-horizontal">
+            <li class="list-group-item">measurement.date</li>
+            <li class="list-group-item">measurement.value</li>
+            <li class="list-group-item">measurement.unit</li>
+          </ul>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Progresso</h4>
+      </div>
+      <div class="card-body">
+        
+      </div>
+    </div>
+  </div>
+{% endblock %}

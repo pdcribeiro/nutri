@@ -133,7 +133,7 @@ ctrlrs.controller('waitDialogCtrl',['$scope','$modalInstance','$translate','$tim
 	//-- Methods -----//
 
 	$scope.getProgress = function(){
-		return {'width': $scope.progress + '%'};
+		return { 'width': $scope.progress + '%' };
 	}; // end getProgress
 	
 }]); // end WaitDialogCtrl

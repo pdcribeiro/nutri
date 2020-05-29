@@ -1,8 +1,10 @@
+import datetime
+
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from service.models import Client, Meeting, Meal, Plan
+from .models import Client, Meeting, Meal, Plan
 
 
 MealsBaseFormSet = inlineformset_factory(Client, Meal, fields='__all__', extra=6, can_delete=False, max_num=6)
@@ -59,3 +61,41 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control mb-3',
         'placeholder': 'palavra-passe'}))
+
+
+# def append_to_dict_item(dict_, item, appendix):
+#     dict_[item] = (dict_[item] if item in dict_ else '') + appendix
+
+# class BootstrapMixin:
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         for field_name in self.fields:
+#             field = self.fields[field_name]
+#             attrs = field.widget.attrs
+#             if isinstance(field, forms.ChoiceField):
+#                 append_to_dict_item(attrs, 'class', 'custom-select ')
+#             else:
+#                 append_to_dict_item(attrs, 'class', 'form-control ')
+
+
+class MeetingStartForm(forms.Form):
+    last_meeting_notes = forms.CharField(widget=forms.Textarea, disabled=True, label='Notas da última consulta')
+    notes = forms.CharField(widget=forms.Textarea)
+
+class MeetingMeasureForm(forms.Form):
+    date = forms.DateField(
+        initial=datetime.date.today, label='Data',
+        widget=forms.DateInput(attrs={ 'placeholder': 'dia-mês-ano' }))
+    new_measurement = forms.DecimalField(
+        label='Nova medição', widget=forms.NumberInput(attrs={ 'placeholder': 'valor' }))
+    unit = forms.CharField(
+        label='Unidade', widget=forms.TextInput(attrs={ 'placeholder': 'unidade' }))
+
+class MeetingCalculateForm(forms.Form):
+    pass
+
+class MeetingPlanForm(forms.Form):
+    pass
+
+class MeetingFinishForm(forms.Form):
+    notes = forms.CharField(widget=forms.Textarea)

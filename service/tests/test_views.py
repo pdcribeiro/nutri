@@ -7,7 +7,7 @@ from django.test import TestCase
 from service.models import Partner, Client, Measurement, Meeting, Plan, PAL
 
 
-USER = {'username': 'user', 'password': 'user1234'}
+USER = { 'username': 'user', 'password': 'user1234' }
 MODELS = ['partner', 'client', 'measurement', 'meeting', 'plan']
 
 

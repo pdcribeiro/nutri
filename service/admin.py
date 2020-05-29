@@ -1,10 +1,14 @@
 from django.contrib import admin
 
-from .models import Client, Meal, Meeting, Plan
+from .models import Client, Meal, Measure, Measurement, Meeting, Plan
 
 
 class MealsInline(admin.TabularInline):
     model = Meal
+    extra = 0
+
+class MeasurementsInline(admin.TabularInline):
+    model = Measurement
     extra = 0
 
 class MeetingsInline(admin.TabularInline):
@@ -19,11 +23,20 @@ class PlansInline(admin.TabularInline):
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'nutritionist', 'name', 'age',)
-    inlines = [MealsInline, PlansInline, MeetingsInline]
+    inlines = [MealsInline, MeasurementsInline, MeetingsInline, PlansInline]
 
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
     list_display = ('id', 'client', 'time', 'place')
+
+@admin.register(Measure)
+class MeasureAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'unit')
+    inlines = [MeasurementsInline]
+
+@admin.register(Measurement)
+class MeasurementAdmin(admin.ModelAdmin):
+    list_display = ('id', 'client', 'date', 'measure', 'value', 'unit')
 
 @admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
