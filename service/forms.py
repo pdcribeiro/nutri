@@ -86,10 +86,14 @@ class MeetingMeasureForm(forms.Form):
     date = forms.DateField(
         initial=datetime.date.today, label='Data',
         widget=forms.DateInput(attrs={ 'placeholder': 'dia-mês-ano' }))
-    new_measurement = forms.DecimalField(
+    value = forms.DecimalField(
         label='Nova medição', widget=forms.NumberInput(attrs={ 'placeholder': 'valor' }))
     unit = forms.CharField(
-        label='Unidade', widget=forms.TextInput(attrs={ 'placeholder': 'unidade' }))
+        label='Unidade', widget=forms.TextInput(attrs={
+            # 'readonly': '',
+            # 'class': 'form-control-plaintext ',
+            'placeholder': 'unidade'}))
+    notes = forms.CharField(widget=forms.Textarea)
 
 class MeetingCalculateForm(forms.Form):
     pass

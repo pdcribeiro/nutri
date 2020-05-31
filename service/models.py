@@ -91,10 +91,11 @@ class Measure(models.Model):
     unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
 
     class Meta:
-        ordering = ['name']
+        ordering = ['id']
 
     def __str__(self):
-        return f'{self.name} ({self.unit})'
+        # return f'{self.display_name} ({self.unit})'
+        return self.display_name
 
 
 class Measurement(models.Model):
@@ -105,10 +106,10 @@ class Measurement(models.Model):
     date = models.DateField(default=datetime.date.today, verbose_name='Data')
 
     class Meta:
-        ordering = ['-date', 'client__name']
+        ordering = ['-date', 'client__name', '-id']
 
     def __str__(self):
-        return f'{self.get_measure_display()} of {self.client.name} in {self.date}'
+        return f'{self.measure.display_name} of {self.client.name} in {self.date}'
 
 
 class Meeting(models.Model):

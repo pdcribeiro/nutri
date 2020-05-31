@@ -26,7 +26,10 @@ def get_field_value(field, obj):
         return { 'value': get_display() }
     elif field.many_to_one:
         obj = get_object_or_404(field.target_field.model, pk=value)
-        return { 'href': obj.get_absolute_url(), 'value': obj }
+        if hasattr(obj, 'get_absolute_url') and callable(obj.get_absolute_url):
+            return { 'href': obj.get_absolute_url(), 'value': obj }
+        else:
+            return { 'value': obj }
     else:
         return { 'value': value }
 
@@ -261,16 +264,18 @@ class ClientDelete(PermissionRequiredMixin, DeleteViewMixin, generic.DeleteView)
 
 class ClientBasedCreateMixin(generic.CreateView):
     def get_initial(self):
-        self.initial.update({
+        initial = super().get_initial()
+        initial.update({
             'client': get_object_or_404(Client, pk=self.kwargs['client_pk'])
                 if 'client_pk' in self.kwargs else None})
-        return super().get_initial()
+        return initial
 
 class ClientBasedUpdateMixin(generic.UpdateView):
     def get_initial(self):
-        self.initial.update({
+        initial = super().get_initial()
+        initial.update({
             'client': get_object_or_404(self.model, pk=self.kwargs['pk']).client})
-        return super().get_initial()
+        return initial
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -340,9 +345,10 @@ class MeetingCreate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedCreate
     context = { 'title': 'Agendar consulta' }
 
     def get_initial(self):
+        initial = super().get_initial()
         if 'duration' in self.kwargs:
-            self.initial.update({ 'duration': self.kwargs['duration'] })
-        return super().get_initial()
+            initial.update({ 'duration': self.kwargs['duration'] })
+        return initial
 
 class MeetingUpdate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedUpdateMixin):
     permission_required = 'service.change_meeting'
@@ -371,12 +377,14 @@ class MeetingMixin(PermissionRequiredMixin, FormMixin, ViewMixin, generic.FormVi
     def setup(self, request, *args, **kwargs):
         """Get meeting object."""
         self.meeting = get_object_or_404(Meeting, pk=kwargs['pk'])
+        self.client = self.meeting.client
         return super().setup(request, *args, **kwargs)
 
     def get_initial(self):
         """Get meeting notes."""
-        self.initial.update({ 'notes': self.meeting.notes })
-        return super().get_initial()
+        initial = super().get_initial()
+        initial.update({ 'notes': self.meeting.notes })
+        return initial
 
     def form_valid(self, form):
         """Save meeting notes."""
@@ -386,8 +394,8 @@ class MeetingMixin(PermissionRequiredMixin, FormMixin, ViewMixin, generic.FormVi
     
     def get_success_url(self):
         """Go to next or success url."""
-        if hasattr(self, 'next_url'):
-            url = reverse(self.next_url, kwargs={ 'pk': self.meeting.id })
+        if hasattr(self, 'next_step_url'):
+            url = reverse(self.next_step_url, kwargs={ 'pk': self.meeting.id })
             next_ = self.request.GET.get('next')
             if next_: url += '?next=' + next_
             return url
@@ -396,9 +404,9 @@ class MeetingMixin(PermissionRequiredMixin, FormMixin, ViewMixin, generic.FormVi
 
 class MeetingStart(MeetingMixin):
     form_class = MeetingStartForm
-    template_name = 'common/generic_form.html'
+    template_name = 'common/meeting_flow.html'
     context = { 'title': 'Início da consulta' }
-    next_url = 'meeting-measure'
+    next_step_url = 'meeting-measure'
     
     def dispatch(self, request, *args, **kwargs):
         self.last_meeting = self.meeting.get_previous()
@@ -407,30 +415,55 @@ class MeetingStart(MeetingMixin):
         return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
-        self.initial.update({ 'last_meeting_notes': self.last_meeting.notes })
-        return super().get_initial()
+        initial = super().get_initial()
+        initial.update({ 'last_meeting_notes': self.last_meeting.notes })
+        return initial
 
 class MeetingMeasure(MeetingMixin):
     form_class = MeetingMeasureForm
     template_name = 'service/meeting_measure_form.html'
     context = { 'title': 'Medições' }
+    next_step_url = 'meeting-finish'
 
     def get_initial(self):
         """Get default measure unit."""
-        print('get_initial')
+        initial = super().get_initial()
         measure_name = self.request.GET.get('measure') or 'weight'
         self.measure = Measure.objects.get(name__exact=measure_name)
-        self.initial.update({ 'unit': self.measure.unit })
-        return super().get_initial()
+        initial.update({ 'unit': self.measure.unit })
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        for field in form.fields:
+            if field != 'notes':
+                form.fields[field].widget.attrs['class'] += 'border-0 '
+        return form
 
     def get_context_data(self, **kwargs):
-        print('get_context_data')
         context = super().get_context_data(**kwargs)
+        client = self.meeting.client
         context.update({
-            'client': self.meeting.client,
+            'meeting': self.meeting,
+            'client': client,
             'measures': Measure.objects.all(),
-            'measure': self.measure })
+            'current_measure': self.measure,
+            'measurements': client.measurement_set.filter(measure=self.measure),
+            'next_step_url': super().get_success_url()})
         return context
+
+    def form_valid(self, form):
+        """Save new measurement."""
+        measurement = Measurement(
+            client=self.meeting.client, measure=self.measure,
+            value=form.cleaned_data['value'], unit=form.cleaned_data['unit'],
+            date=form.cleaned_data['date'])
+        measurement.save()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return self.request.path
+    
 
 # def MeetingCalculate(MeetingMixin):
 #     form_class = MeetingCalculateForm
@@ -444,7 +477,7 @@ class MeetingMeasure(MeetingMixin):
 
 class MeetingFinish(MeetingMixin):
     form_class = MeetingFinishForm
-    template_name = 'common/generic_form.html'
+    template_name = 'service/meeting_finish.html'
     success_url = reverse_lazy('meetings')
     context = { 'title': 'Fim da consulta' }
 

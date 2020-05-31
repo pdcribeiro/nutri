@@ -1,0 +1,18 @@
+{% extends 'common/generic_form.html' %}
+
+{% block navbar %}
+  <a href="javascript:history.back()" class="btn btn-secondary my-0 px-3 float-right">
+    <i class="fas fa-chevron-left"></i>
+    <span>&nbsp;&nbsp;Anterior</span>
+  </a>
+  {% block navbar_submit %}
+    <button type="submit" class="btn btn-primary my-0 ml-3 px-3 float-right" form="form">
+        <i class="fas fa-chevron-right"></i>
+        <span>&nbsp;&nbsp;Seguinte</span>
+    </button>
+  {% endblock %}
+  <a href="{{ next }}" class="btn btn-secondary my-0 ml-3 px-3 float-right">
+    <i class="fas fa-undo"></i>
+    <span>&nbsp;&nbsp;Cancelar</span>
+  </a>
+{% endblock %}

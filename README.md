@@ -2,7 +2,7 @@
 
 ## TODOs
 
-* Provide initial value for measurement unit
+* Implement measurements list
 
 Meeting flow
   * Add Measurements view
@@ -13,7 +13,7 @@ Meeting flow
   * Test flow
   * Improve views
   * ...
-  * IF meeting_state = ongoing, 
+  * IF meeting_state == ongoing, 
   * Meeting flow "navbar"
 
 Meeting flow design
