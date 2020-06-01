@@ -152,6 +152,8 @@ DATE_INPUT_FORMATS = [
     '%d/%m/%y',
 ]
 
+# DATE_FORMAT = 'd-m-Y'
+
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 

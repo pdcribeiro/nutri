@@ -2,25 +2,29 @@
 
 ## TODOs
 
-* Implement measurements list
+* Color code list views
 
-Meeting flow
-  * Add Measurements view
-  
-  * Define models
-  * Define urls
-  * Define empty/generic views
-  * Test flow
-  * Improve views
-  * ...
-  * IF meeting_state == ongoing, 
-  * Meeting flow "navbar"
+
+### Clients
+
+* models.Client.Meta.ordering: display and order by last meeting/activity
+* Filter clients by user (nutri)
+* Filter plans/meetings by clients
+* Client.age: calculate and display age in list view
+* Use for loop to display table headers in client_form.html
+
+
+### Meetings
+
+Dev process
+* Define models
+* Define urls
+* Define empty/generic views
+* Test flow
+* Improve views
 
 Meeting flow design
 0. Click start button in meeting list item
-  * LATER
-    * Only show start button if meeting in previous/next two hour
-    * Start button disapears after meeting finishes
 1. Start
   * IF previous meeting: notes from previous meeting
 2. Measurements
@@ -32,7 +36,30 @@ Meeting flow design
   * Notes for next meeting
   * Generate meal plan deliverable
 
-* ? Move FormMixin code to BootstrapMixin
+* 'Agendar consulta/rastreio/outro' buttons
+* Save phase and if meeting_state == 'ongoing', return to last phase
+* Meeting flow breadcrumb
+* Put calendar in meetings list page
+
+* Calendar
+  * Add event / fill date time by clicking calendar cell
+  * Update events start datetime by dragging
+  * Update events duration by dragging
+
+* Create meeting
+  * Fail on conflict and show conflicting event
+  * Possibility to add custom event types
+
+* Prepopulate summary field when coming from consulta/rastreio link
+  * Use get parameters
+* Choose calendars to show
+* Show upcoming meetings in home page
+* ? calendar.js: Use eventSources instead of events
+  * Use addEventSource, remove, etc.
+
+LATER
+* If any meeting is ongoing, place button/popup in every page to return to meeting
+  * Return to where left off
 
 
 ### Measurements
@@ -48,47 +75,6 @@ Meeting flow design
   * Allow client to add measurements
   * Distinguish client and nutritionist added measurements
   * Progress graph
-
-
-### Clients
-
-* models.Client.Meta.ordering: display and order by last meeting/activity
-* Filter clients by user (nutri)
-* Filter plans/meetings by clients
-* Client.age: calculate and display age in list view
-* Use for loop to display table headers in client_form.html
-
-
-### Meetings
-
-* Put calendar in meetings list page
-* Failed meeting indicator (eg. red color) on list view
-* Only show detail view button for started meetings
-  * Replace start button in place
-
-* Calendar
-  * Add event / fill date time by clicking calendar cell
-  * Update events start datetime by dragging
-  * Update events duration by dragging
-
-* Create meeting
-  * Fail on conflict and show conflicting event
-  * Possibility to add custom event types
-
-* Update meeting
-  * Only update gcalendar if date or time changed
-
-* Prepopulate summary field when coming from consulta/rastreio link
-  * Use get parameters
-  * Use regex?
-* Choose calendars to show
-* Show upcoming meetings in home page
-* ? calendar.js: Use eventSources instead of events
-  * Use addEventSource, remove, etc.
-
-LATER
-* If any meeting is ongoing, place button/popup in every page to return to meeting
-  * Return to where left off
 
 
 ### Plans

@@ -66,21 +66,10 @@ class LoginForm(AuthenticationForm):
 # def append_to_dict_item(dict_, item, appendix):
 #     dict_[item] = (dict_[item] if item in dict_ else '') + appendix
 
-# class BootstrapMixin:
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         for field_name in self.fields:
-#             field = self.fields[field_name]
-#             attrs = field.widget.attrs
-#             if isinstance(field, forms.ChoiceField):
-#                 append_to_dict_item(attrs, 'class', 'custom-select ')
-#             else:
-#                 append_to_dict_item(attrs, 'class', 'form-control ')
-
 
 class MeetingStartForm(forms.Form):
     last_meeting_notes = forms.CharField(widget=forms.Textarea, disabled=True, label='Notas da última consulta')
-    notes = forms.CharField(widget=forms.Textarea)
+    notes = forms.CharField(widget=forms.Textarea, required=False)
 
 class MeetingMeasureForm(forms.Form):
     date = forms.DateField(
@@ -93,7 +82,7 @@ class MeetingMeasureForm(forms.Form):
             # 'readonly': '',
             # 'class': 'form-control-plaintext ',
             'placeholder': 'unidade'}))
-    notes = forms.CharField(widget=forms.Textarea)
+    notes = forms.CharField(widget=forms.Textarea, required=False)
 
 class MeetingCalculateForm(forms.Form):
     pass
@@ -102,4 +91,4 @@ class MeetingPlanForm(forms.Form):
     pass
 
 class MeetingFinishForm(forms.Form):
-    notes = forms.CharField(widget=forms.Textarea)
+    notes = forms.CharField(widget=forms.Textarea, required=False)

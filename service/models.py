@@ -4,7 +4,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.utils.timezone import now
+from django.utils import dateparse, timezone
 from django.urls import reverse
 
 
@@ -85,38 +85,12 @@ class Meal(models.Model):
         return f'meal_id: {self.id} ({self.client})'
 
 
-class Measure(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    display_name = models.CharField(max_length=100, verbose_name='Nome')
-    unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
-
-    class Meta:
-        ordering = ['id']
-
-    def __str__(self):
-        # return f'{self.display_name} ({self.unit})'
-        return self.display_name
-
-
-class Measurement(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
-    measure = models.ForeignKey(Measure, on_delete=models.CASCADE, verbose_name='Medida')
-    value = models.IntegerField(verbose_name='Valor')
-    unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
-    date = models.DateField(default=datetime.date.today, verbose_name='Data')
-
-    class Meta:
-        ordering = ['-date', 'client__name', '-id']
-
-    def __str__(self):
-        return f'{self.measure.display_name} of {self.client.name} in {self.date}'
-
-
 class Meeting(models.Model):
     STATE = (
         ('s', 'Agendada'),
         ('o', 'A decorrer'),
-        ('t', 'Terminada'),
+        ('f', 'Terminada'),
+        ('m', 'Falhada'),
     )
     PHASE = (
         ('', ''),
@@ -137,7 +111,6 @@ class Meeting(models.Model):
     state = models.CharField(max_length=1, choices=STATE, default='s', verbose_name='Estado')
     phase = models.CharField(max_length=1, choices=PHASE, default='', verbose_name='Fase')
     
-    weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name='Peso (kg)')
     notes = models.TextField(blank=True, verbose_name='Notas')
 
     class Meta:
@@ -152,11 +125,57 @@ class Meeting(models.Model):
     def get_previous(self):
         return self.client.meeting_set.filter(date__lt=self.date).first()
 
+    def check_missed(self):
+        meeting_dtime = self.get_meeting_datetime()
+        tdelta = datetime.timedelta(hours=2)
+        if timezone.localtime() > meeting_dtime + tdelta:
+            self.state = 'm'
+            self.save()
+
+    def get_meeting_datetime(self):
+        unaware_dtime = datetime.datetime.combine(self.date, self.time)
+        return timezone.make_aware(unaware_dtime)
+    
+    def is_startable(self):
+        if self.state in ['f', 'm']: return False
+        meeting_dtime = self.get_meeting_datetime()
+        tdelta = datetime.timedelta(hours=2)
+        return timezone.localtime() > meeting_dtime - tdelta
+
+
+class Measure(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    display_name = models.CharField(max_length=100, verbose_name='Nome')
+    unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        # return f'{self.display_name} ({self.unit})'
+        return self.display_name
+
+
+class Measurement(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
+    meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
+    measure = models.ForeignKey(Measure, on_delete=models.CASCADE, verbose_name='Medida')
+    
+    value = models.IntegerField(verbose_name='Valor')
+    unit = models.CharField(max_length=50, blank=True, verbose_name='Unidade')
+    date = models.DateField(default=datetime.date.today, verbose_name='Data')
+
+    class Meta:
+        ordering = ['-date', 'client__name', '-id']
+
+    def __str__(self):
+        return f'{self.measure.display_name} of {self.client.name} in {self.date}'
+
 
 class Plan(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
     meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
-    date = models.DateField(default=now, null=True, blank=True, verbose_name='Data')
+    date = models.DateField(default=timezone.now, null=True, blank=True, verbose_name='Data')
 
     goal_weight = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name='Peso desejado (kg)')
     goal_body_fat = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, verbose_name='Gordura corporal (%)')
@@ -200,7 +219,7 @@ class Plan(models.Model):
 class Calculations(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
     meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
-    date = models.DateField(default=now, null=True, blank=True, verbose_name='Data')
+    date = models.DateField(default=timezone.now, null=True, blank=True, verbose_name='Data')
 
     goal_weight = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name='Peso desejado (kg)')
     goal_body_fat = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, verbose_name='Gordura corporal (%)')
@@ -244,6 +263,6 @@ class Calculations(models.Model):
 class MealPlan(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
     meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
-    date = models.DateField(default=now, null=True, blank=True, verbose_name='Data')
+    date = models.DateField(default=timezone.now, null=True, blank=True, verbose_name='Data')
 
     todo = models.BooleanField(default=True, verbose_name='Bigan')
