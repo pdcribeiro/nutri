@@ -225,6 +225,14 @@ function parseEvents(events, color) {
 
 // // Meeting Form // //
 
+function timeoutPromise(timeout) {
+  return new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error('Tempo limite ultrapassado.'));
+    }, timeout);
+  });
+}
+
 // Create meeting on gcal
 function createMeeting() {
   return gapi.client.calendar.events.insert({
@@ -307,20 +315,25 @@ function updateMeeting() {
 
 // Delete meeting on gcal
 function deleteMeeting() {
-  return gapi.client.calendar.events.delete({
+  return Promise.race([gapi.client.calendar.events.delete({
     calendarId,
     eventId,
-  })
+  }), timeoutPromise(5000)])
     .then(response => {
       $('form').trigger('submit', true);
     })
     .catch(response => {
-      if (response.result.error.code === 410) {
+      if (response.result) var status_code = response.result.error.code;
+      if (status_code === 410) {
         alert('O evento Google já tinha sido apagado. A consulta foi apagada da base de dados.');
         $('form').trigger('submit', true);
       }
+      else if (status_code === 404) {
+        alert('O evento Google não foi encontrado. A consulta foi apagada da base de dados.');
+        $('form').trigger('submit', true);
+      }
       else {
-        console.error('Error deleting meeting.', error);
+        console.error('Error deleting meeting.', response);
         alert('Erro ao apagar evento Google. Verifique a sua ligação à internet.');
       }
     });
