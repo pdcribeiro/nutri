@@ -2,7 +2,15 @@
 
 ## TODOs
 
-* Color code list views
+* WIP Fix errors from webpack
+  * Test
+
+* WIP Color code list views
+
+* Filter meetings by client in plan form page
+* Change daily energy calculation layout
+  * Make goal column same as current
+  * Create separate table to input desired daily energy
 
 
 ### Clients
@@ -41,14 +49,15 @@ Meeting flow design
 * Meeting flow breadcrumb
 * Put calendar in meetings list page
 
-* Calendar
-  * Add event / fill date time by clicking calendar cell
-  * Update events start datetime by dragging
-  * Update events duration by dragging
+Calendar
+* Add event / fill date time by clicking calendar cell
+* Update events start datetime by dragging
+* Update events duration by dragging
+* Split calendar.js into separate files
 
-* Create meeting
-  * Fail on conflict and show conflicting event
-  * Possibility to add custom event types
+Create meeting
+* Fail on conflict and show conflicting event
+* Possibility to add custom event types
 
 * Prepopulate summary field when coming from consulta/rastreio link
   * Use get parameters

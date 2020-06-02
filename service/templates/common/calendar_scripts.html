@@ -8,11 +8,12 @@
 {% if js_context %}
   <script>
     var { CLIENT_ID, API_KEY, calendarId, eventId } = {{ js_context|safe }};
+    var renderCalendar = {{ render_calendar|safe }};
   </script>
 {% endif %}
 {% load static %}
-<script src="{% static 'js/calendar.js' %}"></script>
-<script async defer src="https://apis.google.com/js/api.js"
+<script src="{% static 'js/calendar.min.js' %}"></script>
+{% comment %} <script async defer src="https://apis.google.com/js/api.js"
   onload="this.onload=function(){};handleClientLoad({{ render_calendar }})"
   onreadystatechange="if (this.readyState === 'complete') this.onload()">
-</script>
+</script> {% endcomment %}

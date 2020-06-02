@@ -111,13 +111,16 @@ $color-red-error: rgb(185, 74, 72) !default;
 $color-grey-arrow: rgba(204, 204, 204, 0.2) !default;
 
 $bg-nude:               #FFFCF5 !default;
-$bg-primary:            lighten($primary-color, 7%) !default;
-$bg-info:               lighten($info-color, 7%) !default;
-$bg-success:            lighten($success-color, 7%) !default;
-$bg-warning:            lighten($warning-color, 7%) !default;
-$bg-danger:             lighten($danger-color, 7%) !default;
-$bg-brown:              lighten($brown-color, 7%) !default;
-$bg-purple:             lighten($purple-color, 7%) !default;
+// $bg-default:            lighten($default-color, 7%) !default;
+$bg-lighter: 25%;  //CUSTOM
+$bg-default:            lighten($default-color, $bg-lighter) !default;  //CUSTOM...
+$bg-primary:            lighten($primary-color, $bg-lighter) !default;
+$bg-info:               lighten($info-color, $bg-lighter) !default;
+$bg-success:            lighten($success-color, $bg-lighter) !default;
+$bg-warning:            lighten($warning-color, $bg-lighter) !default;
+$bg-danger:             lighten($danger-color, $bg-lighter) !default;
+$bg-brown:              lighten($brown-color, $bg-lighter) !default;
+$bg-purple:             lighten($purple-color, $bg-lighter) !default;
 
 //     brand Colors
 $brand-primary:              $primary-color !default;

@@ -5,7 +5,7 @@
   {% with row.object.is_startable as is_startable %}
     {% if button.url == 'meeting-start' and not is_startable %}
     {% elif button.url == 'meeting-detail' and row.object.state != 'f' %}
-    {% elif button.url == 'meeting-update' and row.object.state in 'fm' %}
+    {% elif button.url == 'meeting-update' and row.object.state == 'f' %}
     {% else %}
       {{ block.super }}
     {% endif %}

@@ -76,6 +76,13 @@
         z-index: 1029;
     }
 
+    &.navbar-fixed{  //CUSTOM
+        position: fixed;
+        margin-left: 260px;
+        background-color: $default-body-bg;
+        z-index: 1029;
+    }
+
     .documentation &{
         &.fixed-top{
             left: 0;
@@ -188,7 +195,7 @@
     }
 
     .navbar-brand{
-        text-transform: capitalize;
+        // text-transform: capitalize;  //CUSTOM
         font-size: $font-size-large-navbar;
         padding-top: $padding-base-vertical;
         padding-bottom: $padding-base-vertical;
@@ -281,30 +288,25 @@
     }
 }
 
+// CUSTOM
 .bg-default{
-    background-color: $default-color !important;
+    background-color: $bg-default !important;
 }
-
 .bg-primary{
-    background-color: $primary-color !important;
+    background-color: $bg-primary !important;
 }
-
 .bg-info{
-    background-color: $info-color !important;
+    background-color: $bg-info !important;
 }
-
 .bg-success{
-    background-color: $success-color !important;
+    background-color: $bg-success !important;
 }
-
 .bg-danger{
-    background-color: $danger-color !important;
+    background-color: $bg-danger !important;
 }
-
 .bg-warning{
-    background-color: $warning-color !important;
+    background-color: $bg-warning !important;
 }
-
 .bg-white{
     background-color: $white-color !important;
 }

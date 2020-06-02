@@ -9,7 +9,14 @@ var SCOPES = "https://www.googleapis.com/auth/calendar";
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 
-function handleClientLoad(renderCalendar=false) {
+$(document).ready(() => {
+  var script = document.createElement('script');
+  script.src = 'https://apis.google.com/js/api.js';
+  script.onload = handleClientLoad;
+  document.body.appendChild(script);
+});
+
+function handleClientLoad() {
   if (renderCalendar) $('.navbar-toggler').click();
   $('#spinner').show();
   gapi.load('client:auth2', () => {
@@ -139,11 +146,11 @@ function initCalendar() {
     // slotDuration: '01:00:00',
     // slotLabelInterval: '02:00:00',
     buttonText: {
-      today:    'hoje',
-      month:    'mês',
-      week:     'semana',
-      day:      'dia',
-      list:     'lista'
+      today: 'hoje',
+      month: 'mês',
+      week: 'semana',
+      day: 'dia',
+      list: 'lista'
     },
     eventTextColor: 'white',
     header: {
@@ -345,7 +352,7 @@ function deleteMeeting() {
 function parseCalendar() {
   $('#spinner').show();
   calendarId = $('#id_calendar').val();
-  gapi.client.calendar.calendars.get({calendarId})
+  gapi.client.calendar.calendars.get({ calendarId })
     // Calendar found through ID. Submit.
     .then(() => {
       $('#spinner').hide();
@@ -412,7 +419,7 @@ var VIEWS_MAP = [
 
 // Get current view
 var view = null;
-VIEWS_MAP.forEach(function(view_) {
+VIEWS_MAP.forEach(function (view_) {
   if (view_.pattern.test(window.location.pathname)) view = view_;
 })
 
@@ -465,7 +472,7 @@ if (view.section === 'Meeting') {
 }
 
 if (view.section === 'Partner') {
-  $('#id_name').on('input', function(event) {
+  $('#id_name').on('input', function (event) {
     $('#id_calendar').val(event.target.value);
   });
 }

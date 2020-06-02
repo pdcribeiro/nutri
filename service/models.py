@@ -109,7 +109,7 @@ class Meeting(models.Model):
     event = models.CharField(max_length=200, verbose_name='ID do evento Google')
     
     state = models.CharField(max_length=1, choices=STATE, default='s', verbose_name='Estado')
-    phase = models.CharField(max_length=1, choices=PHASE, default='', verbose_name='Fase')
+    phase = models.CharField(max_length=1, choices=PHASE, blank=True, verbose_name='Fase')
     
     notes = models.TextField(blank=True, verbose_name='Notas')
 
@@ -126,11 +126,17 @@ class Meeting(models.Model):
         return self.client.meeting_set.filter(date__lt=self.date).first()
 
     def check_missed(self):
+        if self.state != 's': return
         meeting_dtime = self.get_meeting_datetime()
         tdelta = datetime.timedelta(hours=2)
         if timezone.localtime() > meeting_dtime + tdelta:
             self.state = 'm'
             self.save()
+    
+    def get_color(self):
+        # return {'s': '', 'o': 'warning', 'f': '', 'm': 'danger'}[self.state]
+        if self.state == 'm': return 'danger'
+        elif self.is_startable() or self.state == 'o': return 'warning'
 
     def get_meeting_datetime(self):
         unaware_dtime = datetime.datetime.combine(self.date, self.time)

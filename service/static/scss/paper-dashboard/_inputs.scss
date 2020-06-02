@@ -3,7 +3,8 @@
 };
 
 
-.form-control {
+.form-control,
+.custom-select {  //CUSTOM
     background-color: $white-color;
     border: 1px solid $medium-gray;
     border-radius: $border-radius-base;
@@ -323,7 +324,7 @@
 textarea.form-control{
     max-width: 100%;
     max-height: 80px;
-    padding: 10px 10px 0 0;
+    // padding: 10px 10px 0 0;  //CUSTOM
     resize: none;
     border: none;
     border: 1px solid $light-gray;

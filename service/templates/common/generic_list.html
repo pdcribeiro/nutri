@@ -13,27 +13,27 @@
         </thead>
         <tbody>
           {% for row in rows %}
-              <tr>
-                {% for field in row.fields %}
-                  <td>
-                    {% if field.href %}
-                      <a href="{{ field.href }}">{{ field.value }}</a>
-                    {% else %}
-                      {{ field.value }}
-                    {% endif %}
-                  </td>
-                {% endfor %}
-                <td class="text-right">
-                  {% for button in buttons %}
-                    {% block list_buttons %}
-                      <a class="btn btn-link" href="{% url button.url row.object.id %}?next={{ request.path }}">
-                        {% if button.icon %}<i class="fas fa-{{ button.icon }}"></i>{% endif %}
-                        {% if button.text %}{{ button.text }}{% endif %}
-                      </a>
-                    {% endblock %}
-                  {% endfor %}
+            <tr{% if row.color %} class="bg-{{ row.color }}"{% endif %}>
+              {% for field in row.fields %}
+                <td>
+                  {% if field.href %}
+                    <a href="{{ field.href }}">{{ field.value }}</a>
+                  {% else %}
+                    {{ field.value }}
+                  {% endif %}
                 </td>
-              </tr>
+              {% endfor %}
+              <td class="text-right">
+                {% for button in buttons %}
+                  {% block list_buttons %}
+                    <a class="btn btn-link" href="{% url button.url row.object.id %}?next={{ request.path }}">
+                      {% if button.icon %}<i class="fas fa-{{ button.icon }}"></i>{% endif %}
+                      {% if button.text %}{{ button.text }}{% endif %}
+                    </a>
+                  {% endblock %}
+                {% endfor %}
+              </td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>

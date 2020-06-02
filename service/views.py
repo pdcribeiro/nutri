@@ -85,7 +85,8 @@ class ListMixin(ViewMixin, generic.ListView):
             'rows': [{
                 'object': obj,
                 'fields': [get_field_value(field, obj) for field in obj._meta.fields
-                    if filter_fields(self, field.name)]
+                    if filter_fields(self, field.name)],
+                'color': hasattr(obj, 'get_color') and obj.get_color() or None,
             } for obj in lst],
             'buttons': [],
         })
@@ -108,7 +109,7 @@ class ListMixin(ViewMixin, generic.ListView):
                 and check_url_reverse(f'{self.slug}-delete', args=[0])):
             context['buttons'].append({ 'url': f'{self.slug }-delete', 'icon': 'trash-alt'})
         return context
-    
+
 class DetailMixin(ViewMixin, generic.DetailView):
     context_object_name = 'object'
     template_name = 'common/generic_detail.html'
@@ -298,10 +299,9 @@ class MeetingList(PermissionRequiredMixin, ListMixin):
         context = super().get_context_data(**kwargs)
         # Remove seconds from time fields
         if context['rows']:
-            rows = context['rows']
             time_idx = context['cols'].index('Hora')
-            for i in range(len(rows)):
-                field = rows[i]['fields'][time_idx]
+            for row in context['rows']:
+                field = row['fields'][time_idx]
                 field['value'] = field['value'][:-3]
         # Add custom navbar buttons
         # if self.request.user.has_perm('service.add_meeting'):
@@ -356,6 +356,11 @@ class MeetingCreate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedCreate
 class MeetingUpdate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedUpdateMixin):
     permission_required = 'service.change_meeting'
     context = { 'title': 'Editar consulta' }
+    
+    def form_valid(self, form):
+        self.object.state = 's'
+        self.object.save()
+        return super().form_valid(form)
 
 class MeetingDelete(PermissionRequiredMixin, MeetingFormMixin, generic.DeleteView):
     permission_required = 'service.delete_meeting'

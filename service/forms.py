@@ -68,7 +68,7 @@ class LoginForm(AuthenticationForm):
 
 
 class MeetingStartForm(forms.Form):
-    last_meeting_notes = forms.CharField(widget=forms.Textarea, disabled=True, label='Notas da última consulta')
+    last_meeting_notes = forms.CharField(widget=forms.Textarea, disabled=True, required=False, label='Notas da última consulta')
     notes = forms.CharField(widget=forms.Textarea, required=False)
 
 class MeetingMeasureForm(forms.Form):

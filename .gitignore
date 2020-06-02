@@ -5,3 +5,5 @@ db.sqlite3
 runserver.sh
 deploy.sh
 *.bak
+node_modules/
+*.code-workspace
