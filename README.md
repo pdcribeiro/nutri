@@ -2,48 +2,49 @@
 
 ## TODOs
 
+* WIP Try GET params as optional params in url patterns
+
 * Integrate calculations in meeting flow
   * Also allow independent calculations
 
 * Change daily energy calculation layout
   * Make goal column same as current
   * Create separate table to input desired daily energy
+* Move height to measurements
+* Measurement, PrePlan, Plan
+  * Allow either meeting or date
+  * get_date method
 
 
 ### Clients
 
 * models.Client.Meta.ordering: display and order by last meeting/activity
 * Filter clients by user (nutri)
-* Filter plans/meetings by clients
+* Filter pre plans/meetings by clients
 * Use for loop to display table headers in client_form.html
 
 
 ### Meetings
 
-Dev process
-* Define models
-* Define urls
-* Define empty/generic views
-* Test flow
-* Improve views
-
-Meeting flow design
-0. Click start button in meeting list item
-1. Start
-  * IF previous meeting: notes from previous meeting
-2. Measurements
-3. IF first meeting: calculations page
-4. Meal plan adjustments
-  * Slide down option to check calculations
-    * Option to edit calculations
-5. Finish
-  * Notes for next meeting
-  * Generate meal plan deliverable
-
-* 'Agendar consulta/rastreio/outro' buttons
-* Save phase and if meeting_state == 'ongoing', return to last phase
-* Meeting flow breadcrumb
-* Put calendar in meetings list page
+Meeting flow
+* Dev process
+  * Define models
+  * Define urls
+  * Define empty/generic views
+  * Test flow
+  * Improve views
+* Flow
+  0. Click start button in meeting list item
+  1. Start
+    * IF previous meeting: notes from previous meeting
+  2. Measurements
+  3. IF first meeting: calculations page
+  4. Meal plan adjustments
+    * Slide down option to check calculations
+      * Option to edit calculations
+  5. Finish
+    * Notes for next meeting
+    * Generate meal plan deliverable
 
 Calendar
 * Add event / fill date time by clicking calendar cell
@@ -55,24 +56,27 @@ Create meeting
 * Fail on conflict and show conflicting event
 * Possibility to add custom event types
 
-* Prepopulate summary field when coming from consulta/rastreio link
-  * Use get parameters
 * Choose calendars to show
 * Show upcoming meetings in home page
 * ? calendar.js: Use eventSources instead of events
   * Use addEventSource, remove, etc.
 
+Misc
+* Save phase and if meeting_state == 'ongoing', return to last phase
+* Meeting flow breadcrumb
+* ? Put calendar in meetings list page
+
 LATER
 * If any meeting is ongoing, place button/popup in every page to return to meeting
-  * Return to where left off
+  * Return to phase where left off
 
 
 ### Measurements
 
-* Measures list
-  * Select measure
-* New measurement form
-* Measurement list
+* Add measurments list to client detail page
+  * ? Show only latest measurement for each measure
+  * Button to view all measurements and create new ones
+* Integrate new measurement form in measurement create/update views
 * LATER
   * Progress graph EITHER:
     * For selected measure
@@ -83,17 +87,13 @@ LATER
 * ? Get data from GET request in MeasurementCreate
 
 
-### Plans
+### PrePlans
 
-* Fetch data instead of reloading page in PlanCreate
+* Fetch data instead of reloading page in PrePlanCreate
 
-Meals page
-  * ...
-  * Intermediate 'dosage distribution per meal' table
-
-Plan page
+PrePlan page
   * Make 
-  * plan.js: Use 'fields', 'cfields' and 'efields' objects
+  * preplan.js: Use 'fields', 'cfields' and 'efields' objects
   * Compare performance of two versions of maxProtein/Carbs/Fats calculation
   * Fix select elements width
   * Review table column widths
@@ -114,7 +114,7 @@ Plan page
   * Tab and arrows navigation
   * Use Vue / React to minimize rendering?
   * Use Babel to transpile JS to older versions
-  * plan.js: Handle people born on the 29th of Feb for the NIDDK Calculator
+  * preplan.js: Handle people born on the 29th of Feb for the NIDDK Calculator
   * BMI fields description
   * Detect calculator dialogs on errors
     * ? appController $scope.goalChange(): $scope.unachievableGoal
@@ -130,8 +130,12 @@ Plan page
       * $scope.weightRangeLow
       * $scope.weightRangeHigh
 
-Measurements page
-  * Move height to measurements
+
+### MealPlans
+
+Meals page
+  * ...
+  * Intermediate 'dosage distribution per meal' table
 
 
 ### Google API
@@ -142,6 +146,7 @@ Measurements page
 
 
 ### Misc
+
 * Change any 'get_object_or_404' calls with 'self.object'
 * More tests
 * Handle brute force attacks
@@ -149,7 +154,7 @@ Measurements page
 * Fix opposite logic on Paper Dashboard sidebar toggler
 * Filter db entries appropriately
 * Turn function views into classes
-* Retry to generalize Meeting/Plan mixins
+* Retry to generalize Meeting/PrePlan mixins
 * Set card max height and scroll vertically
 * Send email to NIDDK guy
 * BootstrapMixin to add form-control class, etc. to input elements
@@ -165,10 +170,12 @@ Measurements page
 * Search input
   * When selecting clients
   * In homepage, to jump to client page
+
+LATER
+* Put 'today' or 'now' row in or mark today items in list views.
 * ? Optimize MealsFormSet.__init__() for loop
 * ? Don't store empty meal forms; problem: position filled meal forms appropriately
-* ? service.models.Meeting/Plan.date: set default value in form, not in model
-* ? Bottom navbar for forms views
+* ? service.models.Meeting/PrePlan.date: set default value in form, not in model
 
 
 ### Client version

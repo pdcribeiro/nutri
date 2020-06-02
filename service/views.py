@@ -13,8 +13,8 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic, View
 from django.views.generic.edit import ModelFormMixin
 
-from .models import Partner, Client, Measure, Measurement, Meeting, Plan, PAL
-from .forms import ClientForm, MeetingStartForm, MeetingMeasureForm, MeetingCalculateForm, MeetingPlanForm, MeetingFinishForm
+from .models import Partner, Client, Measure, Measurement, Meeting, PrePlan, PAL
+from .forms import ClientForm, MeetingStartForm, MeetingMeasureForm, MeetingCalculateForm, MeetingPrePlanForm, MeetingFinishForm
 
 
 def get_field_value(field, obj):
@@ -195,7 +195,7 @@ class Home(LoginRequiredMixin, ViewMixin, View):
         # Generate counts of some of the main objects
         num_clients = Client.objects.all().count()
         num_meetings = Meeting.objects.all().count()
-        num_plans = Plan.objects.all().count()
+        num_preplans = PrePlan.objects.all().count()
         
         # # Number of visits to this view, as counted in the session variable.
         # num_visits = request.session.get('num_visits', 0)
@@ -206,7 +206,7 @@ class Home(LoginRequiredMixin, ViewMixin, View):
             'url': 'home',
             'num_clients': num_clients,
             'num_meetings': num_meetings,
-            'num_plans': num_plans,
+            'num_preplans': num_preplans,
             # 'num_visits': num_visits,
         }
 
@@ -499,12 +499,12 @@ class MeetingMeasure(MeetingFlowMixin):
     
 # def MeetingCalculate(MeetingFlowMixin):
 #     form_class = MeetingCalculateForm
-#     template_name = 'common/meeting_calculate_form.html'
+#     template_name = 'common/generic_form.html'
 #     context = { 'title': 'Medições' }
 
 # def MeetingPlan(MeetingFlowMixin):
 #     form_class = MeetingPlanForm
-#     template_name = 'common/meeting_plan_form.html'
+#     template_name = 'common/generic_form.html'
 #     context = { 'title': 'Medições' }
 
 class MeetingFinish(MeetingFlowMixin):
@@ -542,31 +542,31 @@ class MeasurementDelete(PermissionRequiredMixin, DeleteViewMixin):
     model = Measurement
 
 
-class PlanList(PermissionRequiredMixin, ListViewMixin):
-    permission_required = 'service.view_plan'
-    model = Plan
-    context = { 'url': 'plans' }
+class PrePlanList(PermissionRequiredMixin, ListViewMixin):
+    permission_required = 'service.view_preplan'
+    model = PrePlan
+    context = { 'url': 'preplans' }
     fields = ['client', 'date', 'daily_energy']
-    slug = 'plan'
-    add_btn_str = 'Novo plano'
+    slug = 'preplan'
+    add_btn_str = 'Novos cálculos'
 
-class PlanDetail(PermissionRequiredMixin, DetailViewMixin):
-    permission_required = 'service.view_plan'
-    model = Plan
+class PrePlanDetail(PermissionRequiredMixin, DetailViewMixin):
+    permission_required = 'service.view_preplan'
+    model = PrePlan
     exclude = ['id', 'client', 'date']
-    slug = 'plan'
+    slug = 'preplan'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        plan = get_object_or_404(Plan, pk=self.kwargs['pk'])
-        context.update({ 'heading': plan.client, 'subheading': plan.date.strftime('%d-%m-%Y') })
+        preplan = get_object_or_404(PrePlan, pk=self.kwargs['pk'])
+        context.update({ 'heading': preplan.client, 'subheading': preplan.date.strftime('%d-%m-%Y') })
         return context
 
-class PlanFormMixin(FormViewMixin):
-    model = Plan
+class PrePlanFormMixin(FormViewMixin):
+    model = PrePlan
     fields = '__all__'
-    template_name = 'plan/index.html'
-    success_url = reverse_lazy('plans')
+    template_name = 'preplan/index.html'
+    success_url = reverse_lazy('preplans')
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -607,7 +607,7 @@ class PlanFormMixin(FormViewMixin):
         }
         context.update({
             'client': client,
-            # 'plan': plan,
+            # 'preplan': preplan,
             'columns': {
                 'client_info': ['Atual', 'Objetivo'],
                 'calculations': ['Atual', 'Objetivo'],
@@ -621,8 +621,8 @@ class PlanFormMixin(FormViewMixin):
         })
         return context
 
-class PlanCreate(PermissionRequiredMixin, PlanFormMixin, ClientBasedCreateMixin):
-    permission_required = 'service.add_plan'
+class PrePlanCreate(PermissionRequiredMixin, PrePlanFormMixin, ClientBasedCreateMixin):
+    permission_required = 'service.add_preplan'
 
     def get_initial(self):
         return get_param_to_dict(self.request, 'meeting', super().get_initial(), Meeting)
@@ -630,19 +630,20 @@ class PlanCreate(PermissionRequiredMixin, PlanFormMixin, ClientBasedCreateMixin)
     def form_valid(self, form):
         client_id = form.cleaned_data['client'].id
         if 'reload' in self.request.POST and client_id:
-            url = reverse('plan-create', args=[client_id])
+            url = reverse('preplan-create', args=[client_id])
             return redirect(url + '?next=' + self.get_next())
         form.instance.date = datetime.date.today()
         return super().form_valid(form)
 
-class PlanUpdate(PermissionRequiredMixin, PlanFormMixin, ClientBasedUpdateMixin):
-    permission_required = 'service.change_plan'
+class PrePlanUpdate(PermissionRequiredMixin, PrePlanFormMixin, ClientBasedUpdateMixin):
+    permission_required = 'service.change_preplan'
 
-class PlanDelete(PermissionRequiredMixin, DeleteViewMixin):
-    permission_required = 'service.delete_plan'
-    model = Plan
-    
-@permission_required('service.view_plan')
+class PrePlanDelete(PermissionRequiredMixin, DeleteViewMixin):
+    permission_required = 'service.delete_preplan'
+    model = PrePlan
+
+
+"""@permission_required('service.view_plan')
 def deliver_plan(request, pk):
     plan = get_object_or_404(Plan, pk=pk)
     client_name = plan.client.name
@@ -675,7 +676,7 @@ def deliver_plan(request, pk):
             ]},
         ],
     }
-    return render(request, 'plan/deliverable.html', context=context)
+    return render(request, 'plan/deliverable.html', context=context)"""
 
 
 def get_calendar(request, client_pk):

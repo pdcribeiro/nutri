@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Client, Meal, Measure, Measurement, Meeting, Plan
+from .models import Client, Meal, Measure, Measurement, Meeting, PrePlan
 
 
 class MealsInline(admin.TabularInline):
@@ -15,15 +15,15 @@ class MeetingsInline(admin.TabularInline):
     model = Meeting
     extra = 0
 
-class PlansInline(admin.TabularInline):
-    model = Plan
+class PrePlansInline(admin.TabularInline):
+    model = PrePlan
     extra = 0
 
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'nutritionist', 'name', 'age',)
-    inlines = [MealsInline, MeasurementsInline, MeetingsInline, PlansInline]
+    inlines = [MealsInline, MeasurementsInline, MeetingsInline, PrePlansInline]
 
 @admin.register(Meal)
 class MealAdmin(admin.ModelAdmin):
@@ -42,6 +42,6 @@ class MeasurementAdmin(admin.ModelAdmin):
 class MeetingAdmin(admin.ModelAdmin):
     list_display = ('id', 'client', 'date')
 
-@admin.register(Plan)
-class PlanAdmin(admin.ModelAdmin):
+@admin.register(PrePlan)
+class PrePlanAdmin(admin.ModelAdmin):
     list_display = ('id', 'client', 'meeting', 'date', 'daily_energy')

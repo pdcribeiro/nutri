@@ -65,14 +65,22 @@
                 </a>
               </li>
               {% endif %}
-              {% if perms.service.view_plan %}
+              {% if perms.service.view_preplan %}
+              <li {% if url == 'preplans' %}class="active"{% endif %}>
+                <a href="{% url 'preplans' %}">
+                  <i class="fas fa-calculator"></i>
+                  <p>Cálculos</p>
+                </a>
+              </li>
+              {% endif %}
+              {% comment %} {% if perms.service.view_plan %}
               <li {% if url == 'plans' %}class="active"{% endif %}>
                 <a href="{% url 'plans' %}">
                   <i class="fas fa-file-alt"></i>
                   <p>Planos</p>
                 </a>
               </li>
-              {% endif %}
+              {% endif %} {% endcomment %}
               {% if perms.service.view_partner %}
               <li {% if url == 'partners' %}class="active"{% endif %}>
                 <a href="{% url 'partners' %}">

@@ -30,16 +30,17 @@ urlpatterns = [
 
     path('meeting/<int:pk>/start/', views.MeetingStart.as_view(), name='meeting-start'),
     path('meeting/<int:pk>/measure/', views.MeetingMeasure.as_view(), name='meeting-measure'),
-    # path('meeting/<int:pk>/calculate/', views.MeetingCalculate.as_view(), name='meeting-calculate'),
+    # path('meeting/<int:pk>/preplan/', views.MeetingPrePlan.as_view(), name='meeting-preplan'),
     # path('meeting/<int:pk>/plan/', views.MeetingPlan.as_view(), name='meeting-plan'),
     path('meeting/<int:pk>/finish/', views.MeetingFinish.as_view(), name='meeting-finish'),
     
     path('calendar/<int:client_pk>/', views.get_calendar, name='get-calendar'),
 
-    path('plans/', views.PlanList.as_view(), name='plans'),
-    path('plan/<int:pk>', views.PlanDetail.as_view(), name='plan-detail'),
-    path('plan/create/', views.PlanCreate.as_view(), name='plan-create'),
-    path('plan/<int:pk>/update/', views.PlanUpdate.as_view(), name='plan-update'),
-    path('plan/<int:pk>/delete/', views.PlanDelete.as_view(), name='plan-delete'),
-    path('plan/<int:pk>/deliver/', views.deliver_plan, name='plan-deliver'),
+    path('preplans/', views.PrePlanList.as_view(), name='preplans'),
+    path('preplan/<int:pk>', views.PrePlanDetail.as_view(), name='preplan-detail'),
+    path('preplan/create/', views.PrePlanCreate.as_view(), name='preplan-create'),
+    path('preplan/<int:pk>/update/', views.PrePlanUpdate.as_view(), name='preplan-update'),
+    path('preplan/<int:pk>/delete/', views.PrePlanDelete.as_view(), name='preplan-delete'),
+    
+    # path('plan/<int:pk>/deliver/', views.deliver_plan, name='plan-deliver'),
 ]

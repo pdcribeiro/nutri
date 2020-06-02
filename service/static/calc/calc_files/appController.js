@@ -425,16 +425,6 @@
                     dlg = dialogs.wait(msgs[i++], progress);
                     fakeProgress();
                     break;
-
-                    // Notify Dialog
-                case 'about':
-                    var notifyText = "<p>The <a target=\"_blank\" href=\"https:\/\/www.niddk.nih.gov\/research-funding\/at-niddk\/labs-branches\/LBM\/integrative-physiology-section\/research-behind-body-weight-planner\/Pages\/default.aspx\">research behind</a> the National Institutes of Health (NIH) Body Weight Planner is from work done by <a target=\"_blank\" href=\"https:\/\/www.niddk.nih.gov\/about-niddk\/staff-directory\/intramural\/kevin-hall\/pages\/research-summary.aspx\">Dr. Kevin Hall\'s</a> research group to better understand how diet and exercise quantitatively contribute to weight loss and weight loss maintenance.</p>" +
-                        "<p>This research was published as part of The Lancet Series on Obesity (August 27, 2011). Please reference this paper when publishing material using the Body Weight Planner:</p>" +
-                        "<p>Hall KD, Sacks G, Chandramohan D, Chow CC, Wang YC, Gortmaker SL, Swinburn BA. <a target=\"_blank\" href=\"http:\/\/www.ncbi.nlm.nih.gov\/pubmed?term=Quantification%20of%20the%20effect%20of%20energy%20imbalance%20on%20bodyweight\" >Quantification of the effect of energy imbalance on bodyweight</a>. Lancet. 2011 Aug 27;378(9793):826-37. (PMID:21872751)</p>" +
-                        "<p>Full description of the model equations can be found in the <a target=\"_blank\" href=\"https:\/\/www.niddk.nih.gov\/-\/media\/Files\/BWP\/Hall_Lancet_Web_Appendix.pdf\">Dynamic Mathematical Model of Body Weight Change in Adults (PDF, 244KB)</a> document.</p>";
-
-                    dlg = dialogs.notify('About', notifyText, { keyboard: true, backdrop: false, size: 'md', windowClass: '' });
-                    break;
                 case 'guidedStartingCalculatedOK':
                     var errorText = $scope.maintCalsField + " is an estimate of the typical number of " + $scope.energyUnitsRadioGroup + " you eat, based on the starting weight, sex, age, height, and physical activity level you provided. You can use SuperTracker\'s Food Tracker feature to track how many calories you eat each day. For accurate tracking, be sure to enter all meals, snacks and beverages, and pay close attention to the portion sizes you enter. You can find more information about portion sizes at ChooseMyPlate.gov.<br/><br/>Click the \"Next Step\" button to continue.";
                     dlg = dialogs.notify('Starting Intake Calculated', errorText, { keyboard: true, backdrop: false, size: 'md', windowClass: '' });

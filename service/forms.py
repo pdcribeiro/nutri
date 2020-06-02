@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from .models import Client, Meeting, Meal, Plan
+from .models import Client, Meeting, Meal, PrePlan
 
 
 MealsBaseFormSet = inlineformset_factory(Client, Meal, fields='__all__', extra=6, can_delete=False, max_num=6)
@@ -87,7 +87,7 @@ class MeetingMeasureForm(forms.Form):
 class MeetingCalculateForm(forms.Form):
     pass
 
-class MeetingPlanForm(forms.Form):
+class MeetingPrePlanForm(forms.Form):
     pass
 
 class MeetingFinishForm(forms.Form):

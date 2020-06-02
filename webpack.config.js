@@ -5,7 +5,7 @@ module.exports = {
   entry: {
     main: './service/static/js/main.js',
     calendar: './service/static/js/calendar.js',
-    plan: './service/static/js/plan.js',
+    preplan: './service/static/js/preplan.js',
   },
   output: {
     path: path.resolve(__dirname, './service/static/js'),

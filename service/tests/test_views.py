@@ -4,11 +4,11 @@ from decimal import Decimal
 from django.contrib.auth.models import User, Group, Permission
 from django.test import TestCase
 
-from service.models import Partner, Client, Measurement, Meeting, Plan, PAL
+from service.models import Partner, Client, Measurement, Meeting, PrePlan, PAL
 
 
 USER = { 'username': 'user', 'password': 'user1234' }
-MODELS = ['partner', 'client', 'measurement', 'meeting', 'plan']
+MODELS = ['partner', 'client', 'measurement', 'meeting', 'preplan']
 
 
 class LoginRequiredTest(TestCase):
@@ -18,13 +18,13 @@ class LoginRequiredTest(TestCase):
         'clients/',
         'measures/',
         'meetings/',
-        'plans/',
+        'preplans/',
         # Detail views
         'partner/1',
         'client/1',
         # 'measure/1',
         'meeting/1',
-        'plan/1',
+        'preplan/1',
         # Form views
         'partner/create/',
         'partner/1/update/',
@@ -34,14 +34,14 @@ class LoginRequiredTest(TestCase):
         'measure/1/update/',
         'meeting/create/',
         'meeting/1/update/',
-        'plan/create/',
-        'plan/1/update/',
+        'preplan/create/',
+        'preplan/1/update/',
         # Delete views
         'partner/1/delete/',
         'client/1/delete/',
         'measure/1/delete/',
         'meeting/1/delete/',
-        'plan/1/delete/']
+        'preplan/1/delete/']
 
     @classmethod
     def setUpTestData(cls):
@@ -65,14 +65,14 @@ class TemplateUsedTest(TestCase):
             'clients/',
             'measures/',
             'meetings/',
-            'plans/',
+            'preplans/',
         ]},
         # Detail views
         {'template': 'common/generic_detail.html', 'urls': [
             'partner/1',
             # 'measure/1',
             'meeting/1',
-            'plan/1',
+            'preplan/1',
         ]},
         {'template': 'service/client_detail.html', 'urls': [
             'client/1',
@@ -94,16 +94,16 @@ class TemplateUsedTest(TestCase):
             'meeting/create/',
             'meeting/1/update/',
         ]},
-        {'template': 'plan/index.html', 'urls': [
-            'plan/create/',
-            'plan/1/update/',
+        {'template': 'preplan/index.html', 'urls': [
+            'preplan/create/',
+            'preplan/1/update/',
         ]},
         # Delete views
         {'template': 'common/generic_confirm_delete.html', 'urls': [
             'partner/1/delete/',
             'client/1/delete/',
             'measure/1/delete/',
-            'plan/1/delete/',
+            'preplan/1/delete/',
         ]},
         {'template': 'service/meeting_confirm_delete.html', 'urls': [
             'meeting/1/delete/',
@@ -134,13 +134,13 @@ class EmptyDatabaseTest(TestCase):
         'clients/',
         'measures/',
         'meetings/',
-        'plans/',
+        'preplans/',
         # Form views
         'partner/create/',
         'client/create/',
         'measure/create/',
         'meeting/create/',
-        'plan/create/']
+        'preplan/create/']
 
     @classmethod
     def setUpTestData(cls):
@@ -170,10 +170,10 @@ def create_one_of_each():
     meeting = Meeting.objects.create(
         client=client, date=datetime.date.today(), time=datetime.datetime.now().time(),
         duration=30, summary='summary', event='event')
-    plan = Plan.objects.create(client=client)
+    preplan = PrePlan.objects.create(client=client)
     measurement.save()
     meeting.save()
-    plan.save()
+    preplan.save()
     return user
 
 def create_nutritionist():

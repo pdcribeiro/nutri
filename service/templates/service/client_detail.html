@@ -76,20 +76,20 @@
     <div class="card-header">
       <div class="row">
         <div class="col">
-          <h4 class="card-title">Planos</h4>
+          <h4 class="card-title">Cálculos</h4>
         </div>
         <div class="col">
-          {% if perms.service.add_plan %}
-            <a class="btn btn-primary float-right" href="{% url 'plan-create' %}?client={{ client.pk }}&next={{ request.path }}">
+          {% if perms.service.add_preplan %}
+            <a class="btn btn-primary float-right" href="{% url 'preplan-create' %}?client={{ client.pk }}&next={{ request.path }}">
               <i class="fas fa-plus"></i>
-              <span>&nbsp;&nbsp;Novo plano</span>
+              <span>&nbsp;&nbsp;Novos cálculos</span>
             </a>
           {% endif %}
         </div>
       </div>
     </div>
     <div class="card-body">
-      {% if client.plan_set %}
+      {% if client.preplan_set %}
         <div class="table-responsive-lg">
           <table class="table">
             <thead class="text-primary">
@@ -101,18 +101,18 @@
               </th>
             </thead>
             <tbody>
-              {% for plan in client.plan_set.all %}
+              {% for preplan in client.preplan_set.all %}
                   <tr>
                     <td>
-                      {{ plan.date }}
+                      {{ preplan.date }}
                     </td>
                     <td class="text-right">
-                      {{ plan.daily_energy }} kcal/dia
+                      {{ preplan.daily_energy }} kcal/dia
                     </td>
                     <td class="text-right">
-                      {% if perms.service.view_plan %}<a class="btn btn-link" href="{% url 'plan-detail' plan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
-                      {% if perms.service.change_plan %}<a class="btn btn-link" href="{% url 'plan-update' plan.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
-                      {% if perms.service.delete_plan %}<a class="btn btn-link" href="{% url 'plan-delete' plan.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                      {% if perms.service.view_preplan %}<a class="btn btn-link" href="{% url 'preplan-detail' preplan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.service.change_preplan %}<a class="btn btn-link" href="{% url 'preplan-update' preplan.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.service.delete_preplan %}<a class="btn btn-link" href="{% url 'preplan-delete' preplan.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
                     </td>
                   </tr>
               {% endfor %}

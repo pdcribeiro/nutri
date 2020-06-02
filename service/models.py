@@ -32,7 +32,7 @@ class Partner(models.Model):
         verbose_name = 'parceiro'
 
     def get_absolute_url(self):
-        return reverse('partner-detail', args=[str(self.id)])
+        return reverse('partner-detail', args=[str(self.pk)])
 
     def __str__(self):
         return f'{self.name}'
@@ -66,7 +66,7 @@ class Client(models.Model):
         verbose_name = 'cliente'
 
     def get_absolute_url(self):
-        return reverse('client-detail', args=[str(self.id)])
+        return reverse('client-detail', args=[str(self.pk)])
 
     def __str__(self):
         return f'{self.name}'
@@ -86,7 +86,7 @@ class Meal(models.Model):
         verbose_name_plural = 'refeições'
 
     def __str__(self):
-        return f'meal_id: {self.id} ({self.client})'
+        return f'meal_id: {self.pk} ({self.client})'
 
 
 class Meeting(models.Model):
@@ -122,7 +122,7 @@ class Meeting(models.Model):
         verbose_name = 'consulta'
 
     def get_absolute_url(self):
-        return reverse('meeting-detail', args=[str(self.id)])
+        return reverse('meeting-detail', args=[str(self.pk)])
 
     def __str__(self):
         return f'{self.date}'
@@ -186,7 +186,7 @@ class Measurement(models.Model):
         return f'{self.measure.display_name} of {self.client.name} in {self.date}'
 
 
-class Plan(models.Model):
+class PrePlan(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
     meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
     date = models.DateField(default=timezone.now, null=True, blank=True, verbose_name='Data')
@@ -222,55 +222,11 @@ class Plan(models.Model):
 
     class Meta:
         ordering = ['-date', 'client__name', '-id']
-        verbose_name = 'plano'
-
-    def get_absolute_url(self):
-        return reverse('plan-detail', args=[str(self.id)])
-    
-    def __str__(self):
-        return f'{self.client.name} ({self.date})'
-
-
-class Calculations(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='Cliente')
-    meeting = models.ForeignKey(Meeting, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Consulta')
-    date = models.DateField(default=timezone.now, null=True, blank=True, verbose_name='Data')
-
-    goal_weight = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name='Peso desejado (kg)')
-    goal_body_fat = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, verbose_name='Gordura corporal (%)')
-    new_pal = models.DecimalField(max_digits=3, decimal_places=2, choices=PAL, default=PAL[2][0], null=True, blank=True, verbose_name='Atividade física atual')
-    
-    goal_time = models.DecimalField(
-        max_digits=3, decimal_places=1, validators=[MinValueValidator(0.5), MaxValueValidator(12)],
-        default=3, null=True, blank=True, verbose_name='Duração da dieta (meses)')
-    pal_change = models.DecimalField(
-        max_digits=4, decimal_places=1, validators=[MinValueValidator(0), MaxValueValidator(300)],
-        default=0, null=True, blank=True, verbose_name='Mudança no PAL (%)')
-
-    daily_energy = models.IntegerField(validators=[MinValueValidator(500), MaxValueValidator(5000)], null=True, blank=True, verbose_name='Energia diária (kcal/dia)')
-
-    protein = models.IntegerField(default=25, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de proteínas (%)')
-    carbs = models.IntegerField(default=50, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de hidratos de carbono (%)')
-    fats = models.IntegerField(default=25, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de lípidos (%)')
-    
-    regular_milk = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de leite meio-gordo (doses)')
-    low_fat_milk = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de leite magro (doses)')
-    solid_yoghurt = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de iogurte sólido (doses)')
-    liquid_yoghurt = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de iogurte líquido (doses)')
-    whey = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de whey (doses)')
-    fruit = models.IntegerField(default=3, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de fruta (doses)')
-    vegetables = models.IntegerField(default=4, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Quantidade de vegetais (doses)')
-    
-    # protein_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Carne e equivalentes (doses)')
-    # carbs_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Pão e equivalentes (doses)')
-    # fats_dosage = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)], null=True, blank=True, verbose_name='Gordura (doses)')
-
-    class Meta:
-        ordering = ['-date', 'client__name', '-id']
         verbose_name = 'cálculos'
+        verbose_name_plural = 'cálculos'
 
     def get_absolute_url(self):
-        return reverse('plan-detail', args=[str(self.id)])
+        return reverse('preplan-detail', args=[str(self.pk)])
     
     def __str__(self):
         return f'{self.client.name} ({self.date})'
