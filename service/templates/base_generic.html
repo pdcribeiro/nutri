@@ -6,7 +6,7 @@
   {% comment %} <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="./assets/img/favicon.png"> {% endcomment %}
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>{{ title }} - nutricenas</title>
+  <title>{{ title|capfirst|capfirst }} - nutricenas</title>
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' />
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
   {% load static %}
@@ -111,7 +111,7 @@
               </button>
             </div>
             {% comment %} <a class="navbar-brand" href="javascript:;">{{ user.get_username }}</a> {% endcomment %}
-            <span class="navbar-brand">{{ title }}</span>
+            <span class="navbar-brand">{{ title|capfirst }}</span>
           </div>
           {% comment %} <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-bar navbar-kebab"></span>

@@ -29,6 +29,7 @@ class Partner(models.Model):
 
     class Meta:
         ordering = ['-date', 'name']
+        verbose_name = 'parceiro'
 
     def get_absolute_url(self):
         return reverse('partner-detail', args=[str(self.id)])
@@ -62,6 +63,7 @@ class Client(models.Model):
 
     class Meta:
         ordering = ['name', 'age']
+        verbose_name = 'cliente'
 
     def get_absolute_url(self):
         return reverse('client-detail', args=[str(self.id)])
@@ -80,6 +82,8 @@ class Meal(models.Model):
 
     class Meta:
         ordering = ['id']
+        verbose_name = 'refeição'
+        verbose_name_plural = 'refeições'
 
     def __str__(self):
         return f'meal_id: {self.id} ({self.client})'
@@ -115,6 +119,7 @@ class Meeting(models.Model):
 
     class Meta:
         ordering = ['-date', '-time']
+        verbose_name = 'consulta'
 
     def get_absolute_url(self):
         return reverse('meeting-detail', args=[str(self.id)])
@@ -156,6 +161,7 @@ class Measure(models.Model):
 
     class Meta:
         ordering = ['id']
+        verbose_name = 'medida'
 
     def __str__(self):
         # return f'{self.display_name} ({self.unit})'
@@ -173,6 +179,8 @@ class Measurement(models.Model):
 
     class Meta:
         ordering = ['-date', 'client__name', '-id']
+        verbose_name = 'medição'
+        verbose_name_plural = 'medições'
 
     def __str__(self):
         return f'{self.measure.display_name} of {self.client.name} in {self.date}'
@@ -214,6 +222,7 @@ class Plan(models.Model):
 
     class Meta:
         ordering = ['-date', 'client__name', '-id']
+        verbose_name = 'plano'
 
     def get_absolute_url(self):
         return reverse('plan-detail', args=[str(self.id)])
@@ -258,6 +267,7 @@ class Calculations(models.Model):
 
     class Meta:
         ordering = ['-date', 'client__name', '-id']
+        verbose_name = 'cálculos'
 
     def get_absolute_url(self):
         return reverse('plan-detail', args=[str(self.id)])

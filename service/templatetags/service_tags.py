@@ -7,6 +7,9 @@ def get_last_measurement(client, measure):
     return client.measurement_set.filter(measure__exact=measure.id).first()
     #TODO try without exact
 
+# @register.filter
+# def get_meta(object, field):
+#     return object._meta.getattr(field, None)
 
 # @register.filter
 # def endswith(str, substr):
