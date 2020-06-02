@@ -25,8 +25,6 @@ urlpatterns = [
     path('meetings/', views.MeetingList.as_view(), name='meetings'),
     path('meeting/<int:pk>', views.MeetingDetail.as_view(), name='meeting-detail'),
     path('meeting/create/', views.MeetingCreate.as_view(), name='meeting-create'),
-    path('meeting/create/<int:client_pk>/', views.MeetingCreate.as_view(), name='meeting-create'),
-    path('meeting/create/<int:client_pk>/<int:duration>/', views.MeetingCreate.as_view(), name='meeting-create'),
     path('meeting/<int:pk>/update/', views.MeetingUpdate.as_view(), name='meeting-update'),
     path('meeting/<int:pk>/delete/', views.MeetingDelete.as_view(), name='meeting-delete'),
 
@@ -41,7 +39,6 @@ urlpatterns = [
     path('plans/', views.PlanList.as_view(), name='plans'),
     path('plan/<int:pk>', views.PlanDetail.as_view(), name='plan-detail'),
     path('plan/create/', views.PlanCreate.as_view(), name='plan-create'),
-    path('plan/create/<int:client_pk>/', views.PlanCreate.as_view(), name='plan-create'),
     path('plan/<int:pk>/update/', views.PlanUpdate.as_view(), name='plan-update'),
     path('plan/<int:pk>/delete/', views.PlanDelete.as_view(), name='plan-delete'),
     path('plan/<int:pk>/deliver/', views.deliver_plan, name='plan-deliver'),

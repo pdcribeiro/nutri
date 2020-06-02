@@ -5,9 +5,6 @@
 * Delete measurements and plans when delete meeting?
 * Delete meeting, measurements and plans when delete client?
 
-* Get data from GET request
-  * Schedule/update meeting
-  * ...
 * Integrate calculations in meeting flow
   * Also allow independent calculations
 * Change daily energy calculation layout
@@ -85,6 +82,7 @@ LATER
   * Allow client to add measurements
   * Distinguish client and nutritionist added measurements
   * Progress graph
+* ? Get data from GET request in MeasurementCreate
 
 
 ### Plans

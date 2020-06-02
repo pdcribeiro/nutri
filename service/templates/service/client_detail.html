@@ -23,11 +23,11 @@
         </div>
         <div class="col">
           {% if perms.service.add_meeting %}
-            <a class="btn btn-primary float-right ml-4" href="{% url 'meeting-create' %}?client={{ client.pk }}&amp;duration=60&amp;next={{ request.path }}">
+            <a class="btn btn-primary float-right ml-4" href="{% url 'meeting-create' %}?client={{ client.pk }}&duration=60&summary=rastreio&next={{ request.path }}">
               <i class="fas fa-plus"></i>
               <span>&nbsp;&nbsp;Agendar rastreio</span>
             </a>
-            <a class="btn btn-primary float-right" href="{% url 'meeting-create' %}?next={{ request.path }}">
+            <a class="btn btn-primary float-right" href="{% url 'meeting-create' %}?client={{ client.pk }}&duration=30&next={{ request.path }}">
               <i class="fas fa-plus"></i>
               <span>&nbsp;&nbsp;Agendar consulta</span>
             </a>
@@ -80,7 +80,7 @@
         </div>
         <div class="col">
           {% if perms.service.add_plan %}
-            <a class="btn btn-primary float-right" href="{% url 'plan-create' client.pk %}?next={{ request.path }}">
+            <a class="btn btn-primary float-right" href="{% url 'plan-create' %}?client={{ client.pk }}&next={{ request.path }}">
               <i class="fas fa-plus"></i>
               <span>&nbsp;&nbsp;Novo plano</span>
             </a>

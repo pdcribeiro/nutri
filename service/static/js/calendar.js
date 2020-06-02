@@ -443,12 +443,13 @@ if (view.section === 'Meeting') {
         }
       }
       else {
-        var newClient = getClientName();
-        $('#id_summary').val('Consulta ' + newClient);
-        client = newClient;
+        var summary = new URL(window.location.href).searchParams.get('summary') || 'consulta';
+        summary = summary[0].toUpperCase() + summary.slice(1) + ' ';
+        client = getClientName();
+        $('#id_summary').val(summary + client);
       }
     }
-  });
+  }).change();
 
   function getClientName() {
     var client_id = $('#id_client').val();

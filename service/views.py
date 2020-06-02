@@ -281,20 +281,25 @@ class ClientDelete(PermissionRequiredMixin, DeleteViewMixin):
     model = Client
     success_url = reverse_lazy('clients')
 
+def add_to_dict(dict_, key, val):
+    dict_[key] = val
+    return dict_
+
+def get_param_to_dict(request, name, dict_, model=None):
+    """Adds object from GET request to dict."""
+    param = request.GET.get(name)
+    if model:
+        obj = get_object_or_404(model, pk=param) if param else None
+        return add_to_dict(dict_, name, obj)
+    return add_to_dict(dict_, name, param)
+
 class ClientBasedCreateMixin(CreateViewMixin):
     def get_initial(self):
-        initial = super().get_initial()
-        initial.update({
-            'client': get_object_or_404(Client, pk=self.kwargs['client_pk'])
-                if 'client_pk' in self.kwargs else None})
-        return initial
+        return get_param_to_dict(self.request, 'client', super().get_initial(), Client)
 
 class ClientBasedUpdateMixin(UpdateViewMixin):
     def get_initial(self):
-        initial = super().get_initial()
-        initial.update({
-            'client': get_object_or_404(self.model, pk=self.kwargs['pk']).client})
-        return initial
+        return add_to_dict(super().get_initial(), 'client' , self.object.client)
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -322,12 +327,15 @@ class MeetingList(PermissionRequiredMixin, ListViewMixin):
                 field = row['fields'][time_idx]
                 field['value'] = field['value'][:-3]
         # Add custom navbar buttons
-        # if self.request.user.has_perm('service.add_meeting'):
-        #     context['navbar'] = [
-        #         { 'text': 'Agendar consulta', 'type': 'primary', 'href': reverse('meeting-create', args=[30]) },
-        #         { 'text': 'Agendar rastreio', 'type': 'primary', 'href': reverse('meeting-create', args=[60]) },
-        #         { 'text': 'Agendar outro', 'type': 'secondary', 'href': reverse('meeting-create') },
-        #     ]
+        if self.request.user.has_perm('service.add_meeting'):
+            create_url = reverse('meeting-create')
+            context['navbar'] = [
+                {'icon': 'fas fa-plus', 'text': 'Agendar consulta', 'type': 'primary',
+                    'href': create_url + '?duration=60&next=' + self.request.path},
+                {'icon': 'fas fa-plus', 'text': 'Agendar rastreio', 'type': 'primary',
+                    'href': create_url + '?duration=30&summary=rastreio&next=' + self.request.path},
+                {'icon': 'fas fa-plus', 'text': 'Agendar outro', 'type': 'secondary',
+                    'href': create_url + '?next=' + self.request.path}]
         # Add 'view' list item button
         if self.request.user.has_perm(f'service.change_{self.slug}'):
             context['buttons'].insert(0, { 'url': f'{self.slug }-start', 'icon': 'play'})
@@ -365,10 +373,7 @@ class MeetingCreate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedCreate
     context = { 'title': 'Agendar consulta' }
 
     def get_initial(self):
-        initial = super().get_initial()
-        if 'duration' in self.kwargs:
-            initial.update({ 'duration': self.kwargs['duration'] })
-        return initial
+        return get_param_to_dict(self.request, 'duration', super().get_initial())
 
 class MeetingUpdate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedUpdateMixin):
     permission_required = 'service.change_meeting'
@@ -535,7 +540,7 @@ class MeasurementUpdate(PermissionRequiredMixin, MeasurementFormMixin, ClientBas
 class MeasurementDelete(PermissionRequiredMixin, DeleteViewMixin):
     permission_required = 'service.delete_measurement'
     model = Measurement
-    
+
 
 class PlanList(PermissionRequiredMixin, ListViewMixin):
     permission_required = 'service.view_plan'
@@ -618,6 +623,9 @@ class PlanFormMixin(FormViewMixin):
 
 class PlanCreate(PermissionRequiredMixin, PlanFormMixin, ClientBasedCreateMixin):
     permission_required = 'service.add_plan'
+
+    def get_initial(self):
+        return get_param_to_dict(self.request, 'meeting', super().get_initial(), Meeting)
 
     def form_valid(self, form):
         client_id = form.cleaned_data['client'].id
