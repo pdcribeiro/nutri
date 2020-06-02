@@ -475,7 +475,7 @@ class MeetingMeasure(MeetingMixin):
         return super().form_valid(form)
     
     def get_success_url(self):
-        return self.request.path
+        return self.request.get_full_path()
     
 # def MeetingCalculate(MeetingMixin):
 #     form_class = MeetingCalculateForm
@@ -554,23 +554,28 @@ class PlanFormMixin(FormMixin, ViewMixin):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
+        # Define range inputs
         for field in ['proteins', 'carbs', 'fats']:
             form.fields[field].widget = NumberInput(attrs={
                 'type': 'range',
                 'class': 'custom-range',
                 'step': '5'})
+
+        if 'client_pk' in self.kwargs:
+            self.client = get_object_or_404(Client, pk=self.kwargs['client_pk'])
+        elif 'pk' in self.kwargs: self.client = self.object.client
+        else: return form
+
+        # Define meeting queryset
+        form.fields['meeting'].queryset = self.client.meeting_set.filter(date__lte=datetime.date.today())
         return form
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        if 'client_pk' in self.kwargs:
-            client = get_object_or_404(Client, pk=self.kwargs['client_pk'])
-        elif 'pk' in self.kwargs:
-            client = get_object_or_404(Plan, pk=self.kwargs['pk']).client
-        else:
-            return context
         
+        if not hasattr(self, 'client'): return context
+        else: client = self.client
+
         # today = datetime.date.today()
         js_context = {
             'gender': client.gender,

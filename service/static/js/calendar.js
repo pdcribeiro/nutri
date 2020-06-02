@@ -360,7 +360,7 @@ function parseCalendar() {
     })
     // Calendar not found through ID. Search by name.
     .catch(response => {
-      console.error('Calendar ID not found. Searching by name...', response.result);
+      console.log('Calendar ID not found. Searching by name...', response.result);
       searchCalendarByName();
     });
 }
@@ -383,7 +383,7 @@ function searchCalendarByName() {
     })
     // Calendar not found through name. Create new.
     .catch(() => {
-      console.error('Calendar not found. Creating new one...');
+      console.log('Calendar not found. Creating new one...');
       createCalendar();
     });
 }
@@ -402,7 +402,7 @@ function createCalendar() {
     })
     // Failed to create calendar.
     .catch(response => {
-      console.log('Failed to create calendar.', response.result);
+      console.error('Failed to create calendar.', response.result);
       alert('O calendário não foi encontrado e não foi possível criar um novo. Verifique a sua ligação à internet.');
     });
 }

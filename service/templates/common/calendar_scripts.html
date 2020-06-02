@@ -8,7 +8,7 @@
 {% if js_context %}
   <script>
     var { CLIENT_ID, API_KEY, calendarId, eventId } = {{ js_context|safe }};
-    var renderCalendar = {{ render_calendar|safe }};
+    var renderCalendar = {% if render_calendar %}{{ render_calendar|safe }}{% else %}false{% endif %};
   </script>
 {% endif %}
 {% load static %}

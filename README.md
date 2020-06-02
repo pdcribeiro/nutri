@@ -2,12 +2,14 @@
 
 ## TODOs
 
-* WIP Fix errors from webpack
-  * Test
+* Delete measurements and plans when delete meeting?
+* Delete meeting, measurements and plans when delete client?
 
-* WIP Color code list views
-
-* Filter meetings by client in plan form page
+* Get data from GET request
+  * Schedule/update meeting
+  * ...
+* Integrate calculations in meeting flow
+  * Also allow independent calculations
 * Change daily energy calculation layout
   * Make goal column same as current
   * Create separate table to input desired daily energy
@@ -18,7 +20,6 @@
 * models.Client.Meta.ordering: display and order by last meeting/activity
 * Filter clients by user (nutri)
 * Filter plans/meetings by clients
-* Client.age: calculate and display age in list view
 * Use for loop to display table headers in client_form.html
 
 
