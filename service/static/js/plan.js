@@ -93,7 +93,7 @@ function findDosages(totals, initialDosages) {
     }
   }
   
-  let { totalProteins, totalCarbs, totalFats, totalCalories } = totals;
+  let { totalProtein, totalCarbs, totalFats, totalCalories } = totals;
   const {
     regularMilk, lowFatMilk, solidYoghurt, liquidYoghurt, whey, fruit, vegetables
   } = initialDosages;
@@ -101,14 +101,14 @@ function findDosages(totals, initialDosages) {
     regularMilk, lowFatMilk, solidYoghurt, liquidYoghurt, whey, fruit, vegetables
   ];
 
-  totalProteins -= dot(initialDosagesArray, [7, 7, 16.5, 12.1, 19.5, 0, 2]);
+  totalProtein -= dot(initialDosagesArray, [7, 7, 16.5, 12.1, 19.5, 0, 2]);
   totalCarbs -= dot(initialDosagesArray, [12, 10, 6, 8.2, 1, 10, 5]);
   totalFats -= dot(initialDosagesArray, [4, 1.2, 0.3, 0.7, 1.8, 0, 0]);
   totalCalories -= dot(initialDosagesArray, [106, 80, 93, 87, 98, 50, 25]);
-  const totalsArray = [totalProteins, totalCarbs, totalFats, totalCalories];
+  const totalsArray = [totalProtein, totalCarbs, totalFats, totalCalories];
 
-  const maxProteins = Math.ceil(Math.min(totalProteins / 7, totalFats / 3));
-  const maxCarbs = Math.ceil(Math.min(totalProteins / 2, totalCarbs / 15));
+  const maxProtein = Math.ceil(Math.min(totalProtein / 7, totalFats / 3));
+  const maxCarbs = Math.ceil(Math.min(totalProtein / 2, totalCarbs / 15));
   const maxFats = Math.ceil(totalFats / 5);
 
   const factorVectors = [
@@ -121,10 +121,10 @@ function findDosages(totals, initialDosages) {
   let dosages, optimalDosages = null;
   let minError = 1000;
 
-  for (let proteins = 7, error = 0; proteins <= maxProteins; proteins++) {
+  for (let protein = 7, error = 0; protein <= maxProtein; protein++) {
     for (let carbs = 7; carbs <= maxCarbs; carbs++) {
       for (let fats = 4; fats <= maxFats; fats++) {
-        dosages = [proteins, carbs, fats];
+        dosages = [protein, carbs, fats];
         error = factorVectors.reduce(
           (sum, vec, idx) => sum += (Math.abs(dot(dosages, vec) - totalsArray[idx]) / totalsArray[idx])
         , 0);
@@ -142,7 +142,7 @@ function findDosages(totals, initialDosages) {
   //   optimalDosages,
   //   errors: [...factorVectors.map((val, idx) => dot(optimalDosages, val) - totalsArray[idx]), minError],
   // });
-  $('#optimal_proteins').text(optimalDosages[0]);
+  $('#optimal_protein').text(optimalDosages[0]);
   $('#optimal_carbs').text(optimalDosages[1]);
   $('#optimal_fats').text(optimalDosages[2]);
 }
@@ -164,11 +164,11 @@ function render() {  //TODO? try without parseFloat
   const fruit = parseInt($('#fruit_efield input').val());
   const vegetables = parseInt($('#vegetables_efield input').val());
 
-  const proteins = parseFloat($('#proteins_efield input').val()) / 100;
+  const protein = parseFloat($('#protein_efield input').val()) / 100;
   const carbs = parseFloat($('#carbs_efield input').val()) / 100;
   const fats = parseFloat($('#fats_efield input').val()) / 100;
 
-  const proteinsWeight = Math.round(goalDailyEnergy * proteins / 4);
+  const proteinWeight = Math.round(goalDailyEnergy * protein / 4);
   const carbsWeight = Math.round(goalDailyEnergy * carbs / 4);
   const fatsWeight = Math.round(goalDailyEnergy * fats / 9);
 
@@ -210,16 +210,16 @@ function render() {  //TODO? try without parseFloat
   $('#goal_bmr').text(Math.round(goalBmr));
   $('#goal_daily_energy_extra').text(Math.round(goalBmr * newPal) + ' kcal/dia');
 
-  $('#proteins_weight').text(proteinsWeight);
+  $('#protein_weight').text(proteinWeight);
   $('#carbs_weight').text(carbsWeight);
   $('#fats_weight').text(fatsWeight);
 
-  $('#proteins_per_weight').text(properRound(proteinsWeight / weight, 2));
+  $('#protein_per_weight').text(properRound(proteinWeight / weight, 2));
   $('#carbs_per_weight').text(properRound(carbsWeight / weight, 2));
   $('#fats_per_weight').text(properRound(fatsWeight / weight, 2));
 
   setTimeout(() => findDosages({
-    totalProteins: proteinsWeight,
+    totalProtein: proteinWeight,
     totalCarbs: carbsWeight,
     totalFats: fatsWeight,
     totalCalories: goalDailyEnergy,
@@ -269,7 +269,7 @@ function addEventListeners() {
   $('.efield input[type="range"]').change(render);
 
   // Range inputs interdependence
-  const mns = ['proteins', 'carbs', 'fats', 'proteins', 'carbs'].map(mn => $(`#${mn}_efield input`));
+  const mns = ['protein', 'carbs', 'fats', 'protein', 'carbs'].map(mn => $(`#${mn}_efield input`));
   for (let i = 0; i < 3; i++) {
     mns[i].on('input', function() {
       const secondVal = Math.max(100 - $(this).val() - mns[i+2].val(), 0);

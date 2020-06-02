@@ -2,11 +2,9 @@
 
 ## TODOs
 
-* Delete measurements and plans when delete meeting?
-* Delete meeting, measurements and plans when delete client?
-
 * Integrate calculations in meeting flow
   * Also allow independent calculations
+
 * Change daily energy calculation layout
   * Make goal column same as current
   * Create separate table to input desired daily energy
@@ -96,7 +94,7 @@ Meals page
 Plan page
   * Make 
   * plan.js: Use 'fields', 'cfields' and 'efields' objects
-  * Compare performance of two versions of maxProteins/Carbs/Fats calculation
+  * Compare performance of two versions of maxProtein/Carbs/Fats calculation
   * Fix select elements width
   * Review table column widths
   * Try to use Bootstrap help text for Field extra

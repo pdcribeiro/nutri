@@ -5,7 +5,7 @@
 {% block name %}Proteínas{% endblock %}
 
 {% block fields %}
-  {% include 'common/efield.html' with name='proteins' unit='%' extra='...' input=form.proteins %}
-  {% include 'common/field.html' with name='proteins_weight' value='...' unit='g' %}
-  {% include 'common/field.html' with name='proteins_per_weight' value='...' unit='g/kg' %}
+  {% include 'common/efield.html' with name='protein' unit='%' extra='...' input=form.protein %}
+  {% include 'common/field.html' with name='protein_weight' value='...' unit='g' %}
+  {% include 'common/field.html' with name='protein_per_weight' value='...' unit='g/kg' %}
 {% endblock %}

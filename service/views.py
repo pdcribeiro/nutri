@@ -571,7 +571,7 @@ class PlanFormMixin(FormViewMixin):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         # Define range inputs
-        for field in ['proteins', 'carbs', 'fats']:
+        for field in ['protein', 'carbs', 'fats']:
             form.fields[field].widget = NumberInput(attrs={
                 'type': 'range',
                 'class': 'custom-range',
