@@ -2,18 +2,20 @@
 
 ## TODOs
 
-* WIP Try GET params as optional params in url patterns
-
 * Integrate calculations in meeting flow
   * Also allow independent calculations
 
 * Change daily energy calculation layout
   * Make goal column same as current
   * Create separate table to input desired daily energy
+  * Try split niddk table into two rows
+  * ? Move niddk table below other calcs
 * Move height to measurements
 * Measurement, PrePlan, Plan
   * Allow either meeting or date
   * get_date method
+
+* Handle notifyNegativeMaintCals
 
 
 ### Clients
@@ -147,6 +149,11 @@ Meals page
 
 ### Misc
 
+* Put view classes into scopes
+  * Create python package for views?
+* Check for errors when fetching data from server
+  * PrePlanCreate page
+  * MeetingCreate page
 * Change any 'get_object_or_404' calls with 'self.object'
 * More tests
 * Handle brute force attacks

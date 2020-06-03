@@ -5,11 +5,11 @@
 {% block description %}Defina as doses de laticínios, fruta e vegetais{% endblock %}
 
 {% block tables %}
-  <div class="row justify-content-around align-items-center">
-    <div class="col-sm">
+  <div class="row align-items-center" style="justify-content: space-evenly;">
+    <div class="col-sm-5">
       {% include './table_initial.html' %}
     </div>
-    <div class="col-sm">
+    <div class="col-sm-5">
       {% include './table_optimal.html' %}
     </div>
   </div>

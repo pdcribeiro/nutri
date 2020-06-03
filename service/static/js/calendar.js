@@ -459,10 +459,11 @@ if (view.section === 'Meeting') {
   // Fetch gcal calendar ID
   function fetchCalendar() {
     if ($('#id_client').val()) {
-      var url = '/main/calendar/' + $('#id_client').val();
-      fetch(url).then(response => response.text()).then(function (calId) {
-        calendarId = calId;
-      });
+      return fetch('/main/client/' + $('#id_client').val() + '/calendar/')
+        .then(response => response.json())
+        .then(({ id }) => {
+          calendarId = id;
+        });
     }
   }
   if (typeof calendarId === 'undefined') {

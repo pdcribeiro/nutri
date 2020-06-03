@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic, View
@@ -52,6 +52,18 @@ def check_url_reverse(url_name, *args, **kwargs):
 
 def append_to_dict_item(dict_, item, appendix):
     dict_[item] = (dict_[item] if item in dict_ else '') + appendix
+
+def get_param_to_dict(request, name, dict_, model=None):
+    """Adds object from GET request to dict."""
+    param = request.GET.get(name)
+    if model:
+        obj = get_object_or_404(model, pk=param) if param else None
+        return add_to_dict(dict_, name, obj)
+    return add_to_dict(dict_, name, param)
+
+def add_to_dict(dict_, key, val):
+    dict_[key] = val
+    return dict_
 
 
 class ViewMixin:
@@ -281,17 +293,27 @@ class ClientDelete(PermissionRequiredMixin, DeleteViewMixin):
     model = Client
     success_url = reverse_lazy('clients')
 
-def add_to_dict(dict_, key, val):
-    dict_[key] = val
-    return dict_
+@permission_required('service.add_plan')
+def get_client_data(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    # today = datetime.date.today()
+    return JsonResponse({
+        'gender': client.gender,
+        # 'age': today.year - client.born.year -
+        #     ((today.month, today.day) <
+        #     (client.born.month, client.born.day)),
+        'age': client.age,
+        'height': float(client.height),
+        'weight': float(client.weight),
+        'bodyFat': float(client.body_fat) if client.body_fat else '',
+        'pal': str(client.pal),
+        'palMap': { str(key): val for [key, val] in PAL },
+    })
 
-def get_param_to_dict(request, name, dict_, model=None):
-    """Adds object from GET request to dict."""
-    param = request.GET.get(name)
-    if model:
-        obj = get_object_or_404(model, pk=param) if param else None
-        return add_to_dict(dict_, name, obj)
-    return add_to_dict(dict_, name, param)
+@permission_required('service.add_meeting')
+def get_client_calendar(request, pk):
+    client = get_object_or_404(Client, pk=pk)
+    return JsonResponse({ 'id': client.partner.calendar })
 
 class ClientBasedCreateMixin(CreateViewMixin):
     def get_initial(self):
@@ -302,6 +324,7 @@ class ClientBasedUpdateMixin(UpdateViewMixin):
         return add_to_dict(super().get_initial(), 'client' , self.object.client)
 
     def get_form(self, form_class=None):
+        """Disables client field."""
         form = super().get_form(form_class)
         form.fields['client'].disabled = True
         return form
@@ -570,43 +593,27 @@ class PrePlanFormMixin(FormViewMixin):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        # Define range inputs
+        # Setup range inputs
         for field in ['protein', 'carbs', 'fats']:
             form.fields[field].widget = NumberInput(attrs={
                 'type': 'range',
                 'class': 'custom-range',
                 'step': '5'})
-
-        if 'client_pk' in self.kwargs:
-            self.client = get_object_or_404(Client, pk=self.kwargs['client_pk'])
-        elif 'pk' in self.kwargs: self.client = self.object.client
-        else: return form
-
-        # Define meeting queryset
+        # Get client
+        if 'pk' in self.kwargs: self.client = self.object.client
+        else:
+            client_pk = self.request.GET.get('client')
+            if client_pk: self.client = get_object_or_404(Client, pk=client_pk)
+            else: return form
+        # Get meeting queryset
         form.fields['meeting'].queryset = self.client.meeting_set.filter(date__lte=datetime.date.today())
         return form
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
         if not hasattr(self, 'client'): return context
-        else: client = self.client
-
-        # today = datetime.date.today()
-        js_context = {
-            'gender': client.gender,
-            # 'age': today.year - client.born.year -
-            #     ((today.month, today.day) <
-            #     (client.born.month, client.born.day)),
-            'age': client.age,
-            'height': float(client.height),
-            'weight': float(client.weight),
-            'bodyFat': client.body_fat and float(client.body_fat) or '',
-            'pal': str(client.pal),
-            'palMap': { str(key): val for [key, val] in PAL },
-        }
         context.update({
-            'client': client,
+            'client': self.client,
             # 'preplan': preplan,
             'columns': {
                 'client_info': ['Atual', 'Objetivo'],
@@ -617,7 +624,7 @@ class PrePlanFormMixin(FormViewMixin):
                 # 'optimal_dosages': ['Carne e eq', 'Pão e eq', 'Gordura'],
                 'food_dosages': ['Quantidade'],
             },
-            'js_context': json.dumps(js_context),
+            # 'js_context': json.dumps(js_context),
         })
         return context
 
@@ -630,8 +637,8 @@ class PrePlanCreate(PermissionRequiredMixin, PrePlanFormMixin, ClientBasedCreate
     def form_valid(self, form):
         client_id = form.cleaned_data['client'].id
         if 'reload' in self.request.POST and client_id:
-            url = reverse('preplan-create', args=[client_id])
-            return redirect(url + '?next=' + self.get_next())
+            url = reverse('preplan-create')
+            return redirect(f'{url}?client={client_id}&next={self.get_next()}')
         form.instance.date = datetime.date.today()
         return super().form_valid(form)
 
@@ -641,7 +648,6 @@ class PrePlanUpdate(PermissionRequiredMixin, PrePlanFormMixin, ClientBasedUpdate
 class PrePlanDelete(PermissionRequiredMixin, DeleteViewMixin):
     permission_required = 'service.delete_preplan'
     model = PrePlan
-
 
 """@permission_required('service.view_plan')
 def deliver_plan(request, pk):
@@ -677,8 +683,3 @@ def deliver_plan(request, pk):
         ],
     }
     return render(request, 'plan/deliverable.html', context=context)"""
-
-
-def get_calendar(request, client_pk):
-    client = get_object_or_404(Client, pk=client_pk)
-    return HttpResponse(client.partner.calendar)
