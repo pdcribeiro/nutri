@@ -1,5 +1,5 @@
-*/migrations/
-staticfiles/
+migrations/
+static/
 node_modules/
 *.pyc
 *.bak

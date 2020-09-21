@@ -1,0 +1,127 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h2>{{ client.name }}</h2>
+  <div class="card">
+    <div class="card-header">
+      <h4 class="card-title">Informações gerais</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Sexo:</strong> {{ client.get_gender_display }}</p>
+      <p><strong>Idade:</strong> {{ client.age }} anos</p>
+      <p><strong>Altura:</strong> {{ client.height }} cm</p>
+      <p><strong>Peso:</strong> {{ client.weight }} kg</p>
+      <p><strong>IMC:</strong> {{ client.get_bmi }} kg/m2</p>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col">
+          <h4 class="card-title">Consultas</h4>
+        </div>
+        <div class="col">
+          {% if perms.core.add_meeting %}
+            <a class="btn btn-primary float-right ml-4" href="{% url 'meeting-create' %}?client={{ client.pk }}&duration=60&summary=rastreio&next={{ request.path }}">
+              <i class="fas fa-plus"></i>
+              <span>&nbsp;&nbsp;Agendar rastreio</span>
+            </a>
+            <a class="btn btn-primary float-right" href="{% url 'meeting-create' %}?client={{ client.pk }}&duration=30&next={{ request.path }}">
+              <i class="fas fa-plus"></i>
+              <span>&nbsp;&nbsp;Agendar consulta</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if client.meeting_set %}
+        <div class="table-responsive-lg">
+          <table class="table">
+            <thead class="text-primary">
+              <th>
+                Data
+              </th>
+              <th class="text-right">
+                Peso
+              </th>
+            </thead>
+            <tbody>
+              {% for meeting in client.meeting_set.all %}
+                  <tr>
+                    <td>
+                      {{ meeting.date }}
+                    </td>
+                    <td class="text-right">
+                      {{ meeting.weight }} kg
+                    </td>
+                    <td class="text-right">
+                      {% if perms.core.view_meeting %}<a class="btn btn-link" href="{% url 'meeting-detail' meeting.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.core.change_meeting %}<a class="btn btn-link" href="{% url 'meeting-update' meeting.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.core.delete_meeting %}<a class="btn btn-link" href="{% url 'meeting-delete' meeting.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                    </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p>O cliente não tem consultas.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="row">
+        <div class="col">
+          <h4 class="card-title">Cálculos</h4>
+        </div>
+        <div class="col">
+          {% if perms.core.add_preplan %}
+            <a class="btn btn-primary float-right" href="{% url 'preplan-create' %}?client={{ client.pk }}&next={{ request.path }}">
+              <i class="fas fa-plus"></i>
+              <span>&nbsp;&nbsp;Novos cálculos</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if client.preplan_set %}
+        <div class="table-responsive-lg">
+          <table class="table">
+            <thead class="text-primary">
+              <th>
+                Data
+              </th>
+              <th class="text-right">
+                Energia diária
+              </th>
+            </thead>
+            <tbody>
+              {% for preplan in client.preplan_set.all %}
+                  <tr>
+                    <td>
+                      {{ preplan.date }}
+                    </td>
+                    <td class="text-right">
+                      {{ preplan.daily_energy }} kcal/dia
+                    </td>
+                    <td class="text-right">
+                      {% if perms.core.view_preplan %}<a class="btn btn-link" href="{% url 'preplan-detail' preplan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.core.change_preplan %}<a class="btn btn-link" href="{% url 'preplan-update' preplan.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.core.delete_preplan %}<a class="btn btn-link" href="{% url 'preplan-delete' preplan.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                    </td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p>O cliente não tem planos.</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

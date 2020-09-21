@@ -3,12 +3,12 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    main: './service/static/js/main.js',
-    calendar: './service/static/js/calendar.js',
-    preplan: './service/static/js/preplan.js',
+    main: './core/static/js/main.js',
+    calendar: './core/static/js/calendar.js',
+    preplan: './core/static/js/preplan.js',
   },
   output: {
-    path: path.resolve(__dirname, './service/static/js'),
+    path: path.resolve(__dirname, './core/static/js'),
     filename: '[name].min.js',
   },
   mode: 'development',
