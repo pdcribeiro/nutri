@@ -8,3 +8,6 @@ It was developed using Django and Bootstrap.
 ## Live demo
 
 [http://nutri.pdcribeiro.ddnsgeek.com](http://nutri.pdcribeiro.ddnsgeek.com)
+
+Username: user<br/>
+Password: user
