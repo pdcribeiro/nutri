@@ -1,0 +1,17 @@
+{% if render_calendar %}
+  <script src="https://unpkg.com/@fullcalendar/core/main.global.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/interaction/main.global.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/daygrid/main.global.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/timegrid/main.global.min.js"></script>
+  <script src="https://unpkg.com/@fullcalendar/list/main.global.min.js"></script>
+{% endif %}
+{% if js_context %}
+  <script>
+    var { CLIENT_ID, API_KEY, calendarId, eventId } = {{ js_context|safe }};
+  </script>
+{% endif %}
+<script>
+  var renderCalendar = {% firstof render_calendar 'false' %};
+</script>
+{% load static %}
+<script src="{% static 'js/calendar.min.js' %}"></script>
