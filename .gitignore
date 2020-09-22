@@ -1,8 +1,9 @@
-*/migrations/
-staticfiles/
+migrations/
+static/
 node_modules/
-*.pyc
+*.local.*
 *.bak
+*.pyc
 *.code-workspace
 db.sqlite3
 runserver.sh
