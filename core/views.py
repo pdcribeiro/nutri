@@ -115,21 +115,21 @@ class ListViewMixin(ViewMixin, generic.ListView):
             'model_vbname_plural': self.model._meta.verbose_name_plural,
         })
         # Add 'add item' button to navbar
-        if self.request.user.has_perm(f'service.add_{self.slug}'):
+        if self.request.user.has_perm(f'core.add_{self.slug}'):
             context['navbar'].append({
                 'icon': 'fas fa-plus', 'type': 'primary',
                 'text': self.add_btn_str if hasattr(self, 'add_btn_str') else 'Criar',
                 'href': f"{reverse(f'{self.slug}-create')}?next={self.request.path}"})
         # Add 'view' list item button
-        if (self.request.user.has_perm(f'service.view_{self.slug}')
+        if (self.request.user.has_perm(f'core.view_{self.slug}')
                 and check_url_reverse(f'{self.slug}-detail', args=[0])):
             context['buttons'].append({ 'url': f'{self.slug }-detail', 'icon': 'file-alt'})
         # Add 'edit' list item button
-        if (self.request.user.has_perm(f'service.change_{self.slug}')
+        if (self.request.user.has_perm(f'core.change_{self.slug}')
                 and check_url_reverse(f'{self.slug}-update', args=[0])):
             context['buttons'].append({ 'url': f'{self.slug }-update', 'icon': 'edit'})
         # Add 'delete' list item button
-        if (self.request.user.has_perm(f'service.delete_{self.slug}')
+        if (self.request.user.has_perm(f'core.delete_{self.slug}')
                 and check_url_reverse(f'{self.slug}-delete', args=[0])):
             context['buttons'].append({ 'url': f'{self.slug }-delete', 'icon': 'trash-alt'})
         return context
@@ -148,11 +148,11 @@ class DetailViewMixin(ViewMixin, generic.DetailView):
                 **get_field_value(field, obj),
             } for field in obj._meta.fields if filter_fields(self, field.name)],
         })
-        if self.request.user.has_perm(f'service.change_{self.slug}'):
+        if self.request.user.has_perm(f'core.change_{self.slug}'):
             context['navbar'] += [{
                 'icon': 'fas fa-edit', 'text': 'Editar', 'type': 'primary',
                 'href': reverse(f'{self.slug}-update', args=[self.kwargs['pk']])}]
-        if self.request.user.has_perm(f'service.delete_{self.slug}'):
+        if self.request.user.has_perm(f'core.delete_{self.slug}'):
             context['navbar'] += [{
                 'icon': 'fas fa-trash-alt', 'text': 'Apagar', 'type': 'secondary',
                 'href': reverse(f'{self.slug}-delete', args=[self.kwargs['pk']])}]
@@ -226,7 +226,7 @@ class Home(LoginRequiredMixin, ViewMixin, View):
 
 
 class PartnerList(PermissionRequiredMixin, ListViewMixin):
-    permission_required = 'service.view_partner'
+    permission_required = 'core.view_partner'
     model = Partner
     context = { 'url': 'partners' }
     exclude = ['id']
@@ -234,7 +234,7 @@ class PartnerList(PermissionRequiredMixin, ListViewMixin):
     add_btn_str = 'Novo parceiro'
 
 class PartnerDetail(PermissionRequiredMixin, DetailViewMixin):
-    permission_required = 'service.view_partner'
+    permission_required = 'core.view_partner'
     model = Partner
     exclude = ['id']
     slug = 'partner'
@@ -242,22 +242,22 @@ class PartnerDetail(PermissionRequiredMixin, DetailViewMixin):
 class PartnerFormMixin(GoogleApiMixin, FormViewMixin):
     model = Partner
     fields = '__all__'
-    template_name = 'service/partner_form.html'
+    template_name = 'core/partner_form.html'
 
 class PartnerCreate(PermissionRequiredMixin, PartnerFormMixin, CreateViewMixin):
-    permission_required = 'service.add_partner'
+    permission_required = 'core.add_partner'
 
 class PartnerUpdate(PermissionRequiredMixin, PartnerFormMixin, UpdateViewMixin):
-    permission_required = 'service.change_partner'
+    permission_required = 'core.change_partner'
 
 class PartnerDelete(PermissionRequiredMixin, DeleteViewMixin):
-    permission_required = 'service.delete_partner'
+    permission_required = 'core.delete_partner'
     model = Partner
     success_url = reverse_lazy('partners')
 
 
 class ClientList(PermissionRequiredMixin, ListViewMixin):
-    permission_required = 'service.view_client'
+    permission_required = 'core.view_client'
     model = Client
     context = { 'url': 'clients' }
     fields = ['name', 'gender', 'age', 'weight', 'partner']
@@ -265,20 +265,20 @@ class ClientList(PermissionRequiredMixin, ListViewMixin):
     add_btn_str = 'Novo cliente'
 
 class ClientDetail(PermissionRequiredMixin, DetailViewMixin):
-    permission_required = 'service.view_client'
+    permission_required = 'core.view_client'
     model = Client
     context_object_name = 'client'
-    template_name = 'service/client_detail.html'
+    template_name = 'core/client_detail.html'
     exclude = ['id', 'user', 'nutritionist']
     slug = 'client'
 
 class ClientFormMixin(FormViewMixin):
     model = Client
     form_class = ClientForm
-    template_name = 'service/client_form.html'
+    template_name = 'core/client_form.html'
 
 class ClientCreate(PermissionRequiredMixin, ClientFormMixin, CreateViewMixin):
-    permission_required = 'service.add_client'
+    permission_required = 'core.add_client'
 
     def form_valid(self, form):
         if self.request.user.groups.filter(name='nutritionist').exists():
@@ -286,14 +286,14 @@ class ClientCreate(PermissionRequiredMixin, ClientFormMixin, CreateViewMixin):
         return super().form_valid(form)
 
 class ClientUpdate(PermissionRequiredMixin, ClientFormMixin, UpdateViewMixin):
-    permission_required = 'service.change_client'
+    permission_required = 'core.change_client'
 
 class ClientDelete(PermissionRequiredMixin, DeleteViewMixin):
-    permission_required = 'service.delete_client'
+    permission_required = 'core.delete_client'
     model = Client
     success_url = reverse_lazy('clients')
 
-@permission_required('service.add_plan')
+@permission_required('core.add_plan')
 def get_client_data(request, pk):
     client = get_object_or_404(Client, pk=pk)
     # today = datetime.date.today()
@@ -310,7 +310,7 @@ def get_client_data(request, pk):
         'palMap': { str(key): val for [key, val] in PAL },
     })
 
-@permission_required('service.add_meeting')
+@permission_required('core.add_meeting')
 def get_client_calendar(request, pk):
     client = get_object_or_404(Client, pk=pk)
     return JsonResponse({ 'id': client.partner.calendar })
@@ -331,9 +331,9 @@ class ClientBasedUpdateMixin(UpdateViewMixin):
 
 
 class MeetingList(PermissionRequiredMixin, ListViewMixin):
-    permission_required = 'service.view_meeting'
+    permission_required = 'core.view_meeting'
     model = Meeting
-    template_name = 'service/meeting_list.html'
+    template_name = 'core/meeting_list.html'
     context = { 'url': 'meetings' }
     exclude = ['id', 'duration', 'event', 'phase', 'notes']
     slug = 'meeting'
@@ -350,7 +350,7 @@ class MeetingList(PermissionRequiredMixin, ListViewMixin):
                 field = row['fields'][time_idx]
                 field['value'] = field['value'][:-3]
         # Add custom navbar buttons
-        if self.request.user.has_perm('service.add_meeting'):
+        if self.request.user.has_perm('core.add_meeting'):
             create_url = reverse('meeting-create')
             context['navbar'] = [
                 {'icon': 'fas fa-plus', 'text': 'Agendar consulta', 'type': 'primary',
@@ -360,12 +360,12 @@ class MeetingList(PermissionRequiredMixin, ListViewMixin):
                 {'icon': 'fas fa-plus', 'text': 'Agendar outro', 'type': 'secondary',
                     'href': create_url + '?next=' + self.request.path}]
         # Add 'view' list item button
-        if self.request.user.has_perm(f'service.change_{self.slug}'):
+        if self.request.user.has_perm(f'core.change_{self.slug}'):
             context['buttons'].insert(0, { 'url': f'{self.slug }-start', 'icon': 'play'})
         return context
 
 class MeetingDetail(PermissionRequiredMixin, DetailViewMixin):
-    permission_required = 'service.view_meeting'
+    permission_required = 'core.view_meeting'
     model = Meeting
     exclude = ['id', 'client', 'date', 'time']
     slug = 'meeting'
@@ -380,7 +380,7 @@ class MeetingDetail(PermissionRequiredMixin, DetailViewMixin):
 class MeetingFormMixin(GoogleApiMixin, FormViewMixin):
     model = Meeting
     fields = ['client', 'date', 'time', 'duration', 'summary', 'event']
-    template_name = 'service/meeting_form.html'
+    template_name = 'core/meeting_form.html'
     success_url = reverse_lazy('meetings')
 
     def get_form(self, form_class=None):
@@ -392,14 +392,14 @@ class MeetingFormMixin(GoogleApiMixin, FormViewMixin):
         return form
 
 class MeetingCreate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedCreateMixin):
-    permission_required = 'service.add_meeting'
+    permission_required = 'core.add_meeting'
     context = { 'title': 'Agendar consulta' }
 
     def get_initial(self):
         return get_param_to_dict(self.request, 'duration', super().get_initial())
 
 class MeetingUpdate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedUpdateMixin):
-    permission_required = 'service.change_meeting'
+    permission_required = 'core.change_meeting'
     
     def form_valid(self, form):
         self.object.state = 's'
@@ -407,9 +407,9 @@ class MeetingUpdate(PermissionRequiredMixin, MeetingFormMixin, ClientBasedUpdate
         return super().form_valid(form)
 
 class MeetingDelete(PermissionRequiredMixin, MeetingFormMixin, DeleteViewMixin):
-    permission_required = 'service.delete_meeting'
+    permission_required = 'core.delete_meeting'
     model = Meeting
-    template_name = 'service/meeting_confirm_delete.html'
+    template_name = 'core/meeting_confirm_delete.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -422,7 +422,7 @@ class MeetingDelete(PermissionRequiredMixin, MeetingFormMixin, DeleteViewMixin):
 
 
 class MeetingFlowMixin(PermissionRequiredMixin, FormViewMixin, ViewMixin, generic.FormView):
-    permission_required = 'service.change_meeting'
+    permission_required = 'core.change_meeting'
     model = Meeting
 
     def setup(self, request, *args, **kwargs):
@@ -477,7 +477,7 @@ class MeetingStart(MeetingFlowMixin):
 
 class MeetingMeasure(MeetingFlowMixin):
     form_class = MeetingMeasureForm
-    template_name = 'service/meeting_measure.html'
+    template_name = 'core/meeting_measure.html'
     context = { 'title': 'Medições' }
     next_step_url = 'meeting-finish'
 
@@ -532,7 +532,7 @@ class MeetingMeasure(MeetingFlowMixin):
 
 class MeetingFinish(MeetingFlowMixin):
     form_class = MeetingFinishForm
-    template_name = 'service/meeting_finish.html'
+    template_name = 'core/meeting_finish.html'
     success_url = reverse_lazy('meetings')
     context = { 'title': 'Fim da consulta' }
     
@@ -543,7 +543,7 @@ class MeetingFinish(MeetingFlowMixin):
     
 
 class MeasurementList(PermissionRequiredMixin, ListViewMixin):
-    permission_required = 'service.view_measurement'
+    permission_required = 'core.view_measurement'
     model = Measurement
     context = { 'url': 'measurements' }
     exclude = ['id']
@@ -555,18 +555,18 @@ class MeasurementFormMixin(FormViewMixin):
     fields = '__all__'
 
 class MeasurementCreate(PermissionRequiredMixin, MeasurementFormMixin, ClientBasedCreateMixin):
-    permission_required = 'service.add_measurement'
+    permission_required = 'core.add_measurement'
 
 class MeasurementUpdate(PermissionRequiredMixin, MeasurementFormMixin, ClientBasedUpdateMixin):
-    permission_required = 'service.change_measurement'
+    permission_required = 'core.change_measurement'
 
 class MeasurementDelete(PermissionRequiredMixin, DeleteViewMixin):
-    permission_required = 'service.delete_measurement'
+    permission_required = 'core.delete_measurement'
     model = Measurement
 
 
 class PrePlanList(PermissionRequiredMixin, ListViewMixin):
-    permission_required = 'service.view_preplan'
+    permission_required = 'core.view_preplan'
     model = PrePlan
     context = { 'url': 'preplans' }
     fields = ['client', 'date', 'daily_energy']
@@ -574,7 +574,7 @@ class PrePlanList(PermissionRequiredMixin, ListViewMixin):
     add_btn_str = 'Novos cálculos'
 
 class PrePlanDetail(PermissionRequiredMixin, DetailViewMixin):
-    permission_required = 'service.view_preplan'
+    permission_required = 'core.view_preplan'
     model = PrePlan
     exclude = ['id', 'client', 'date']
     slug = 'preplan'
@@ -629,7 +629,7 @@ class PrePlanFormMixin(FormViewMixin):
         return context
 
 class PrePlanCreate(PermissionRequiredMixin, PrePlanFormMixin, ClientBasedCreateMixin):
-    permission_required = 'service.add_preplan'
+    permission_required = 'core.add_preplan'
 
     def get_initial(self):
         return get_param_to_dict(self.request, 'meeting', super().get_initial(), Meeting)
@@ -643,13 +643,13 @@ class PrePlanCreate(PermissionRequiredMixin, PrePlanFormMixin, ClientBasedCreate
         return super().form_valid(form)
 
 class PrePlanUpdate(PermissionRequiredMixin, PrePlanFormMixin, ClientBasedUpdateMixin):
-    permission_required = 'service.change_preplan'
+    permission_required = 'core.change_preplan'
 
 class PrePlanDelete(PermissionRequiredMixin, DeleteViewMixin):
-    permission_required = 'service.delete_preplan'
+    permission_required = 'core.delete_preplan'
     model = PrePlan
 
-"""@permission_required('service.view_plan')
+"""@permission_required('core.view_plan')
 def deliver_plan(request, pk):
     plan = get_object_or_404(Plan, pk=pk)
     client_name = plan.client.name

@@ -22,7 +22,7 @@
           <h4 class="card-title">Consultas</h4>
         </div>
         <div class="col">
-          {% if perms.service.add_meeting %}
+          {% if perms.core.add_meeting %}
             <a class="btn btn-primary float-right ml-4" href="{% url 'meeting-create' %}?client={{ client.pk }}&duration=60&summary=rastreio&next={{ request.path }}">
               <i class="fas fa-plus"></i>
               <span>&nbsp;&nbsp;Agendar rastreio</span>
@@ -57,9 +57,9 @@
                       {{ meeting.weight }} kg
                     </td>
                     <td class="text-right">
-                      {% if perms.service.view_meeting %}<a class="btn btn-link" href="{% url 'meeting-detail' meeting.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
-                      {% if perms.service.change_meeting %}<a class="btn btn-link" href="{% url 'meeting-update' meeting.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
-                      {% if perms.service.delete_meeting %}<a class="btn btn-link" href="{% url 'meeting-delete' meeting.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                      {% if perms.core.view_meeting %}<a class="btn btn-link" href="{% url 'meeting-detail' meeting.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.core.change_meeting %}<a class="btn btn-link" href="{% url 'meeting-update' meeting.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.core.delete_meeting %}<a class="btn btn-link" href="{% url 'meeting-delete' meeting.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
                     </td>
                   </tr>
               {% endfor %}
@@ -79,7 +79,7 @@
           <h4 class="card-title">Cálculos</h4>
         </div>
         <div class="col">
-          {% if perms.service.add_preplan %}
+          {% if perms.core.add_preplan %}
             <a class="btn btn-primary float-right" href="{% url 'preplan-create' %}?client={{ client.pk }}&next={{ request.path }}">
               <i class="fas fa-plus"></i>
               <span>&nbsp;&nbsp;Novos cálculos</span>
@@ -110,9 +110,9 @@
                       {{ preplan.daily_energy }} kcal/dia
                     </td>
                     <td class="text-right">
-                      {% if perms.service.view_preplan %}<a class="btn btn-link" href="{% url 'preplan-detail' preplan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
-                      {% if perms.service.change_preplan %}<a class="btn btn-link" href="{% url 'preplan-update' preplan.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
-                      {% if perms.service.delete_preplan %}<a class="btn btn-link" href="{% url 'preplan-delete' preplan.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
+                      {% if perms.core.view_preplan %}<a class="btn btn-link" href="{% url 'preplan-detail' preplan.pk %}"><i class="fas fa-file-alt"></i></a>{% endif %}
+                      {% if perms.core.change_preplan %}<a class="btn btn-link" href="{% url 'preplan-update' preplan.pk %}?next={{ request.path }}"><i class="fas fa-edit"></i></a>{% endif %}
+                      {% if perms.core.delete_preplan %}<a class="btn btn-link" href="{% url 'preplan-delete' preplan.pk %}?next={{ request.path }}"><i class="fas fa-trash-alt"></i></a>{% endif %}
                     </td>
                   </tr>
               {% endfor %}

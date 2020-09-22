@@ -1,5 +1,5 @@
 migrations/
-static/
+/static/
 node_modules/
 *.local.*
 *.bak

@@ -20,11 +20,11 @@ from django.contrib.auth import views as auth_views
 from django.urls import include, path
 from django.views.generic import RedirectView
 
-from service.forms import LoginForm
+from core.forms import LoginForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('main/', include('service.urls')),
+    path('main/', include('core.urls')),
     path('', RedirectView.as_view(url='main/', permanent=True)),
     path('accounts/login/', auth_views.LoginView.as_view(authentication_form=LoginForm)),
     path('accounts/', include('django.contrib.auth.urls')),

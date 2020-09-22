@@ -1,6 +1,6 @@
 {% extends 'common/generic_list.html' %}
 
-{% load service_tags %}
+{% load core_tags %}
 {% block list_buttons %}
   {% with row.object.is_startable as is_startable %}
     {% if button.url == 'meeting-start' and not is_startable %}

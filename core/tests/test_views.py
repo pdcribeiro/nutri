@@ -4,7 +4,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User, Group, Permission
 from django.test import TestCase
 
-from service.models import Partner, Client, Measurement, Meeting, PrePlan, PAL
+from core.models import Partner, Client, Measurement, Meeting, PrePlan, PAL
 
 
 USER = { 'username': 'user', 'password': 'user1234' }
@@ -74,7 +74,7 @@ class TemplateUsedTest(TestCase):
             'meeting/1',
             'preplan/1',
         ]},
-        {'template': 'service/client_detail.html', 'urls': [
+        {'template': 'core/client_detail.html', 'urls': [
             'client/1',
         ]},
         # Form views
@@ -82,15 +82,15 @@ class TemplateUsedTest(TestCase):
             'measure/create/',
             'measure/1/update/',
         ]},
-        {'template': 'service/partner_form.html', 'urls': [
+        {'template': 'core/partner_form.html', 'urls': [
             'partner/create/',
             'partner/1/update/',
         ]},
-        {'template': 'service/client_form.html', 'urls': [
+        {'template': 'core/client_form.html', 'urls': [
             'client/create/',
             'client/1/update/',
         ]},
-        {'template': 'service/meeting_form.html', 'urls': [
+        {'template': 'core/meeting_form.html', 'urls': [
             'meeting/create/',
             'meeting/1/update/',
         ]},
@@ -105,7 +105,7 @@ class TemplateUsedTest(TestCase):
             'measure/1/delete/',
             'preplan/1/delete/',
         ]},
-        {'template': 'service/meeting_confirm_delete.html', 'urls': [
+        {'template': 'core/meeting_confirm_delete.html', 'urls': [
             'meeting/1/delete/',
         ]}]
 

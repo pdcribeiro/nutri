@@ -41,7 +41,7 @@
               </a>
             </li>
             {% if user.is_authenticated %}
-              {% if perms.service.view_client %}
+              {% if perms.core.view_client %}
                 <li {% if url == 'clients' %}class="active"{% endif %}>
                   <a href="{% url 'clients' %}">
                     <i class="fas fa-user"></i>
@@ -49,7 +49,7 @@
                   </a>
                 </li>
               {% endif %}
-              {% if perms.service.view_meeting %}
+              {% if perms.core.view_meeting %}
               <li {% if url == 'meetings' %}class="active"{% endif %}>
                 <a href="{% url 'meetings' %}">
                   <i class="fas fa-calendar-check"></i>
@@ -57,7 +57,7 @@
                 </a>
               </li>
               {% endif %}
-              {% if perms.service.view_measurement %}
+              {% if perms.core.view_measurement %}
               <li {% if url == 'measurements' %}class="active"{% endif %}>
                 <a href="{% url 'measurements' %}">
                   <i class="fas fa-ruler"></i>
@@ -65,7 +65,7 @@
                 </a>
               </li>
               {% endif %}
-              {% if perms.service.view_preplan %}
+              {% if perms.core.view_preplan %}
               <li {% if url == 'preplans' %}class="active"{% endif %}>
                 <a href="{% url 'preplans' %}">
                   <i class="fas fa-calculator"></i>
@@ -73,7 +73,7 @@
                 </a>
               </li>
               {% endif %}
-              {% comment %} {% if perms.service.view_plan %}
+              {% comment %} {% if perms.core.view_plan %}
               <li {% if url == 'plans' %}class="active"{% endif %}>
                 <a href="{% url 'plans' %}">
                   <i class="fas fa-file-alt"></i>
@@ -81,7 +81,7 @@
                 </a>
               </li>
               {% endif %} {% endcomment %}
-              {% if perms.service.view_partner %}
+              {% if perms.core.view_partner %}
               <li {% if url == 'partners' %}class="active"{% endif %}>
                 <a href="{% url 'partners' %}">
                   <i class="fas fa-handshake"></i>
