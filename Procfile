@@ -1,1 +1,0 @@
-web: gunicorn nutri.wsgi --log-file -

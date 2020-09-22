@@ -1,4 +1,7 @@
+migrations/
+static/
+*.local.*
 *.bak
 *.pyc
+*.code-workspace
 db.sqlite3
-nutriservice/migrations
