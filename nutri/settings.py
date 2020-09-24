@@ -26,9 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'aecj!=_adkwhcks_wybjn38h$e4!3l
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
-                 'nutri.pdcribeiro.ddnsgeek.com',
-                 'www.nutri.pdcribeiro.ddnsgeek.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nutri.pdcribeiro.com']
 
 
 # Application definition

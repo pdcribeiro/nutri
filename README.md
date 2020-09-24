@@ -7,7 +7,7 @@ It was developed using Django and Bootstrap.
 
 ## Live demo
 
-[http://nutri.pdcribeiro.ddnsgeek.com](http://nutri.pdcribeiro.ddnsgeek.com)
+[https://nutri.pdcribeiro.com](https://nutri.pdcribeiro.com)
 
 Username: user<br/>
 Password: user
